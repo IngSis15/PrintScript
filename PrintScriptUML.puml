@@ -1,0 +1,24 @@
+@startuml
+object Runner
+Lexer <- Runner
+Parser <- Runner
+Interpreter <- Runner
+object FS
+
+object Lexer{
+    +lex(input: String): List<Token>
+}
+object Parser{
+    +parse(tokens: List<Token>): List<AST>
+}
+object AST
+object Interpreter{
+    +interpret(ast: AST): void
+}
+
+FS <- Lexer
+AST <- Parser
+AST <- Interpreter
+
+
+@enduml
