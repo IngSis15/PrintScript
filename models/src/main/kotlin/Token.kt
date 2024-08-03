@@ -1,7 +1,7 @@
 package org.example
 
-class Token(val start : Int, val end : Int, val type : TokenType, val literal : Any) {
+class Token(val type : TokenType, val literal : String, val start : Int, val end : Int) {
     override fun toString() : String {
-        return "$type" + " " + "$literal" + " " + "$start" + " " + "$end"
+        return "[$type, $literal, $start, $end]"
     }
 }

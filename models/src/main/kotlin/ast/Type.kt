@@ -1,4 +1,4 @@
-package org.example.AST
+package org.example.ast
 
 enum class Type {
     STRING,

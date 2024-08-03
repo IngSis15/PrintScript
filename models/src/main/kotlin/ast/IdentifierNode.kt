@@ -1,4 +1,4 @@
-package org.example.AST
+package org.example.ast
 
 class IdentifierNode(val type: Type, val name : String, val start: Int, val end: Int) : ASTNode{
     override fun getType(): String {
