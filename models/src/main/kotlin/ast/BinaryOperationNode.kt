@@ -4,4 +4,8 @@ class BinaryOperationNode(val left: ASTNode, val right: ASTNode, val start: Int,
     override fun getType(): String {
         return "BinaryOperation"
     }
+
+    override fun accept(visitor: ASTVisitor) {
+        visitor.visit(this)
+    }
 }

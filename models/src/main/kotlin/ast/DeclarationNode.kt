@@ -4,5 +4,9 @@ class DeclarationNode(val identifier: IdentifierNode, val right: ASTNode, val st
     override fun getType(): String {
         return "Declaration"
     }
+
+    override fun accept(visitor: ASTVisitor) {
+        visitor.visit(this)
+    }
 }
 

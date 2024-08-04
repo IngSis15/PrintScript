@@ -1,22 +1,24 @@
 package org.example
 
 enum class TokenType {
+    LET_KEYWORD,
     IDENTIFIER,
+
     NUMBER_TYPE,
-    INTEGER,
+    NUMBER_LITERAL,
     STRING_TYPE,
-    STRING,
+    STRING_LITERAL,
+
     SUM,
     SUB,
     MUL,
     DIV,
-    WHITESPACE,
-    EOF,
+    ASSIGNATION,
+    PRINT,
+
     SEMICOLON,
     COLON,
-    PRINT,
+
     ILLEGAL,
-    ASIGNATION,
-    DECLARATION,
-    LET
+    EOF,
 }
