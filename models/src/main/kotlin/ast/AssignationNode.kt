@@ -4,4 +4,8 @@ class AssignationNode(val identifier: IdentifierNode, val right: ASTNode): ASTNo
     override fun getType(): String {
         return "Assignation"
     }
+
+    override fun accept(visitor: ASTVisitor) {
+        visitor.visit(this)
+    }
 }
