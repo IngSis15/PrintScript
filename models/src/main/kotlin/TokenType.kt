@@ -18,6 +18,8 @@ enum class TokenType {
 
     SEMICOLON,
     COLON,
+    LEFT_PAR,
+    RIGHT_PAR,
 
     ILLEGAL,
     EOF,
