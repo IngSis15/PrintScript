@@ -38,12 +38,14 @@ class LexerTests {
     @Test
     fun testPrintLnFunction() {
         val lexer = LexerImplementation()
-        val tokens = lexer.lex("println \"Hello, World!\";")
+        val tokens = lexer.lex("println(\"Hello, World!\");")
         val expected = listOf(
             Token(TokenType.PRINT, "println", 0, 7),
+            Token(TokenType.LEFT_PAR, "(", 7, 8),
             Token(TokenType.STRING_LITERAL, "\"Hello, World!\"", 8, 23),
-            Token(TokenType.SEMICOLON, ";", 23, 24),
-            Token(TokenType.EOF, "", 24, 24)
+            Token(TokenType.RIGHT_PAR, ")", 23, 24),
+            Token(TokenType.SEMICOLON, ";", 24, 25),
+            Token(TokenType.EOF, "", 25, 25)
         )
         assertEquals(expected, tokens)
     }

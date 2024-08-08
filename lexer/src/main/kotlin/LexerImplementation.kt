@@ -59,6 +59,16 @@ class LexerImplementation {
                     tokens.add(Token(TokenType.COLON, ch.toString(), start, start + 1))
                     i++
                 }
+                '(' -> {
+                    val start = i
+                    tokens.add(Token(TokenType.LEFT_PAR, ch.toString(), start, start + 1))
+                    i++
+                }
+                ')' -> {
+                    val start = i
+                    tokens.add(Token(TokenType.RIGHT_PAR, ch.toString(), start, start + 1))
+                    i++
+                }
                 ' ', '\t', '\n', '\r' -> i++ // Skip whitespace
                 else -> {
                     val start = i
