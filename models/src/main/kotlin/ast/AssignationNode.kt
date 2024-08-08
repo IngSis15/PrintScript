@@ -6,6 +6,13 @@ class AssignationNode(val identifier: IdentifierNode, val right: ASTNode): ASTNo
     }
 
     override fun accept(visitor: ASTVisitor) {
-        TODO("Not yet implemented")
+        visitor.visit(this)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is AssignationNode) {
+            return other.identifier == identifier && other.right == right
+        }
+        return false
     }
 }

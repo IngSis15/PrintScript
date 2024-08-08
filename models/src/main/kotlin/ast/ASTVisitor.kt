@@ -6,4 +6,5 @@ interface ASTVisitor {
     fun visit(node: IdentifierNode)
     fun visit(node: LiteralNode)
     fun visit(node: PrintNode)
+    fun visit(node: AssignationNode)
 }
