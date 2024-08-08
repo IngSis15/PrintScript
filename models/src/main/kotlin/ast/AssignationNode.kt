@@ -6,6 +6,6 @@ class AssignationNode(val identifier: IdentifierNode, val right: ASTNode): ASTNo
     }
 
     override fun accept(visitor: ASTVisitor) {
-        TODO("Not yet implemented")
+        visitor.visit(this)
     }
 }
