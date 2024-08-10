@@ -1,8 +1,9 @@
 package parser
 
+import ast.Expression
 import org.example.Token
-import org.example.ast.ASTNode
 
 interface InfixParser {
-    fun parse(parser: Parser, left: ASTNode, token: Token)
+    fun parse(parser: Parser, left: Expression, token: Token): Expression
+    fun getPrecedence(): Int
 }

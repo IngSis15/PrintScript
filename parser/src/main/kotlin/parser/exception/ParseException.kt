@@ -1,4 +1,3 @@
 package parser.exception
 
-class ParseException {
-}
+class ParseException(message: String): Exception(message) {}

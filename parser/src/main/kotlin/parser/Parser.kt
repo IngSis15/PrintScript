@@ -1,105 +1,115 @@
 package parser
 
+import ast.DeclareExpr
+import ast.Expression
+import ast.NumberExpr
+import ast.TypeExpr
 import org.example.Token
 import org.example.TokenType
-import org.example.ast.*
+import parser.exception.ParseException
 
-class Parser(private val tokens: List<Token>) {
-    private var current: Int = 0
+class Parser(private val tokens: Iterator<Token>, val grammar: Grammar) {
+    private val tokensRead = mutableListOf<Token>()
 
-    fun parse(): List<ASTNode> {
-        val program: MutableList<ASTNode> = mutableListOf()
+    fun parse(): List<Expression> {
+        val program: MutableList<Expression> = mutableListOf()
 
-        while (!isAtEnd()) {
-            when (peek().type) {
-                TokenType.LET_KEYWORD -> program.add(parseDeclaration())
-                TokenType.PRINT -> program.add(parseCall())
-                else -> program.add(parseExpression())
-            }
+        while (lookAhead(0).type != TokenType.EOF) {
+            val expr = parseStatement()
+            program.add(expr)
         }
 
         return program
     }
 
-    fun curr(): Token {
-        return tokens[0]
+    fun lookAhead(distance: Int): Token {
+        while (distance >= tokensRead.size) {
+            tokensRead.add(tokens.next())
+        }
+        return tokensRead[distance]
     }
 
-    fun next(): Token {
-        return tokens[1]
+    fun match(expected: TokenType): Boolean {
+        val token = lookAhead(0)
+        if (token.type != expected) {
+            return false
+        }
+        consume()
+        return true
     }
 
-    fun advance(): Token {
-        if (!isAtEnd()) current++
-        return previous()
+    fun consume(): Token {
+        lookAhead(0)
+        return tokensRead.removeAt(0)
     }
 
-    fun peek(): Token {
-        return tokens[current]
+    fun consume(expected: TokenType): Token {
+        val token = lookAhead(0)
+        if (token.type != expected) {
+            throw Exception("Expected $expected, found $token")
+        }
+        return consume()
     }
 
-    private fun isAtEnd(): Boolean {
-        return peek().type == TokenType.EOF
+    fun parseStatement(): Expression {
+        val expr: Expression = when {
+            match(TokenType.LET_KEYWORD) -> parseDeclaration()
+            else -> parseExpression()
+        }
+
+        if (!match(TokenType.SEMICOLON)) {
+            throw ParseException("Expected semicolon at the end of the statement")
+        }
+
+        return expr
     }
 
-    private fun previous(): Token {
-        return tokens[current - 1]
+    fun parseExpression(): Expression {
+        return parsePrecedence(0)
     }
 
-    private fun parseDeclaration(): DeclarationNode {
-        val start = advance().start // ignore let keyword
-        if (peek().type != TokenType.IDENTIFIER) throw Exception("Error parsing: Expected an identifier")
+    fun parsePrecedence(precedence: Int): Expression {
+        val token = consume()
+        val parser = grammar.getPrefixParser(token.type)
+            ?: throw ParseException("No prefix parser for ${token.type}")
 
-        val identifierToken = advance()
+        val left = parser.parse(this, token)
+        return parseInfix(left, precedence)
+    }
 
-        if (peek().type != TokenType.COLON)
-            throw Exception("Error parsing: Expected ':' after identifier")
+    fun parseInfix(left: Expression, precedence: Int): Expression {
+        var newLeft = left
+        while (precedence < grammar.getPrecedence(lookAhead(0).type)) {
+            val token = consume()
+            val parser = grammar.getInfixParser(token.type)
+                ?: throw ParseException("No infix parser for ${lookAhead(0).type}")
 
-        advance() // ignore colon
+            newLeft = parser.parse(this, left, token)
+        }
 
+        return newLeft
+    }
+
+    fun parseDeclaration(): Expression {
         val type = parseTypeDeclaration()
 
-        if (peek().type != TokenType.ASSIGNATION)
-            throw Exception("Error parsing: Expected '='")
-
-        advance() // ignore assignation
-        val value = parseExpression()
-        val end = advance().end // Ignore semicolon
-
-        return DeclarationNode(
-            IdentifierNode(type, identifierToken.literal, identifierToken.start, identifierToken.end),
-            value,
-            start,
-            end,
-        )
-    }
-
-    private fun parseTypeDeclaration(): Type {
-        if (
-            peek().type != TokenType.NUMBER_TYPE &&
-            peek().type != TokenType.STRING_TYPE
-            )
-            throw Exception("Error parsing: Expected type definition")
-        return when (advance().type) {
-            TokenType.NUMBER_TYPE -> Type.NUMBER
-            TokenType.STRING_TYPE -> Type.STRING
-            else -> throw Exception("Error parsing: Invalid type")
+        if (match(TokenType.ASSIGNATION)) {
+            val value = parseExpression()
+            return DeclareExpr(type, value, 0)
         }
+
+        return DeclareExpr(type, NumberExpr(0, 0), 0)
     }
 
-    // TODO: Parse Expression (SUM MUL DIV, ETC)
-    private fun parseExpression(): ASTNode {
-        return when (peek().type) {
-            TokenType.NUMBER_LITERAL -> LiteralNode(advance().literal, Type.NUMBER)
-            TokenType.STRING_LITERAL -> LiteralNode(advance().literal, Type.STRING)
-            else -> throw Exception("Error parsing expression")
+    fun parseTypeDeclaration(): Expression {
+        val name = consume(TokenType.IDENTIFIER).literal
+        consume(TokenType.COLON)
+        return if (match(TokenType.STRING_TYPE)) {
+            TypeExpr(name, "string", 0)
+        } else if (match(TokenType.NUMBER_TYPE)) {
+            TypeExpr(name, "number", 0)
+        } else {
+            throw ParseException("Expected type declaration")
         }
-    }
-
-    private fun parseCall(): ASTNode {
-        advance()
-        return PrintNode(
-           parseExpression()
-        )
     }
 }
