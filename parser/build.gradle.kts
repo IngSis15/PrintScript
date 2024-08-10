@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation(project(":models"))
+    implementation(project(":ast"))
     testImplementation(kotlin("test"))
 }
 
