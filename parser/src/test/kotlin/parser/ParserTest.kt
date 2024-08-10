@@ -3,8 +3,9 @@ package parser
 import ast.*
 import org.example.Token
 import org.example.TokenType
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import kotlin.test.Test
+
 
 class ParserTest {
     private fun test(tokens: List<Token>, expected: List<Expression>) {
