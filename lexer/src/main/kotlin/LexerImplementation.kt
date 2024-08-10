@@ -1,10 +1,14 @@
 package org.example
 
+
 class LexerImplementation {
 
-    private val keywords = mapOf("let" to TokenType.LET_KEYWORD, "println" to TokenType.PRINT)
-    private val types = mapOf("number" to TokenType.NUMBER_TYPE, "string" to TokenType.STRING_TYPE)
-    private val operators = mapOf(
+    private val keywords: Map<String, TokenType> = mapOf(
+        "let" to TokenType.LET_KEYWORD,
+        "println" to TokenType.PRINT
+    )
+    private val types: Map<String, TokenType> = mapOf("number" to TokenType.NUMBER_TYPE, "string" to TokenType.STRING_TYPE)
+    private val operators: Map<Char, TokenType> = mapOf(
         '+' to TokenType.SUM,
         '-' to TokenType.SUB,
         '*' to TokenType.MUL,
