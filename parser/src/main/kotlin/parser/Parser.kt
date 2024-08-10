@@ -1,3 +1,5 @@
+package parser
+
 import org.example.Token
 import org.example.TokenType
 import org.example.ast.*
@@ -19,12 +21,20 @@ class Parser(private val tokens: List<Token>) {
         return program
     }
 
-    private fun advance(): Token {
+    fun curr(): Token {
+        return tokens[0]
+    }
+
+    fun next(): Token {
+        return tokens[1]
+    }
+
+    fun advance(): Token {
         if (!isAtEnd()) current++
         return previous()
     }
 
-    private fun peek(): Token {
+    fun peek(): Token {
         return tokens[current]
     }
 

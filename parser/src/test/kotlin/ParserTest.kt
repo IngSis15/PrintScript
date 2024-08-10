@@ -1,6 +1,7 @@
 import org.example.Token
 import org.example.TokenType
 import org.example.ast.*
+import parser.Parser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

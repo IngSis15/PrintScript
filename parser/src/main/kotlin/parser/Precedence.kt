@@ -1,3 +1,5 @@
+package parser
+
 enum class Precedence {
     LOWEST,
     SUM,
