@@ -9,4 +9,5 @@ interface ExpressionVisitor<R, C> {
     fun visit(expr: OperatorExpr, context: C): R
     fun visit(expr: NumberExpr, context: C): R
     fun visit(expr: StringExpr, context: C): R
+    fun visit(expr: VariableExpr, context: C): R
 }
