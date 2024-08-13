@@ -4,7 +4,7 @@ import ast.*
 import org.example.Token
 import org.example.TokenType
 import org.junit.jupiter.api.Assertions.assertEquals
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 
 class ParserTest {
