@@ -1,4 +1,5 @@
-import org.example.LexerImplementation
+
+import lexer.Lexer
 import org.example.Token
 import org.example.TokenType
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -8,7 +9,7 @@ class LexerTests {
 
     @Test
     fun testLetKeyword() {
-        val lexer = LexerImplementation()
+        val lexer = Lexer()
         val tokens = lexer.lex("let x: number;")
         val expected = listOf(
             Token(TokenType.LET_KEYWORD, "let", 0, 3),
@@ -23,7 +24,7 @@ class LexerTests {
 
     @Test
     fun testVariableAssignment() {
-        val lexer = LexerImplementation()
+        val lexer = Lexer()
         val tokens = lexer.lex("x = 5;")
         val expected = listOf(
             Token(TokenType.IDENTIFIER, "x", 0, 1),
@@ -37,7 +38,7 @@ class LexerTests {
 
     @Test
     fun testPrintLnFunction() {
-        val lexer = LexerImplementation()
+        val lexer = Lexer()
         val tokens = lexer.lex("println(\"Hello, World!\");")
         val expected = listOf(
             Token(TokenType.PRINT, "println", 0, 7),
@@ -52,7 +53,7 @@ class LexerTests {
 
     @Test
     fun testArithmeticExpression() {
-        val lexer = LexerImplementation()
+        val lexer = Lexer()
         val tokens = lexer.lex("x = 5 + 3 - 2 * 4 / 2;")
         val expected = listOf(
             Token(TokenType.IDENTIFIER, "x", 0, 1),

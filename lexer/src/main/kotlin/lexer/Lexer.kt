@@ -1,7 +1,11 @@
-package org.example
+package lexer
+
+import org.example.Token
+import org.example.TokenType
 
 
-class LexerImplementation {
+
+class Lexer {
 
     private val keywords: Map<String, TokenType> = mapOf(
         "let" to TokenType.LET_KEYWORD,

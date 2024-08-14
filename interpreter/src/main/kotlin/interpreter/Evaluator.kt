@@ -2,6 +2,7 @@ package interpreter
 
 import ast.*
 
+
 class Evaluator: ExpressionVisitor<Any, Scope> {
     fun evaluate(expression: Expression, scope: Scope) {
         expression.accept(this, scope)
