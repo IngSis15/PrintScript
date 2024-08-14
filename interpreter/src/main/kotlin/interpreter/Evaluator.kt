@@ -4,39 +4,44 @@ import ast.*
 
 
 class Evaluator: ExpressionVisitor<Any, Scope> {
-    fun evaluate(expression: Expression, scope: Scope) {
-        expression.accept(this, scope)
+    fun evaluate(expression: Expression, scope: Scope): Any {
+        return expression.accept(this, scope)
     }
 
     override fun visit(expr: AssignExpr, context: Scope): Any {
-        val value = expr.value.accept(this, context)
+        val value = evaluate(expr.value, context)
 
         if (expr.left is VariableExpr) {
             val variableName = (expr.left as VariableExpr).name
-            context.setVariable(variableName, value.javaClass.simpleName, value)
-            return value
+            val variable = context.getVariable(variableName)
+                ?: throw IllegalArgumentException("Undefined variable: $variableName")
 
+            if (variable.type != value.javaClass.simpleName) {
+                throw IllegalArgumentException("Type mismatch: expected ${variable.type}, but found ${value.javaClass.simpleName}")
+            }
+
+            context.setVariable(variableName, variable.type, value)
+            return value
         } else {
             throw IllegalArgumentException("Expected a variable on the left-hand side of the assignment")
         }
     }
 
     override fun visit(expr: DeclareExpr, context: Scope): Any {
-        val value = expr.value.accept(this, context)
+        val value = evaluate(expr.value, context)
 
         if (expr.variable is TypeExpr) {
             val variableName = (expr.variable as TypeExpr).name
             val variableType = expr.value.javaClass.simpleName
             context.setVariable(variableName, variableType, value)
             return value
-
         } else {
             throw IllegalArgumentException("Expected a variable in the declaration")
         }
     }
 
     override fun visit(expr: CallPrintExpr, context: Scope): Any {
-        val valueToPrint = expr.arg.accept(this, context)
+        val valueToPrint = evaluate(expr.arg, context)
         println(valueToPrint)
         return valueToPrint
     }
@@ -45,8 +50,7 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
         val variable = context.getVariable(expr.name)
 
         if (variable != null) {
-            return variable
-
+            return variable.value
         } else {
             throw IllegalArgumentException("Undefined variable: ${expr.name}")
         }
@@ -56,15 +60,13 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
         val variable = context.getVariable(expr.name)
 
         if (variable != null) {
-            val actualType = variable::class.simpleName
+            val actualType = variable.type
 
             if (actualType == expr.type) {
                 return variable
-
             } else {
                 throw IllegalArgumentException("Type mismatch: expected ${expr.type}, but found $actualType")
             }
-
         } else {
             throw IllegalArgumentException("Undefined variable: ${expr.name}")
         }
@@ -103,8 +105,7 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
         val variableValue = context.getVariable(expr.name)
 
         if (variableValue != null) {
-            return variableValue
-
+            return variableValue.value
         } else {
             throw IllegalArgumentException("Undefined variable: ${expr.name}")
         }

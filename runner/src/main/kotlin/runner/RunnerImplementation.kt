@@ -4,8 +4,8 @@ import parser.Parser
 import lexer.Lexer
 import interpreter.Interpreter
 import parser.Grammar
-class RunnerImplementation {
 
+class RunnerImplementation {
     fun run(code: String) {
         val lexer = Lexer()
         val tokens = lexer.lex(code)
@@ -14,6 +14,4 @@ class RunnerImplementation {
         val interpreter = Interpreter()
         interpreter.interpret(program)
     }
-
-
 }

@@ -8,7 +8,7 @@ class Scope {
         variables[name] = Variable(type, value)
     }
 
-    fun getVariable(name: String): Any? {
+    fun getVariable(name: String): Variable? {
         return variables[name]
     }
 }
