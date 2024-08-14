@@ -7,5 +7,5 @@ import org.example.runner.RunnerImplementation
 fun main() {
     val runner = RunnerImplementation()
     runner.run("println(\"Hello, World!\");")
-    runner.run("let x = 5;")
+    runner.run("let x: number = 5;")
 }

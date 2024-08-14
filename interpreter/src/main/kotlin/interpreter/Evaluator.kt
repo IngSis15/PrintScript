@@ -24,9 +24,9 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
     override fun visit(expr: DeclareExpr, context: Scope): Any {
         val value = expr.value.accept(this, context)
 
-        if (expr.variable is VariableExpr) {
-            val variableName = (expr.variable as VariableExpr).name
-            val variableType = value.javaClass.simpleName
+        if (expr.variable is TypeExpr) {
+            val variableName = (expr.variable as TypeExpr).name
+            val variableType = expr.value.javaClass.simpleName
             context.setVariable(variableName, variableType, value)
             return value
 
