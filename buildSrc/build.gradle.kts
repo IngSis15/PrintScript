@@ -10,8 +10,10 @@ plugins {
 repositories {
     // Use the plugin portal to apply community plugins in convention plugins.
     gradlePluginPortal()
+    mavenCentral()
 }
 
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
+    implementation("org.jlleitschuh.gradle:ktlint-gradle:12.1.1")
 }

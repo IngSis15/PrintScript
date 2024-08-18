@@ -24,11 +24,17 @@ class Grammar {
         return infixParsers[type]
     }
 
-    fun prefix(type: TokenType, parser: PrefixParser) {
+    fun prefix(
+        type: TokenType,
+        parser: PrefixParser,
+    ) {
         prefixParsers[type] = parser
     }
 
-    fun infix(type: TokenType, parser: InfixParser) {
+    fun infix(
+        type: TokenType,
+        parser: InfixParser,
+    ) {
         infixParsers[type] = parser
     }
 

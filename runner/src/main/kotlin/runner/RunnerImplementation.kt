@@ -1,9 +1,9 @@
 package org.example.runner
 
-import parser.Parser
-import lexer.Lexer
 import interpreter.Interpreter
+import lexer.Lexer
 import parser.Grammar
+import parser.Parser
 
 class RunnerImplementation {
     fun run(code: String) {

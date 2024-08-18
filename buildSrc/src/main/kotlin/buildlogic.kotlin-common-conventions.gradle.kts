@@ -5,6 +5,8 @@
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm")
+
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 repositories {
@@ -34,4 +36,13 @@ java {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+ktlint {
+    debug.set(false)
+    verbose.set(false)
+    android.set(false)
+    outputToConsole.set(true)
+    ignoreFailures.set(false)
+    enableExperimentalRules.set(false)
 }

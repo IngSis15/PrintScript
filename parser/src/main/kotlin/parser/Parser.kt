@@ -52,10 +52,11 @@ class Parser(private val tokens: Iterator<Token>, val grammar: Grammar) {
     }
 
     fun parseStatement(): Expression {
-        val expr: Expression = when {
-            match(TokenType.LET_KEYWORD) -> parseDeclaration()
-            else -> parseExpression()
-        }
+        val expr: Expression =
+            when {
+                match(TokenType.LET_KEYWORD) -> parseDeclaration()
+                else -> parseExpression()
+            }
 
         if (!match(TokenType.SEMICOLON)) {
             throw ParseException("Expected semicolon at the end of the statement")
@@ -70,19 +71,24 @@ class Parser(private val tokens: Iterator<Token>, val grammar: Grammar) {
 
     fun parsePrecedence(precedence: Int): Expression {
         val token = consume()
-        val parser = grammar.getPrefixParser(token.type)
-            ?: throw ParseException("No prefix parser for ${token.type}")
+        val parser =
+            grammar.getPrefixParser(token.type)
+                ?: throw ParseException("No prefix parser for ${token.type}")
 
         val left = parser.parse(this, token)
         return parseInfix(left, precedence)
     }
 
-    fun parseInfix(left: Expression, precedence: Int): Expression {
+    fun parseInfix(
+        left: Expression,
+        precedence: Int,
+    ): Expression {
         var newLeft = left
         while (precedence < grammar.getPrecedence(lookAhead(0).type)) {
             val token = consume()
-            val parser = grammar.getInfixParser(token.type)
-                ?: throw ParseException("No infix parser for ${lookAhead(0).type}")
+            val parser =
+                grammar.getInfixParser(token.type)
+                    ?: throw ParseException("No infix parser for ${lookAhead(0).type}")
 
             newLeft = parser.parse(this, left, token)
         }
