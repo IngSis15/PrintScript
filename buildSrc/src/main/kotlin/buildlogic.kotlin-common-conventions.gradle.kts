@@ -38,6 +38,19 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
+
+tasks.register<Copy>("copyPreCommitHook") {
+    description = "Copy pre-commit git hook from the scripts to the .git/hooks folder."
+    group = "git hooks"
+    outputs.upToDateWhen { false }
+    from("$rootDir/hooks/pre-commit")
+    into("$rootDir/.git/hooks/")
+}
+
+tasks.build {
+    dependsOn("copyPreCommitHook")
+}
+
 ktlint {
     debug.set(false)
     verbose.set(false)

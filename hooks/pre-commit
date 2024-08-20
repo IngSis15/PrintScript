@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "Running git pre-commit hook"
+
+# Run ktlint format
+./gradlew ktlintFormat
+
+# Run ktlint check
+./gradlew ktlintCheck
+
+# Check if ktlint passed
+if [ $? -ne 0 ]; then
+  echo "ktlint check failed. Please fix the issues before committing."
+  exit 1
+fi
+
+# Run tests
+./gradlew test
+
+# Check if tests passed
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Please fix the issues before committing."
+  exit 1
+fi
