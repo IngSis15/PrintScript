@@ -1,20 +1,36 @@
 package interpreter
 
-import ast.*
+import ast.AssignExpr
+import ast.CallPrintExpr
+import ast.DeclareExpr
+import ast.Expression
+import ast.ExpressionVisitor
+import ast.IdentifierExpr
+import ast.NumberExpr
+import ast.OperatorExpr
+import ast.StringExpr
+import ast.TypeExpr
+import ast.VariableExpr
 
-
-class Evaluator: ExpressionVisitor<Any, Scope> {
-    fun evaluate(expression: Expression, scope: Scope): Any {
+class Evaluator : ExpressionVisitor<Any, Scope> {
+    fun evaluate(
+        expression: Expression,
+        scope: Scope,
+    ): Any {
         return expression.accept(this, scope)
     }
 
-    override fun visit(expr: AssignExpr, context: Scope): Any {
+    override fun visit(
+        expr: AssignExpr,
+        context: Scope,
+    ): Any {
         val value = evaluate(expr.value, context)
 
         if (expr.left is VariableExpr) {
             val variableName = (expr.left as VariableExpr).name
-            val variable = context.getVariable(variableName)
-                ?: throw IllegalArgumentException("Undefined variable: $variableName")
+            val variable =
+                context.getVariable(variableName)
+                    ?: throw IllegalArgumentException("Undefined variable: $variableName")
 
             if (variable.type != value.javaClass.simpleName) {
                 throw IllegalArgumentException("Type mismatch: expected ${variable.type}, but found ${value.javaClass.simpleName}")
@@ -27,7 +43,10 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
         }
     }
 
-    override fun visit(expr: DeclareExpr, context: Scope): Any {
+    override fun visit(
+        expr: DeclareExpr,
+        context: Scope,
+    ): Any {
         val value = evaluate(expr.value, context)
 
         if (expr.variable is TypeExpr) {
@@ -40,13 +59,19 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
         }
     }
 
-    override fun visit(expr: CallPrintExpr, context: Scope): Any {
+    override fun visit(
+        expr: CallPrintExpr,
+        context: Scope,
+    ): Any {
         val valueToPrint = evaluate(expr.arg, context)
         println(valueToPrint)
         return valueToPrint
     }
 
-    override fun visit(expr: IdentifierExpr, context: Scope): Any {
+    override fun visit(
+        expr: IdentifierExpr,
+        context: Scope,
+    ): Any {
         val variable = context.getVariable(expr.name)
 
         if (variable != null) {
@@ -56,7 +81,10 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
         }
     }
 
-    override fun visit(expr: TypeExpr, context: Scope): Any {
+    override fun visit(
+        expr: TypeExpr,
+        context: Scope,
+    ): Any {
         val variable = context.getVariable(expr.name)
 
         if (variable != null) {
@@ -72,7 +100,10 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
         }
     }
 
-    override fun visit(expr: OperatorExpr, context: Scope): Any {
+    override fun visit(
+        expr: OperatorExpr,
+        context: Scope,
+    ): Any {
         val leftValue = expr.left.accept(this, context)
         val rightValue = expr.right.accept(this, context)
 
@@ -81,11 +112,12 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
                 "+" -> leftValue.toDouble() + rightValue.toDouble()
                 "-" -> leftValue.toDouble() - rightValue.toDouble()
                 "*" -> leftValue.toDouble() * rightValue.toDouble()
-                "/" -> if (rightValue.toDouble() != 0.0) {
-                    leftValue.toDouble() / rightValue.toDouble()
-                } else {
-                    throw ArithmeticException("Division by zero")
-                }
+                "/" ->
+                    if (rightValue.toDouble() != 0.0) {
+                        leftValue.toDouble() / rightValue.toDouble()
+                    } else {
+                        throw ArithmeticException("Division by zero")
+                    }
                 else -> throw IllegalArgumentException("Unsupported operator: ${expr.op}")
             }
         } else {
@@ -93,15 +125,24 @@ class Evaluator: ExpressionVisitor<Any, Scope> {
         }
     }
 
-    override fun visit(expr: NumberExpr, context: Scope): Any {
+    override fun visit(
+        expr: NumberExpr,
+        context: Scope,
+    ): Any {
         return expr.value
     }
 
-    override fun visit(expr: StringExpr, context: Scope): Any {
+    override fun visit(
+        expr: StringExpr,
+        context: Scope,
+    ): Any {
         return expr.value
     }
 
-    override fun visit(expr: VariableExpr, context: Scope): Any {
+    override fun visit(
+        expr: VariableExpr,
+        context: Scope,
+    ): Any {
         val variableValue = context.getVariable(expr.name)
 
         if (variableValue != null) {

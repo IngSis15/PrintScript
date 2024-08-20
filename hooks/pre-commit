@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo "Running git pre-commit hook"
+
+CHANGED_FILES="$(git diff --staged --name-only)"
+
+echo "Running ktlint format"
+./gradlew ktlintFormat
+
+# Run ktlint check
+./gradlew ktlintCheck
+
+# Check if ktlint passed
+if [ $? -ne 0 ]; then
+  echo "ktlint check failed. Please fix the issues before committing."
+  exit 1
+fi
+
+# Run tests
+./gradlew test
+
+# Check if tests passed
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Please fix the issues before committing."
+  exit 1
+fi
+
+for file in $CHANGED_FILES; do
+    if test -f "$file"; then
+      git add $file
+    fi
+done
+

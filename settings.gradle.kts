@@ -3,7 +3,6 @@ plugins {
 }
 
 rootProject.name = "PrintScript"
-include("models")
 include("lexer")
 include("interpreter")
 include("runner")
