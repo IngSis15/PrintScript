@@ -5,12 +5,15 @@ import ast.DeclareExpr
 import ast.Expression
 import ast.IdentifierExpr
 import ast.NumberExpr
+import ast.OperatorExpr
 import ast.StringExpr
 import ast.TypeExpr
 import org.example.Token
 import org.example.TokenType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import parser.exception.ParseException
 
 class ParserTest {
     private fun test(
@@ -72,6 +75,78 @@ class ParserTest {
                 DeclareExpr(
                     TypeExpr("x", "number", 0),
                     NumberExpr(42, 0),
+                    0,
+                ),
+            )
+
+        test(tokens, expected)
+    }
+
+    @Test
+    fun `test unexpected token`() {
+        val tokens =
+            listOf(
+                Token(TokenType.LET_KEYWORD, "let", 0, 0),
+                Token(TokenType.IDENTIFIER, "", 0, 4),
+                Token(TokenType.COLON, ":", 0, 5),
+                Token(TokenType.SEMICOLON, ";", 0, 6),
+            )
+
+        val parser = Parser(tokens.iterator(), Grammar())
+
+        assertThrows<ParseException> {
+            parser.parse()
+        }
+    }
+
+    @Test
+    fun `test basic sum`() {
+        val tokens =
+            listOf(
+                Token(TokenType.NUMBER_LITERAL, "1", 0, 0),
+                Token(TokenType.SUM, "+", 0, 2),
+                Token(TokenType.NUMBER_LITERAL, "2", 0, 4),
+                Token(TokenType.SEMICOLON, ";", 0, 5),
+                Token(TokenType.EOF, "", 0, 5),
+            )
+
+        val expected =
+            listOf(
+                OperatorExpr(
+                    NumberExpr(1, 0),
+                    "+",
+                    NumberExpr(2, 0),
+                    0,
+                ),
+            )
+
+        test(tokens, expected)
+    }
+
+    @Test
+    fun `test basic sum with precedence`() {
+        val tokens =
+            listOf(
+                Token(TokenType.NUMBER_LITERAL, "1", 0, 0),
+                Token(TokenType.SUM, "+", 0, 2),
+                Token(TokenType.NUMBER_LITERAL, "2", 0, 4),
+                Token(TokenType.MUL, "*", 0, 5),
+                Token(TokenType.NUMBER_LITERAL, "3", 0, 7),
+                Token(TokenType.SEMICOLON, ";", 0, 8),
+                Token(TokenType.EOF, "", 0, 8),
+            )
+
+        val expected =
+            listOf(
+                OperatorExpr(
+                    NumberExpr(1, 0),
+                    "+",
+                    OperatorExpr(
+                        NumberExpr(2, 0),
+                        "*",
+                        NumberExpr(3, 0),
+                        0,
+                    ),
                     0,
                 ),
             )
