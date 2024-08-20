@@ -2,7 +2,9 @@
 
 echo "Running git pre-commit hook"
 
-# Run ktlint format
+CHANGED_FILES="$(git diff --staged --name-only)"
+
+echo "Running ktlint format"
 ./gradlew ktlintFormat
 
 # Run ktlint check
@@ -22,3 +24,10 @@ if [ $? -ne 0 ]; then
   echo "Tests failed. Please fix the issues before committing."
   exit 1
 fi
+
+for file in $CHANGED_FILES; do
+    if test -f "$file"; then
+      git add $file
+    fi
+done
+
