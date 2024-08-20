@@ -38,6 +38,15 @@ class Parser(private val tokens: Iterator<Token>, val grammar: Grammar) {
         return true
     }
 
+    fun matchAny(vararg expected: TokenType): Boolean {
+        val token = lookAhead(0)
+        if (expected.none { it == token.type }) {
+            return false
+        }
+        consume()
+        return true
+    }
+
     fun consume(): Token {
         lookAhead(0)
         return tokensRead.removeAt(0)
@@ -46,7 +55,7 @@ class Parser(private val tokens: Iterator<Token>, val grammar: Grammar) {
     fun consume(expected: TokenType): Token {
         val token = lookAhead(0)
         if (token.type != expected) {
-            throw Exception("Expected $expected, found $token")
+            throw ParseException("Expected $expected, found $token")
         }
         return consume()
     }

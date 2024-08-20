@@ -13,7 +13,11 @@ class Grammar {
 
         prefix(TokenType.PRINT, PrintCallParser())
 
-        infix(TokenType.ASSIGNATION, AssignParser(9))
+        infix(TokenType.ASSIGNATION, AssignParser(0))
+        infix(TokenType.SUM, BinaryOperatorParser(1))
+        infix(TokenType.SUB, BinaryOperatorParser(1))
+        infix(TokenType.MUL, BinaryOperatorParser(2))
+        infix(TokenType.DIV, BinaryOperatorParser(2))
     }
 
     fun getPrefixParser(type: TokenType): PrefixParser? {
