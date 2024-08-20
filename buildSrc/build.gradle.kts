@@ -12,4 +12,5 @@ repositories {
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation("org.jlleitschuh.gradle:ktlint-gradle:12.1.1")
+    implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.8.3")
 }
