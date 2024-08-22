@@ -32,11 +32,20 @@ class Evaluator : ExpressionVisitor<Any, Scope> {
                 context.getVariable(variableName)
                     ?: throw IllegalArgumentException("Undefined variable: $variableName")
 
-            if (variable.type != value.javaClass.simpleName) {
-                throw IllegalArgumentException("Type mismatch: expected ${variable.type}, but found ${value.javaClass.simpleName}")
+            val expectedType = variable.type
+            val valueType =
+                when (value) {
+                    is Int -> "Integer"
+                    is Double -> "Double"
+                    is String -> "String"
+                    else -> throw IllegalArgumentException("Unsupported value type: ${value::class.simpleName}")
+                }
+
+            if (expectedType != valueType) {
+                throw IllegalArgumentException("Type mismatch: expected $expectedType, but found $valueType")
             }
 
-            context.setVariable(variableName, variable.type, value)
+            context.setVariable(variableName, expectedType, value)
             return value
         } else {
             throw IllegalArgumentException("Expected a variable on the left-hand side of the assignment")
@@ -49,14 +58,10 @@ class Evaluator : ExpressionVisitor<Any, Scope> {
     ): Any {
         val value = evaluate(expr.value, context)
 
-        if (expr.variable is TypeExpr) {
-            val variableName = (expr.variable as TypeExpr).name
-            val variableType = expr.value.javaClass.simpleName
-            context.setVariable(variableName, variableType, value)
-            return value
-        } else {
-            throw IllegalArgumentException("Expected a variable in the declaration")
-        }
+        val variableName = (expr.variable as TypeExpr).name
+        val variableType = (expr.variable as TypeExpr).type
+        context.setVariable(variableName, variableType, value)
+        return value
     }
 
     override fun visit(
