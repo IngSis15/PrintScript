@@ -153,4 +153,49 @@ class ParserTest {
 
         test(tokens, expected)
     }
+
+    @Test
+    fun `test complex operation`() {
+        val tokens =
+            listOf(
+                Token(TokenType.NUMBER_LITERAL, "1", 0, 0),
+                Token(TokenType.SUM, "+", 0, 2),
+                Token(TokenType.NUMBER_LITERAL, "2", 0, 4),
+                Token(TokenType.MUL, "*", 0, 5),
+                Token(TokenType.NUMBER_LITERAL, "3", 0, 7),
+                Token(TokenType.SUM, "+", 0, 8),
+                Token(TokenType.NUMBER_LITERAL, "4", 0, 10),
+                Token(TokenType.MUL, "*", 0, 11),
+                Token(TokenType.NUMBER_LITERAL, "5", 0, 13),
+                Token(TokenType.SEMICOLON, ";", 0, 14),
+                Token(TokenType.EOF, "", 0, 14),
+            )
+
+        val expected =
+            listOf(
+                OperatorExpr(
+                    OperatorExpr(
+                        NumberExpr(1, 0),
+                        "+",
+                        OperatorExpr(
+                            NumberExpr(2, 0),
+                            "*",
+                            NumberExpr(3, 0),
+                            0,
+                        ),
+                        0,
+                    ),
+                    "+",
+                    OperatorExpr(
+                        NumberExpr(4, 0),
+                        "*",
+                        NumberExpr(5, 0),
+                        0,
+                    ),
+                    0,
+                ),
+            )
+
+        test(tokens, expected)
+    }
 }
