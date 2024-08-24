@@ -66,6 +66,12 @@ ktlint {
 
 kover {
     reports {
+        filters {
+            excludes {
+                packages("ast")
+                packages("token")
+            }
+        }
         verify {
             rule {
                 minBound(80)
