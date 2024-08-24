@@ -1,5 +1,6 @@
 package lexer
 
+import org.example.Position
 import org.example.Token
 import org.example.TokenType
 
@@ -19,7 +20,7 @@ class Lexer {
             '=' to TokenType.ASSIGNATION,
         )
 
-    fun lex(input: String): List<Token> {
+    fun lex(input: String, line: Int): List<Token> {
         val tokens = mutableListOf<Token>()
         var i = 0
 
@@ -30,12 +31,12 @@ class Lexer {
                     while (i < input.length && (input[i] in 'a'..'z' || input[i] in 'A'..'Z' || input[i] == '_')) i++
                     val word = input.substring(start, i)
                     val type = keywords[word] ?: types[word] ?: TokenType.IDENTIFIER
-                    tokens.add(Token(type, word, start, i))
+                    tokens.add(Token(type, word, Position(line, start)))
                 }
                 in '0'..'9' -> {
                     val start = i
                     while (i < input.length && (input[i] in '0'..'9' || input[i] == '.')) i++
-                    tokens.add(Token(TokenType.NUMBER_LITERAL, input.substring(start, i), start, i))
+                    tokens.add(Token(TokenType.NUMBER_LITERAL, input.substring(start, i), Position(line, start)))
                 }
                 '"', '\'' -> {
                     val start = i
@@ -43,49 +44,49 @@ class Lexer {
                     i++
                     while (i < input.length && input[i] != quoteType) i++
                     if (i < input.length) i++ // Closing quote
-                    tokens.add(Token(TokenType.STRING_LITERAL, input.substring(start, i), start, i))
+                    tokens.add(Token(TokenType.STRING_LITERAL, input.substring(start, i), Position(line, start)))
                 }
                 '+', '-', '*', '/' -> {
                     val start = i
                     val type = operators[ch] ?: TokenType.ILLEGAL
-                    tokens.add(Token(type, ch.toString(), start, start + 1))
+                    tokens.add(Token(type, ch.toString(), Position(line, start)))
                     i++
                 }
                 '=' -> {
                     val start = i
-                    tokens.add(Token(TokenType.ASSIGNATION, ch.toString(), start, start + 1))
+                    tokens.add(Token(TokenType.ASSIGNATION, ch.toString(), Position(line, start)))
                     i++
                 }
                 ';' -> {
                     val start = i
-                    tokens.add(Token(TokenType.SEMICOLON, ch.toString(), start, start + 1))
+                    tokens.add(Token(TokenType.SEMICOLON, ch.toString(), Position(line, start)))
                     i++
                 }
                 ':' -> {
                     val start = i
-                    tokens.add(Token(TokenType.COLON, ch.toString(), start, start + 1))
+                    tokens.add(Token(TokenType.COLON, ch.toString(), Position(line, start)))
                     i++
                 }
                 '(' -> {
                     val start = i
-                    tokens.add(Token(TokenType.LEFT_PAR, ch.toString(), start, start + 1))
+                    tokens.add(Token(TokenType.LEFT_PAR, ch.toString(), Position(line, start)))
                     i++
                 }
                 ')' -> {
                     val start = i
-                    tokens.add(Token(TokenType.RIGHT_PAR, ch.toString(), start, start + 1))
+                    tokens.add(Token(TokenType.RIGHT_PAR, ch.toString(), Position(line, start)))
                     i++
                 }
                 ' ', '\t', '\n', '\r' -> i++ // Skip whitespace
                 else -> {
                     val start = i
-                    tokens.add(Token(TokenType.ILLEGAL, ch.toString(), start, start + 1))
+                    tokens.add(Token(TokenType.ILLEGAL, ch.toString(), Position(line, start)))
                     i++
                 }
             }
         }
 
-        tokens.add(Token(TokenType.EOF, "", input.length, input.length))
+        tokens.add(Token(TokenType.EOF, "", Position(line, i)))
         return tokens
     }
 }
