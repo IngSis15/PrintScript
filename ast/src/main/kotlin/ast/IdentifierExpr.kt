@@ -1,9 +1,11 @@
 package ast
 
+import org.example.Position
+
 /*
 Represents an identifier expression: a
  */
-class IdentifierExpr(val name: String, val pos: Int) : Expression {
+class IdentifierExpr(val name: String, val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

@@ -1,9 +1,11 @@
 package ast
 
+import org.example.Position
+
 /*
 Represents an assignment expression: a = 1
  */
-class AssignExpr(val left: Expression, val value: Expression, val pos: Int) : Expression {
+class AssignExpr(val left: Expression, val value: Expression, val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

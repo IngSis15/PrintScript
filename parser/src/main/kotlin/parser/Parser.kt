@@ -1,12 +1,14 @@
 package parser
 
 import ast.Expression
+import org.example.Position
 import org.example.Token
 import org.example.TokenType
 import parser.exception.ParseException
 
 class Parser(private val tokens: Iterator<Token>, private val grammar: Grammar) {
     private val tokensRead = mutableListOf<Token>()
+    private lateinit var position: Position
 
     fun parse(): List<Expression> {
         val program: MutableList<Expression> = mutableListOf()

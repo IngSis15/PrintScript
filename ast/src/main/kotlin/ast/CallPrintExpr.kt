@@ -1,10 +1,12 @@
 package ast
 
+import org.example.Position
+
 /*
 PrintScript only supports print expressions.
 Represents a print expression: println(a)
  */
-class CallPrintExpr(val arg: Expression, val pos: Int) : Expression {
+class CallPrintExpr(val arg: Expression, val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,
