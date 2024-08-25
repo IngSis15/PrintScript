@@ -20,7 +20,10 @@ class Lexer {
             '=' to TokenType.ASSIGNATION,
         )
 
-    fun lex(input: String, line: Int): List<Token> {
+    fun lex(
+        input: String,
+        line: Int,
+    ): List<Token> {
         val tokens = mutableListOf<Token>()
         var i = 0
 
