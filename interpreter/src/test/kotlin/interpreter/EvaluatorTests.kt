@@ -3,11 +3,11 @@ package interpreter
 import ast.AssignExpr
 import ast.CallPrintExpr
 import ast.DeclareExpr
+import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
 import ast.StringExpr
 import ast.TypeExpr
-import ast.VariableExpr
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -37,10 +37,10 @@ class EvaluatorTests {
     fun `test variable declaration and retrieval`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val declareExpr = DeclareExpr(TypeExpr("x", "Integer", 0), NumberExpr(10, 0), 0)
+        val declareExpr = DeclareExpr(TypeExpr("x", "number", 0), NumberExpr(10, 0), 0)
 
         evaluator.evaluate(declareExpr, scope)
-        val result = evaluator.evaluate(VariableExpr("x", 0), scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", 0), scope)
 
         assertEquals(10, result)
     }
@@ -49,12 +49,12 @@ class EvaluatorTests {
     fun `test variable assignment`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val declareExpr = DeclareExpr(TypeExpr("x", "Integer", 0), NumberExpr(10, 0), 0)
-        val assignExpr = AssignExpr(VariableExpr("x", 0), NumberExpr(20, 0), 0)
+        val declareExpr = DeclareExpr(TypeExpr("x", "number", 0), NumberExpr(10, 0), 0)
+        val assignExpr = AssignExpr(IdentifierExpr("x", 0), NumberExpr(20, 0), 0)
 
         evaluator.evaluate(declareExpr, scope)
         evaluator.evaluate(assignExpr, scope)
-        val result = evaluator.evaluate(VariableExpr("x", 0), scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", 0), scope)
 
         assertEquals(20, result)
     }
@@ -66,7 +66,7 @@ class EvaluatorTests {
 
         val exception =
             assertThrows<IllegalArgumentException> {
-                evaluator.evaluate(VariableExpr("y", 0), scope)
+                evaluator.evaluate(IdentifierExpr("y", 0), scope)
             }
 
         assertEquals("Undefined variable: y", exception.message)
@@ -104,5 +104,22 @@ class EvaluatorTests {
 
         val result = evaluator.evaluate(expr, scope)
         assertEquals("test", result)
+    }
+
+    @Test
+    fun `test string variable declaration`() {
+        val evaluator = Evaluator()
+        val scope = Scope()
+
+        val expr =
+            DeclareExpr(
+                TypeExpr("x", "string", 0),
+                StringExpr("hello", 0),
+                0,
+            )
+
+        evaluator.evaluate(expr, scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", 0), scope)
+        assertEquals("hello", result)
     }
 }

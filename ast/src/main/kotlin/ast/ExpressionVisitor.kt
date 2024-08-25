@@ -40,9 +40,4 @@ interface ExpressionVisitor<R, C> {
         expr: StringExpr,
         context: C,
     ): R
-
-    fun visit(
-        expr: VariableExpr,
-        context: C,
-    ): R
 }
