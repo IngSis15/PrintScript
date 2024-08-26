@@ -11,6 +11,8 @@ plugins {
 
     // Coverage checker
     id("org.jetbrains.kotlinx.kover")
+
+    `maven-publish`
 }
 
 repositories {
@@ -70,6 +72,7 @@ kover {
             excludes {
                 packages("ast")
                 packages("token")
+                packages("runner")
             }
         }
         verify {
@@ -79,3 +82,5 @@ kover {
         }
     }
 }
+
+
