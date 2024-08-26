@@ -83,4 +83,21 @@ kover {
     }
 }
 
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/lizlubelczyk/PrintScript")
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("PASSWORD")
+            }
+        }
+    }
 
+    publications {
+        create<MavenPublication>("gpr") {
+            from(components["kotlin"])
+        }
+    }
+}
