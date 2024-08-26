@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class FormatterTest {
-
-    private val config = FormatterConfig(
-        spaceBeforeColon = true,
-        spaceAfterColon = true,
-        spaceAroundAssignment = true,
-        newLinesBeforePrintln = 1
-    )
+    private val config =
+        FormatterConfig(
+            spaceBeforeColon = true,
+            spaceAfterColon = true,
+            spaceAroundAssignment = true,
+            newLinesBeforePrintln = 1,
+        )
     private val formatter = Formatter(config)
 
     @Test
@@ -67,13 +67,13 @@ class FormatterTest {
     @Test
     fun testFormat() {
         val input = "a=1;println(\"Hello\");b=2"
-        val expected = """
-        a = 1;
-        println("Hello");
-        b = 2
-    """.trimIndent() // Using trimIndent() for better formatting in the test
+        val expected =
+            """
+            a = 1;
+            println("Hello");
+            b = 2
+            """.trimIndent() // Using trimIndent() for better formatting in the test
 
         assertEquals(expected, formatter.format(input))
     }
-
 }

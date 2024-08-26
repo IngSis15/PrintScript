@@ -3,7 +3,6 @@ package org.example.formatter
 import java.io.File
 
 class Formatter(private val config: FormatterConfig) {
-
     fun format(input: String): String {
         var formattedCode = input
 
@@ -19,8 +18,10 @@ class Formatter(private val config: FormatterConfig) {
         return formattedCode
     }
 
-
-    fun formatFile(inputFilePath: String, outputFilePath: String) {
+    fun formatFile(
+        inputFilePath: String,
+        outputFilePath: String,
+    ) {
         val inputCode = File(inputFilePath).readText()
         val formattedCode = format(inputCode)
         File(outputFilePath).writeText(formattedCode)
@@ -58,8 +59,6 @@ class Formatter(private val config: FormatterConfig) {
         // Ensure no extra space before the newline after semicolon
         return input.replace(Regex(";\\s*"), ";\n")
     }
-
-
 
     fun formatSingleSpaceBetweenTokens(input: String): String {
         return input.replace(Regex("\\s+"), " ")
