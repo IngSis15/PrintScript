@@ -3,11 +3,13 @@ package interpreter
 import ast.AssignExpr
 import ast.CallPrintExpr
 import ast.DeclareExpr
+import ast.Expression
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
 import ast.StringExpr
 import ast.TypeExpr
+import org.example.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -17,7 +19,7 @@ class EvaluatorTests {
     fun `test number expression`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val expr = NumberExpr(5, 0)
+        val expr = NumberExpr(5, Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
         assertEquals(5, result)
@@ -27,7 +29,7 @@ class EvaluatorTests {
     fun `test string expression`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val expr = StringExpr("hello", 0)
+        val expr = StringExpr("hello", Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
         assertEquals("hello", result)
@@ -37,10 +39,10 @@ class EvaluatorTests {
     fun `test variable declaration and retrieval`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val declareExpr = DeclareExpr(TypeExpr("x", "number", 0), NumberExpr(10, 0), 0)
+        val declareExpr = DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0))
 
         evaluator.evaluate(declareExpr, scope)
-        val result = evaluator.evaluate(IdentifierExpr("x", 0), scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
 
         assertEquals(10, result)
     }
@@ -49,12 +51,12 @@ class EvaluatorTests {
     fun `test variable assignment`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val declareExpr = DeclareExpr(TypeExpr("x", "number", 0), NumberExpr(10, 0), 0)
-        val assignExpr = AssignExpr(IdentifierExpr("x", 0), NumberExpr(20, 0), 0)
+        val declareExpr = DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0))
+        val assignExpr = AssignExpr(IdentifierExpr("x", Position(0, 0)), NumberExpr(20, Position(0, 0)), Position(0, 0))
 
         evaluator.evaluate(declareExpr, scope)
         evaluator.evaluate(assignExpr, scope)
-        val result = evaluator.evaluate(IdentifierExpr("x", 0), scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
 
         assertEquals(20, result)
     }
@@ -66,7 +68,7 @@ class EvaluatorTests {
 
         val exception =
             assertThrows<IllegalArgumentException> {
-                evaluator.evaluate(IdentifierExpr("y", 0), scope)
+                evaluator.evaluate(IdentifierExpr("y", Position(0, 0)), scope)
             }
 
         assertEquals("Undefined variable: y", exception.message)
@@ -76,7 +78,7 @@ class EvaluatorTests {
     fun `test operator expression addition`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val expr = OperatorExpr(NumberExpr(5, 0), "+", NumberExpr(3, 0), 0)
+        val expr = OperatorExpr(NumberExpr(5, Position(0, 0)), "+", NumberExpr(3, Position(0, 0)), Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
         assertEquals(8.0, result)
@@ -86,7 +88,7 @@ class EvaluatorTests {
     fun `test operator expression division by zero`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val expr = OperatorExpr(NumberExpr(5, 0), "/", NumberExpr(0, 0), 0)
+        val expr = OperatorExpr(NumberExpr(5, Position(0, 0)), "/", NumberExpr(0, Position(0, 0)), Position(0, 0))
 
         val exception =
             assertThrows<ArithmeticException> {
@@ -100,7 +102,7 @@ class EvaluatorTests {
     fun `test print expression`() {
         val evaluator = Evaluator()
         val scope = Scope()
-        val expr = CallPrintExpr(StringExpr("test", 0), 0)
+        val expr = CallPrintExpr(StringExpr("test", Position(0, 0)), Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
         assertEquals("test", result)
@@ -113,13 +115,46 @@ class EvaluatorTests {
 
         val expr =
             DeclareExpr(
-                TypeExpr("x", "string", 0),
-                StringExpr("hello", 0),
-                0,
+                TypeExpr("x", "string", Position(0, 0)),
+                StringExpr("hello", Position(0, 0)),
+                Position(0, 0),
             )
 
         evaluator.evaluate(expr, scope)
-        val result = evaluator.evaluate(IdentifierExpr("x", 0), scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
         assertEquals("hello", result)
+    }
+
+    @Test
+    fun `test interpret with single expression`() {
+        val interpreter = Interpreter()
+        val program =
+            listOf<Expression>(
+                DeclareExpr(TypeExpr("x", "Integer", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0)),
+            )
+
+        interpreter.interpret(program)
+
+        val scope = interpreter.scope
+        val result = scope.getVariable("x")?.value
+
+        assertEquals(10, result)
+    }
+
+    @Test
+    fun `test interpret with string expression`() {
+        val interpreter = Interpreter()
+        val program =
+            listOf<Expression>(
+                DeclareExpr(TypeExpr("message", "String", Position(0, 0)), StringExpr("Hello, world!", Position(0, 0)), Position(0, 0)),
+                CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
+            )
+
+        interpreter.interpret(program)
+
+        val scope = interpreter.scope
+        val result = scope.getVariable("message")?.value
+
+        assertEquals("Hello, world!", result)
     }
 }

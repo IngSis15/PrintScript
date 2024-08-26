@@ -3,7 +3,7 @@ package interpreter
 import ast.Expression
 
 class Interpreter {
-    private val scope = Scope()
+    val scope = Scope()
 
     fun interpret(program: List<Expression>) {
         val evaluator = Evaluator()
