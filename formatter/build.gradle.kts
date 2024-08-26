@@ -3,7 +3,6 @@ plugins {
 }
 
 dependencies {
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.0")
     api(project(":parser"))
-    api(project(":lexer"))
-    api(project(":interpreter"))
 }
