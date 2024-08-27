@@ -1,0 +1,2 @@
+let camelCased: number = 1;
+let camelCased: number = 2;
