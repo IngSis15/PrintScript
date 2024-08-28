@@ -1,10 +1,10 @@
 package parser
 
 import ast.Expression
-import org.example.Position
-import org.example.Token
-import org.example.TokenType
 import parser.exception.ParseException
+import token.Position
+import token.Token
+import token.TokenType
 
 class Parser(private val tokens: Iterator<Token>, private val grammar: Grammar) {
     private val tokensRead = mutableListOf<Token>()

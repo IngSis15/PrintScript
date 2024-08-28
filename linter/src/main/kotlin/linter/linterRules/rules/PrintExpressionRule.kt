@@ -2,7 +2,7 @@ package linter.linterRules.rules
 
 import ast.Expression
 import linter.linterRules.LintingRule
-import org.example.Position
+import token.Position
 
 class PrintExpressionRule(val on: Boolean) : LintingRule {
     override fun isValid(expression: Expression): Pair<Boolean, Position> {

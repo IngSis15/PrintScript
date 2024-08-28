@@ -1,6 +1,6 @@
 package parser
 
-import org.example.TokenType
+import token.TokenType
 
 class Grammar {
     private val prefixParsers = mutableMapOf<TokenType, PrefixParser>()

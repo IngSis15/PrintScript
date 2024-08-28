@@ -1,6 +1,6 @@
 package ast
 
-import org.example.Position
+import token.Position
 
 /*
 PrintScript only supports print expressions.

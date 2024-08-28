@@ -3,9 +3,9 @@ package parser
 import ast.Expression
 import ast.NumberExpr
 import ast.StringExpr
-import org.example.Token
-import org.example.TokenType
 import parser.exception.ParseException
+import token.Token
+import token.TokenType
 
 class LiteralParser : PrefixParser {
     override fun parse(

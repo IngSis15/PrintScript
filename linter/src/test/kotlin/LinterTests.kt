@@ -26,19 +26,16 @@ class LinterTests {
 
         val results = mutableListOf<LinterResult>()
 
-        codeLines.forEachIndexed { lineNumber, line ->
-            val tokens = lexer.lex(line, lineNumber + 1)
-            val parser = Parser(tokens.listIterator(), Grammar())
+        codeLines.forEachIndexed { _, line ->
+            val tokens = lexer.lex(line)
+            val parser = Parser(tokens, Grammar())
             val expressionList = parser.parse()
             val lintingResult = linter.lint(expressionList)
             if (!lintingResult.approved) {
                 results.addLast(lintingResult)
             }
         }
-        if (results.size == 0) {
-            return true
-        }
-        return false
+        return results.size == 0
     }
 
     @Test

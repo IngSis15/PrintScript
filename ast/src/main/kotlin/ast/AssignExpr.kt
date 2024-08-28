@@ -1,6 +1,6 @@
 package ast
 
-import org.example.Position
+import token.Position
 
 /*
 Represents an assignment expression: a = 1

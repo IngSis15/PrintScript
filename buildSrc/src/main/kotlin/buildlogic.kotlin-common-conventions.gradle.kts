@@ -73,6 +73,7 @@ kover {
                 packages("ast")
                 packages("token")
                 packages("runner")
+                packages("txtReader")
             }
         }
         verify {

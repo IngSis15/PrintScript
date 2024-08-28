@@ -1,6 +1,6 @@
 package ast
 
-import org.example.Position
+import token.Position
 
 /*
 Represents a number expression: 1, 2, 3, etc.

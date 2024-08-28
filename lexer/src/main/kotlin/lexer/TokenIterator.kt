@@ -1,8 +1,8 @@
 package lexer
 
-import org.example.Position
-import org.example.Token
-import org.example.TokenType
+import token.Position
+import token.Token
+import token.TokenType
 
 class TokenIterator(private val input: String) : Iterator<Token> {
     private val keywords: Map<String, TokenType> =
@@ -92,7 +92,6 @@ class TokenIterator(private val input: String) : Iterator<Token> {
                 Token(TokenType.STRING_LITERAL, input.substring(start, i), Position(line, startColumn))
             }
             ch in "+-*/" -> {
-                val start = i
                 val startColumn = column
                 val type = operators[ch] ?: TokenType.ILLEGAL
                 i++
@@ -100,42 +99,36 @@ class TokenIterator(private val input: String) : Iterator<Token> {
                 Token(type, ch.toString(), Position(line, startColumn))
             }
             ch == '=' -> {
-                val start = i
                 val startColumn = column
                 i++
                 column++
                 Token(TokenType.ASSIGNATION, ch.toString(), Position(line, startColumn))
             }
             ch == ';' -> {
-                val start = i
                 val startColumn = column
                 i++
                 column++
                 Token(TokenType.SEMICOLON, ch.toString(), Position(line, startColumn))
             }
             ch == ':' -> {
-                val start = i
                 val startColumn = column
                 i++
                 column++
                 Token(TokenType.COLON, ch.toString(), Position(line, startColumn))
             }
             ch == '(' -> {
-                val start = i
                 val startColumn = column
                 i++
                 column++
                 Token(TokenType.LEFT_PAR, ch.toString(), Position(line, startColumn))
             }
             ch == ')' -> {
-                val start = i
                 val startColumn = column
                 i++
                 column++
                 Token(TokenType.RIGHT_PAR, ch.toString(), Position(line, startColumn))
             }
             else -> {
-                val start = i
                 val startColumn = column
                 i++
                 column++

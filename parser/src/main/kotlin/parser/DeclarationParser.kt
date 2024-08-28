@@ -4,10 +4,10 @@ import ast.DeclareExpr
 import ast.Expression
 import ast.NumberExpr
 import ast.TypeExpr
-import org.example.Position
-import org.example.Token
-import org.example.TokenType
 import parser.exception.ParseException
+import token.Position
+import token.Token
+import token.TokenType
 
 class DeclarationParser : PrefixParser {
     override fun parse(

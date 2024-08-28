@@ -1,9 +1,9 @@
 import lexer.Lexer
-import org.example.Position
-import org.example.Token
-import org.example.TokenType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import token.Position
+import token.Token
+import token.TokenType
 
 class LexerTests {
     @Test

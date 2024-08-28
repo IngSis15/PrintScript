@@ -1,4 +1,4 @@
-package org.example
+package token
 
 data class Position(val line: Int, val column: Int) {
     override fun toString(): String {

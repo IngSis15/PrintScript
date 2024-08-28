@@ -2,7 +2,7 @@ package parser
 
 import ast.Expression
 import ast.IdentifierExpr
-import org.example.Token
+import token.Token
 
 class IdentifierParser : PrefixParser {
     override fun parse(

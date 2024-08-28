@@ -2,7 +2,7 @@ package parser
 
 import ast.Expression
 import ast.OperatorExpr
-import org.example.Token
+import token.Token
 
 class BinaryOperatorParser(private val precedence: Int) : InfixParser {
     override fun parse(

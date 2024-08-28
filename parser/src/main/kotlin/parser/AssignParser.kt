@@ -2,7 +2,7 @@ package parser
 
 import ast.AssignExpr
 import ast.Expression
-import org.example.Token
+import token.Token
 
 class AssignParser(private val precedence: Int) : InfixParser {
     override fun parse(
