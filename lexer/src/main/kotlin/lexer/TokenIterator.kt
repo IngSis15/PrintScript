@@ -1,16 +1,18 @@
 package lexer
 
+import source.SourceReader
 import token.Position
 import token.Token
 import token.TokenType
 
-class TokenIterator(private val input: String) : Iterator<Token> {
+class TokenIterator(private val input: SourceReader) : Iterator<Token> {
     private val keywords: Map<String, TokenType> =
         mapOf(
             "let" to TokenType.LET_KEYWORD,
             "println" to TokenType.PRINT,
         )
-    private val types: Map<String, TokenType> = mapOf("number" to TokenType.NUMBER_TYPE, "string" to TokenType.STRING_TYPE)
+    private val types: Map<String, TokenType> =
+        mapOf("number" to TokenType.NUMBER_TYPE, "string" to TokenType.STRING_TYPE)
     private val operators: Map<Char, TokenType> =
         mapOf(
             '+' to TokenType.SUM,
@@ -20,117 +22,126 @@ class TokenIterator(private val input: String) : Iterator<Token> {
             '=' to TokenType.ASSIGNATION,
         )
 
-    private var i = 0
     private var line = 1
     private var column = 0
 
     override fun hasNext(): Boolean {
-        while (i < input.length && input[i].isWhitespace()) {
-            if (input[i] == '\n') {
+        while (input.hasMore() && input.current().isWhitespace()) {
+            if (input.current() == '\n') {
                 line++
                 column = 0
             } else {
                 column++
             }
-            i++
+            input.advance()
         }
-        return i <= input.length
+        return input.hasMore()
     }
 
     override fun next(): Token {
-        while (i < input.length && input[i].isWhitespace()) {
-            if (input[i] == '\n') {
+        while (input.hasMore() && input.current().isWhitespace()) {
+            if (input.current() == '\n') {
                 line++
                 column = 0
             } else {
                 column++
             }
-            i++
+            input.advance()
         }
 
-        if (i == input.length) {
-            i++ // Move past the end to prevent repeated EOF tokens
+        if (!input.hasMore()) {
             return Token(TokenType.EOF, "", Position(line, column))
         }
 
-        val ch = input[i]
-        return when {
-            ch in 'a'..'z' || ch in 'A'..'Z' || ch == '_' -> {
-                val start = i
+        return when (val ch = input.current()) {
+            in 'a'..'z', in 'A'..'Z', '_' -> {
+                val word = StringBuilder()
                 val startColumn = column
-                while (i < input.length && (input[i] in 'a'..'z' || input[i] in 'A'..'Z' || input[i] == '_')) {
-                    i++
+                while (input.hasMore() && (input.current() in 'a'..'z' || input.current() in 'A'..'Z' || input.current() == '_')) {
+                    word.append(input.current())
+                    input.advance()
                     column++
                 }
-                val word = input.substring(start, i)
-                val type = keywords[word] ?: types[word] ?: TokenType.IDENTIFIER
-                Token(type, word, Position(line, startColumn))
+                val type = keywords[word.toString()] ?: types[word.toString()] ?: TokenType.IDENTIFIER
+                Token(type, word.toString(), Position(line, startColumn))
             }
-            ch in '0'..'9' -> {
-                val start = i
+
+            in '0'..'9' -> {
+                val word = StringBuilder()
                 val startColumn = column
-                while (i < input.length && (input[i] in '0'..'9' || input[i] == '.')) {
-                    i++
+                while (input.hasMore() && (input.current() in '0'..'9' || input.current() == '.')) {
+                    word.append(input.current())
+                    input.advance()
                     column++
                 }
-                Token(TokenType.NUMBER_LITERAL, input.substring(start, i), Position(line, startColumn))
+                Token(TokenType.NUMBER_LITERAL, word.toString(), Position(line, startColumn))
             }
-            ch == '"' || ch == '\'' -> {
-                val start = i
+
+            '"', '\'' -> {
+                val word = StringBuilder()
                 val startColumn = column
-                val quoteType = ch
-                i++
+                word.append(input.current())
+                input.advance()
                 column++
-                while (i < input.length && input[i] != quoteType) {
-                    i++
+                while (input.hasMore() && input.current() != ch) {
+                    word.append(input.current())
+                    input.advance()
                     column++
                 }
-                if (i < input.length) {
-                    i++ // Closing quote
+                if (input.hasMore()) {
+                    word.append(input.current())
+                    input.advance()
                     column++
                 }
-                Token(TokenType.STRING_LITERAL, input.substring(start, i), Position(line, startColumn))
+                Token(TokenType.STRING_LITERAL, word.toString(), Position(line, startColumn))
             }
-            ch in "+-*/" -> {
+
+            in "+-*/" -> {
                 val startColumn = column
                 val type = operators[ch] ?: TokenType.ILLEGAL
-                i++
+                input.advance()
                 column++
                 Token(type, ch.toString(), Position(line, startColumn))
             }
-            ch == '=' -> {
+
+            '=' -> {
                 val startColumn = column
-                i++
+                input.advance()
                 column++
                 Token(TokenType.ASSIGNATION, ch.toString(), Position(line, startColumn))
             }
-            ch == ';' -> {
+
+            ';' -> {
                 val startColumn = column
-                i++
+                input.advance()
                 column++
                 Token(TokenType.SEMICOLON, ch.toString(), Position(line, startColumn))
             }
-            ch == ':' -> {
+
+            ':' -> {
                 val startColumn = column
-                i++
+                input.advance()
                 column++
                 Token(TokenType.COLON, ch.toString(), Position(line, startColumn))
             }
-            ch == '(' -> {
+
+            '(' -> {
                 val startColumn = column
-                i++
+                input.advance()
                 column++
                 Token(TokenType.LEFT_PAR, ch.toString(), Position(line, startColumn))
             }
-            ch == ')' -> {
+
+            ')' -> {
                 val startColumn = column
-                i++
+                input.advance()
                 column++
                 Token(TokenType.RIGHT_PAR, ch.toString(), Position(line, startColumn))
             }
+
             else -> {
                 val startColumn = column
-                i++
+                input.advance()
                 column++
                 Token(TokenType.ILLEGAL, ch.toString(), Position(line, startColumn))
             }
