@@ -37,10 +37,39 @@ class FormatterTest {
     }
 
     @Test
-    fun testFormatNewLinesBeforePrintln() {
-        val input = "println(\"Hello\")"
-        val expected = "\nprintln(\"Hello\")"
-        assertEquals(expected, formatter.formatNewLinesBeforePrintln(input))
+    fun testFormatNewLinesBeforePrintlnWithFewerNewlines() {
+        val input = "a = 1;println(\"Hello\")"
+        val expected =
+            """
+            a = 1;
+
+            println("Hello")
+            """.trimIndent()
+        assertEquals(expected, formatter.format(input))
+    }
+
+    @Test
+    fun testFormatNewLinesBeforePrintlnWithExactNewlines() {
+        val input = "a = 1;\n\nprintln(\"Hello\")"
+        val expected =
+            """
+            a = 1;
+
+            println("Hello")
+            """.trimIndent()
+        assertEquals(expected, formatter.format(input))
+    }
+
+    @Test
+    fun testFormatNewLinesBeforePrintlnWithMoreNewlines() {
+        val input = "a = 1;\n\n\nprintln(\"Hello\")"
+        val expected =
+            """
+            a = 1;
+
+            println("Hello")
+            """.trimIndent()
+        assertEquals(expected, formatter.format(input))
     }
 
     @Test
@@ -70,9 +99,10 @@ class FormatterTest {
         val expected =
             """
             a = 1;
+            
             println("Hello");
             b = 2
-            """.trimIndent() // Using trimIndent() for better formatting in the test
+            """.trimIndent()
 
         assertEquals(expected, formatter.format(input))
     }

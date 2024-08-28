@@ -9,7 +9,7 @@ class LexerTests {
     @Test
     fun testLetKeyword() {
         val lexer = Lexer()
-        val tokens = lexer.lex("let x: number;", 1)
+        val tokens = lexer.lex("let x: number;").asSequence().toList()
         val expected =
             listOf(
                 Token(TokenType.LET_KEYWORD, "let", Position(1, 0)),
@@ -25,7 +25,7 @@ class LexerTests {
     @Test
     fun testVariableAssignment() {
         val lexer = Lexer()
-        val tokens = lexer.lex("x = 5;", 1)
+        val tokens = lexer.lex("x = 5;").asSequence().toList()
         val expected =
             listOf(
                 Token(TokenType.IDENTIFIER, "x", Position(1, 0)),
@@ -40,7 +40,7 @@ class LexerTests {
     @Test
     fun testPrintLnFunction() {
         val lexer = Lexer()
-        val tokens = lexer.lex("println(\"Hello, World!\");", 1)
+        val tokens = lexer.lex("println(\"Hello, World!\");").asSequence().toList()
         val expected =
             listOf(
                 Token(TokenType.PRINT, "println", Position(1, 0)),
@@ -56,7 +56,7 @@ class LexerTests {
     @Test
     fun testArithmeticExpression() {
         val lexer = Lexer()
-        val tokens = lexer.lex("x = 5 + 3 - 2 * 4 / 2;", 1)
+        val tokens = lexer.lex("x = 5 + 3 - 2 * 4 / 2;").asSequence().toList()
         val expected =
             listOf(
                 Token(TokenType.IDENTIFIER, "x", Position(1, 0)),
@@ -72,6 +72,27 @@ class LexerTests {
                 Token(TokenType.NUMBER_LITERAL, "2", Position(1, 20)),
                 Token(TokenType.SEMICOLON, ";", Position(1, 21)),
                 Token(TokenType.EOF, "", Position(1, 22)),
+            )
+        assertEquals(expected, tokens)
+    }
+
+    @Test
+    fun testNewlineHandling() {
+        val lexer = Lexer()
+        val tokens = lexer.lex("let x = 5;\nprintln(x);").asSequence().toList()
+        val expected =
+            listOf(
+                Token(TokenType.LET_KEYWORD, "let", Position(1, 0)),
+                Token(TokenType.IDENTIFIER, "x", Position(1, 4)),
+                Token(TokenType.ASSIGNATION, "=", Position(1, 6)),
+                Token(TokenType.NUMBER_LITERAL, "5", Position(1, 8)),
+                Token(TokenType.SEMICOLON, ";", Position(1, 9)),
+                Token(TokenType.PRINT, "println", Position(2, 0)),
+                Token(TokenType.LEFT_PAR, "(", Position(2, 7)),
+                Token(TokenType.IDENTIFIER, "x", Position(2, 8)),
+                Token(TokenType.RIGHT_PAR, ")", Position(2, 9)),
+                Token(TokenType.SEMICOLON, ";", Position(2, 10)),
+                Token(TokenType.EOF, "", Position(2, 11)),
             )
         assertEquals(expected, tokens)
     }
