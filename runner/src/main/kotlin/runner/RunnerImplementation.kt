@@ -1,10 +1,5 @@
 package org.example.runner
 
-import interpreter.Interpreter
-import lexer.Lexer
-import parser.Grammar
-import parser.Parser
-
 class RunnerImplementation {
     fun run(code: String) {
         val lexer = Lexer()
