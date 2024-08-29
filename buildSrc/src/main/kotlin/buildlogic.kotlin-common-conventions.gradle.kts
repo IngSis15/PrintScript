@@ -88,8 +88,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/lizlubelczyk/PrintScript")
             credentials {
-                username = System.getenv("USERNAME")
-                password = System.getenv("PASSWORD")
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
