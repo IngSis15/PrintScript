@@ -8,17 +8,7 @@ import token.TokenType
 class Parser(private val tokens: Iterator<Token>, private val grammar: Grammar) {
     private val tokensRead = mutableListOf<Token>()
 
-    fun parse(): List<Expression> {
-        val program: MutableList<Expression> = mutableListOf()
-
-        while (lookAhead(0).type != TokenType.EOF) {
-            val expr = parseExpression()
-            program.add(expr)
-            consume(TokenType.SEMICOLON)
-        }
-
-        return program
-    }
+    fun parse(): Iterator<Expression> = ExpressionIterator(this)
 
     fun parseExpression(): Expression {
         return parsePrecedence(0)

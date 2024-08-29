@@ -18,7 +18,7 @@ class Execute : CliktCommand(help = "Execute PrintScript file") {
             val lexer = Lexer()
             val parser = Parser(lexer.lex(fileSource), Grammar())
             val interpreter = Interpreter()
-            interpreter.interpret(parser.parse())
+            interpreter.interpret(parser.parse().asSequence().toList())
         } catch (e: Exception) {
             println(e.message)
         }
