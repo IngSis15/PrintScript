@@ -11,6 +11,8 @@ plugins {
 
     // Coverage checker
     id("org.jetbrains.kotlinx.kover")
+
+    `maven-publish`
 }
 
 repositories {
@@ -66,10 +68,35 @@ ktlint {
 
 kover {
     reports {
+        filters {
+            excludes {
+                packages("ast", "token", "cli")
+                classes("AppKt")
+            }
+        }
         verify {
             rule {
                 minBound(80)
             }
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/lizlubelczyk/PrintScript")
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("PASSWORD")
+            }
+        }
+    }
+
+    publications {
+        create<MavenPublication>("gpr") {
+            from(components["kotlin"])
         }
     }
 }

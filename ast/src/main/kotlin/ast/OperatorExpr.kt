@@ -1,9 +1,11 @@
 package ast
 
+import token.Position
+
 /*
 Represents an operator expression: a + b, a * b, a / b, a - b
  */
-class OperatorExpr(val left: Expression, val op: String, val right: Expression, val pos: Int) : Expression {
+class OperatorExpr(val left: Expression, val op: String, val right: Expression, val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

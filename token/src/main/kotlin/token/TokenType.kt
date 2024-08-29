@@ -1,4 +1,4 @@
-package org.example
+package token
 
 enum class TokenType {
     LET_KEYWORD,

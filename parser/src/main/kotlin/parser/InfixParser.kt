@@ -1,7 +1,7 @@
 package parser
 
 import ast.Expression
-import org.example.Token
+import token.Token
 
 interface InfixParser {
     fun parse(

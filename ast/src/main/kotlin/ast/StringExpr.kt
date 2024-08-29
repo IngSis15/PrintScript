@@ -1,9 +1,11 @@
 package ast
 
+import token.Position
+
 /*
 Represents a string expression: "hello", "world", etc.
  */
-class StringExpr(val value: String, val pos: Int) : Expression {
+class StringExpr(val value: String, val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

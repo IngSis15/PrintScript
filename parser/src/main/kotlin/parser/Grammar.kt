@@ -1,6 +1,6 @@
 package parser
 
-import org.example.TokenType
+import token.TokenType
 
 class Grammar {
     private val prefixParsers = mutableMapOf<TokenType, PrefixParser>()
@@ -11,9 +11,14 @@ class Grammar {
         prefix(TokenType.NUMBER_LITERAL, LiteralParser())
         prefix(TokenType.STRING_LITERAL, LiteralParser())
 
+        prefix(TokenType.LET_KEYWORD, DeclarationParser())
         prefix(TokenType.PRINT, PrintCallParser())
 
-        infix(TokenType.ASSIGNATION, AssignParser(9))
+        infix(TokenType.ASSIGNATION, AssignParser(1))
+        infix(TokenType.SUM, BinaryOperatorParser(2))
+        infix(TokenType.SUB, BinaryOperatorParser(2))
+        infix(TokenType.MUL, BinaryOperatorParser(3))
+        infix(TokenType.DIV, BinaryOperatorParser(4))
     }
 
     fun getPrefixParser(type: TokenType): PrefixParser? {

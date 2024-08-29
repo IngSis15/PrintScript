@@ -1,0 +1,2 @@
+let snake_cased: number = 1;
+let snake_cased: number = 2;

@@ -1,9 +1,11 @@
 package ast
 
+import token.Position
+
 /*
 Represents a number expression: 1, 2, 3, etc.
 */
-class NumberExpr(val value: Int, val pos: Int) : Expression {
+class NumberExpr(val value: Int, val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

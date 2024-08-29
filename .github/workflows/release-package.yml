@@ -1,8 +1,9 @@
-name: Java CI
+name: Java publish Package
 
 on:
-  - push
-  - workflow_dispatch
+  push:
+      branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build:

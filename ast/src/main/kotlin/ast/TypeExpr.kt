@@ -1,9 +1,11 @@
 package ast
 
+import token.Position
+
 /*
 Represents a type declaration: a: string
  */
-class TypeExpr(val name: String, val type: String, val pos: Int) : Expression {
+class TypeExpr(val name: String, val type: String, val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

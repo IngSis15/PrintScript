@@ -2,8 +2,8 @@ package parser
 
 import ast.CallPrintExpr
 import ast.Expression
-import org.example.Token
-import org.example.TokenType
+import token.Token
+import token.TokenType
 
 class PrintCallParser : PrefixParser {
     override fun parse(

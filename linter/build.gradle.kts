@@ -3,7 +3,9 @@ plugins {
 }
 
 dependencies {
+    api(project(":ast"))
+    api(project(":token"))
     api(project(":parser"))
     api(project(":lexer"))
-    api(project(":interpreter"))
+    implementation("org.json:json:20231013")
 }
