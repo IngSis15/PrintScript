@@ -2,13 +2,11 @@ package parser
 
 import ast.Expression
 import parser.exception.ParseException
-import token.Position
 import token.Token
 import token.TokenType
 
 class Parser(private val tokens: Iterator<Token>, private val grammar: Grammar) {
     private val tokensRead = mutableListOf<Token>()
-    private lateinit var position: Position
 
     fun parse(): List<Expression> {
         val program: MutableList<Expression> = mutableListOf()
@@ -86,7 +84,7 @@ class Parser(private val tokens: Iterator<Token>, private val grammar: Grammar) 
     fun consume(expected: TokenType): Token {
         val token = lookAhead(0)
         if (token.type != expected) {
-            throw ParseException("Expected $expected, found $token")
+            throw ParseException("Parsing error at ${token.start.line}:${token.start.column}\nExpected $expected, found ${token.literal}")
         }
         return consume()
     }

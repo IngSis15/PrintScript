@@ -1,7 +1,5 @@
 package formatter
 
-import org.example.formatter.Formatter
-import org.example.formatter.FormatterConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

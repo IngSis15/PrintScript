@@ -5,10 +5,10 @@ plugins {
 rootProject.name = "PrintScript"
 include("lexer")
 include("interpreter")
-include("runner")
 include("parser")
 include("ast")
 include("token")
 include("linter")
 include("formatter")
 include("lib")
+include("cli")

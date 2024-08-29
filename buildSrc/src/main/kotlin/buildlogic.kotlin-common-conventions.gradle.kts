@@ -72,8 +72,7 @@ kover {
             excludes {
                 packages("ast")
                 packages("token")
-                packages("runner")
-                packages("txtReader")
+                packages("cli")
             }
         }
         verify {
