@@ -31,7 +31,7 @@ class LinterTests {
             val tokens = lexer.lex(StringReader(line))
             val parser = Parser(tokens, Grammar())
             val expressionList = parser.parse()
-            val lintingResult = linter.lint(expressionList)
+            val lintingResult = linter.lint(expressionList.asSequence().toList())
             if (!lintingResult.approved) {
                 results.addLast(lintingResult)
             }

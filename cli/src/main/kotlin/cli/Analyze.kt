@@ -18,7 +18,7 @@ class Analyze : CliktCommand() {
             val linter = Linter()
             val fileSource = FileReader(File(filePath))
             val parser = Parser(lexer.lex(fileSource), Grammar())
-            val result = linter.lint(parser.parse())
+            val result = linter.lint(parser.parse().asSequence().toList())
 
             if (result.approved) {
                 println(result.messages)
