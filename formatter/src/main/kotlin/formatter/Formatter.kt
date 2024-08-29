@@ -1,7 +1,5 @@
 package formatter
 
-import java.io.File
-
 class Formatter(private val config: FormatterConfig) {
     fun format(input: String): String {
         var formattedCode = input
@@ -16,15 +14,6 @@ class Formatter(private val config: FormatterConfig) {
         formattedCode = formatNewLineAfterSemicolon(formattedCode)
 
         return formattedCode
-    }
-
-    fun formatFile(
-        inputFilePath: String,
-        outputFilePath: String,
-    ) {
-        val inputCode = File(inputFilePath).readText()
-        val formattedCode = format(inputCode)
-        File(outputFilePath).writeText(formattedCode)
     }
 
     fun formatSingleSpaceBetweenTokens(input: String): String {
