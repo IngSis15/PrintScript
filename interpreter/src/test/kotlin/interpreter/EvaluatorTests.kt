@@ -157,4 +157,43 @@ class EvaluatorTests {
 
         assertEquals("Hello, world!", result)
     }
+
+    @Test
+    fun `test sum of strings`() {
+        val evaluator = Evaluator()
+        val scope = Scope()
+
+        val left = StringExpr("Hello", Position(0, 0))
+        val right = StringExpr(", World", Position(0, 0))
+        val expr = OperatorExpr(left, "+", right, Position(0, 0))
+
+        val result = evaluator.evaluate(expr, scope)
+        assertEquals("Hello, World", result)
+    }
+
+    @Test
+    fun `test sum of string and number`() {
+        val evaluator = Evaluator()
+        val scope = Scope()
+
+        val left = StringExpr("The number is ", Position(0, 0))
+        val right = NumberExpr(42, Position(0, 0))
+        val expr = OperatorExpr(left, "+", right, Position(0, 0))
+
+        val result = evaluator.evaluate(expr, scope)
+        assertEquals("The number is 42", result)
+    }
+
+    @Test
+    fun `test sum of number and string`() {
+        val evaluator = Evaluator()
+        val scope = Scope()
+
+        val left = NumberExpr(42, Position(0, 0))
+        val right = StringExpr(" is the answer", Position(0, 0))
+        val expr = OperatorExpr(left, "+", right, Position(0, 0))
+
+        val result = evaluator.evaluate(expr, scope)
+        assertEquals("42 is the answer", result)
+    }
 }
