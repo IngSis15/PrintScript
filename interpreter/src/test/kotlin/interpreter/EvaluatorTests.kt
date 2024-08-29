@@ -130,8 +130,8 @@ class EvaluatorTests {
         val interpreter = Interpreter()
         val program =
             listOf<Expression>(
-                DeclareExpr(TypeExpr("x", "Integer", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0)),
-            )
+                DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0)),
+            ).iterator()
 
         interpreter.interpret(program)
 
@@ -146,9 +146,9 @@ class EvaluatorTests {
         val interpreter = Interpreter()
         val program =
             listOf<Expression>(
-                DeclareExpr(TypeExpr("message", "String", Position(0, 0)), StringExpr("Hello, world!", Position(0, 0)), Position(0, 0)),
+                DeclareExpr(TypeExpr("message", "string", Position(0, 0)), StringExpr("Hello, world!", Position(0, 0)), Position(0, 0)),
                 CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
-            )
+            ).iterator()
 
         interpreter.interpret(program)
 
