@@ -32,6 +32,9 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+group = "org.example"
+version = "1.0-SNAPSHOT"
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
@@ -88,14 +91,15 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/lizlubelczyk/PrintScript")
             credentials {
-                username = System.getenv("USERNAME")
-                password = System.getenv("PASSWORD")
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
 
     publications {
         create<MavenPublication>("gpr") {
+            version = "1.0"
             from(components["kotlin"])
         }
     }
