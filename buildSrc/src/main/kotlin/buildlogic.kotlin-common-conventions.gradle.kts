@@ -32,6 +32,9 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+group = "org.example"
+version = "1.0-SNAPSHOT"
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
@@ -96,6 +99,7 @@ publishing {
 
     publications {
         create<MavenPublication>("gpr") {
+            version = "1.0"
             from(components["kotlin"])
         }
     }
