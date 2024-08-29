@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     api(project(":token"))
+    api(project(":lib"))
 }

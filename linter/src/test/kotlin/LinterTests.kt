@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import parser.Grammar
 import parser.Parser
+import source.StringReader
 
 class LinterTests {
     fun readLintingRulesConfig(): JSONObject {
@@ -19,7 +20,7 @@ class LinterTests {
     }
 
     fun lintRunner(codeFilePath: String): Boolean {
-        val codeLines = txtReader.TxtFileReader().readTxtFile(codeFilePath)
+        val codeLines = TxtFileReader().readTxtFile(codeFilePath)
 
         val lexer = Lexer()
         val linter = Linter()
@@ -27,7 +28,7 @@ class LinterTests {
         val results = mutableListOf<LinterResult>()
 
         codeLines.forEachIndexed { _, line ->
-            val tokens = lexer.lex(line)
+            val tokens = lexer.lex(StringReader(line))
             val parser = Parser(tokens, Grammar())
             val expressionList = parser.parse()
             val lintingResult = linter.lint(expressionList)

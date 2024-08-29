@@ -1,4 +1,4 @@
-package org.example.formatter
+package formatter
 
 data class FormatterConfig(
     val spaceBeforeColon: Boolean,

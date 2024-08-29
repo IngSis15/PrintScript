@@ -70,10 +70,8 @@ kover {
     reports {
         filters {
             excludes {
-                packages("ast")
-                packages("token")
-                packages("runner")
-                packages("txtReader")
+                packages("ast", "token", "cli")
+                classes("AppKt")
             }
         }
         verify {

@@ -1,4 +1,4 @@
-package org.example.formatter
+package formatter
 
 import java.io.File
 

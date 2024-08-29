@@ -1,5 +1,3 @@
-package txtReader
-
 import java.io.File
 
 class TxtFileReader {
