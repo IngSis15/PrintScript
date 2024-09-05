@@ -6,7 +6,7 @@ import linter.linterRules.LinterRuleSetter
 class Linter(val path: String) {
     private val ruleSet = LinterRuleSetter().setRules(path)
 
-    fun lint(expressionList: List<Expression>): LinterResult {
+    fun lint(expressionList: Iterator<Expression>): LinterResult {
         val listOfMessages = mutableListOf<String>()
         expressionList.forEach { expression ->
             val (valid, pos) = ruleSet.isValid(expression)
