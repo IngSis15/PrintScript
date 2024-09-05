@@ -1,12 +1,13 @@
 package linter
 
 import ast.Expression
-import linter.linterRules.RulesCompositeSetter
+import linter.linterRules.LinterRuleSetter
 
-class Linter {
-    fun lint(expressionList: List<Expression>): LinterResult {
+class Linter(val path: String) {
+    private val ruleSet = LinterRuleSetter().setRules(path)
+
+    fun lint(expressionList: Iterator<Expression>): LinterResult {
         val listOfMessages = mutableListOf<String>()
-        val ruleSet = RulesCompositeSetter().setRules()
         expressionList.forEach { expression ->
             val (valid, pos) = ruleSet.isValid(expression)
             if (!valid) {

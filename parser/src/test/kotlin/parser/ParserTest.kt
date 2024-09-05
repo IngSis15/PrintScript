@@ -22,7 +22,7 @@ class ParserTest {
         expected: List<Expression>,
     ) {
         val parser = Parser(tokens.iterator(), Grammar())
-        val actual = parser.parse()
+        val actual = parser.parse().asSequence().toList()
         assertEquals(expected, actual)
     }
 
@@ -91,12 +91,13 @@ class ParserTest {
                 Token(TokenType.IDENTIFIER, "x", Position(0, 3)),
                 Token(TokenType.COLON, ":", Position(0, 4)),
                 Token(TokenType.SEMICOLON, ";", Position(0, 5)),
+                Token(TokenType.EOF, "", Position(0, 5)),
             )
 
         val parser = Parser(tokens.iterator(), Grammar())
 
         assertThrows<ParseException> {
-            parser.parse()
+            parser.parse().next()
         }
     }
 

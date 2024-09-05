@@ -2,24 +2,28 @@ package cli
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
-import formatter.Formatter
-import formatter.FormatterConfig
+import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.file
+import com.github.ajalt.clikt.parameters.types.path
+import runner.Runner
+import source.FileWriter
 import java.io.File
 
-class Format : CliktCommand() {
-    private val filePath by argument()
+class Format : CliktCommand(help = "Format PrintScript file") {
+    private val file by argument().file()
+    private val config by option("--config", "-c").file()
+    private val outputPath by option("--output", "-o").path().default(file.toPath())
 
     override fun run() {
-        val config =
-            FormatterConfig(
-                spaceBeforeColon = true,
-                spaceAfterColon = true,
-                spaceAroundAssignment = true,
-                newLinesBeforePrintln = 1,
-            )
-        val formater = Formatter(config)
-        val inputCode = File(filePath).readText()
-        val formattedCode = formater.format(inputCode)
-        File(filePath).writeText(formattedCode)
+        val runner = Runner(listOf(ProgressPrinter()))
+        val fileWriter = FileWriter(outputPath.toString())
+
+        if (config == null) {
+            val configFile = File("/src/main/resources/config.json")
+            runner.runFormat(file, fileWriter, configFile, CliErrorHandler())
+        } else {
+            runner.runFormat(file, fileWriter, config!!, CliErrorHandler())
+        }
     }
 }

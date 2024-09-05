@@ -10,8 +10,9 @@ import ast.NumberExpr
 import ast.OperatorExpr
 import ast.StringExpr
 import ast.TypeExpr
+import source.PrintEmitter
 
-class Evaluator : ExpressionVisitor<Any, Scope> {
+class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any, Scope> {
     fun evaluate(
         expression: Expression,
         scope: Scope,
@@ -68,7 +69,7 @@ class Evaluator : ExpressionVisitor<Any, Scope> {
         context: Scope,
     ): Any {
         val valueToPrint = evaluate(expr.arg, context)
-        println(valueToPrint)
+        printEmitter.print(valueToPrint.toString())
         return valueToPrint
     }
 
@@ -112,8 +113,23 @@ class Evaluator : ExpressionVisitor<Any, Scope> {
                     }
                 else -> throw IllegalArgumentException("Unsupported operator: ${expr.op}")
             }
+        } else if (leftValue is String && rightValue is String) {
+            return when (expr.op) {
+                "+" -> leftValue + rightValue
+                else -> throw IllegalArgumentException("Unsupported operator for strings: ${expr.op}")
+            }
+        } else if (leftValue is String && rightValue is Number) {
+            return when (expr.op) {
+                "+" -> leftValue + rightValue.toString()
+                else -> throw IllegalArgumentException("Unsupported operator for string and number: ${expr.op}")
+            }
+        } else if (leftValue is Number && rightValue is String) {
+            return when (expr.op) {
+                "+" -> leftValue.toString() + rightValue
+                else -> throw IllegalArgumentException("Unsupported operator for number and string: ${expr.op}")
+            }
         } else {
-            throw IllegalArgumentException("Operands must be numbers")
+            throw IllegalArgumentException("Operands must be both numbers, both strings, or one string and one number")
         }
     }
 

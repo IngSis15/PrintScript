@@ -1,14 +1,18 @@
 package interpreter
 
 import ast.Expression
+import source.PrintEmitter
 
 class Interpreter {
-    val scope = Scope()
-
-    fun interpret(program: List<Expression>) {
-        val evaluator = Evaluator()
-        program.forEach {
-            evaluator.evaluate(it, scope)
+    fun interpret(
+        program: Iterator<Expression>,
+        scope: Scope,
+        printEmitter: PrintEmitter,
+    ) {
+        val evaluator = Evaluator(printEmitter)
+        while (program.hasNext()) {
+            val expression = program.next()
+            evaluator.evaluate(expression, scope)
         }
     }
 }

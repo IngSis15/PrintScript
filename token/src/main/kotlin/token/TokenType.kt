@@ -23,4 +23,7 @@ enum class TokenType {
 
     ILLEGAL,
     EOF,
+
+    WHITESPACE,
+    LINEBREAK,
 }
