@@ -99,7 +99,7 @@ publishing {
 
     publications {
         create<MavenPublication>("gpr") {
-            version = "1.0"
+            version = "1.0-SNAPSHOT"
             from(components["kotlin"])
         }
     }
