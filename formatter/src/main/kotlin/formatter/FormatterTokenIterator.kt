@@ -26,6 +26,7 @@ class FormatterTokenIterator(
             TokenType.SEMICOLON -> formatSemicolon(token)
             TokenType.SUM, TokenType.SUB, TokenType.MUL, TokenType.DIV -> formatOperator(token)
             TokenType.WHITESPACE -> formatWhitespace(token)
+            TokenType.STRING_LITERAL -> formatQuotes(token)
             else -> return token
         }
 
@@ -75,5 +76,9 @@ class FormatterTokenIterator(
             return
         }
         nextTokens.add(token)
+    }
+
+    private fun formatQuotes(token: Token) {
+        nextTokens.add(Token(TokenType.STRING_LITERAL, "\"${token.literal}\"", token.start))
     }
 }

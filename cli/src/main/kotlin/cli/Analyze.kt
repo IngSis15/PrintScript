@@ -2,33 +2,23 @@ package cli
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
-import lexer.Lexer
-import linter.Linter
-import parser.Grammar
-import parser.Parser
-import source.FileReader
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.file
+import runner.Runner
 import java.io.File
 
-class Analyze : CliktCommand() {
-    private val filePath by argument()
+class Analyze : CliktCommand(help = "Analyze PrintScript file") {
+    private val file by argument().file()
+    private val config by option("--config", "-c").file()
 
     override fun run() {
-        try {
-            val lexer = Lexer()
-            val linter = Linter()
-            val fileSource = FileReader(File(filePath))
-            val parser = Parser(lexer.lex(fileSource), Grammar())
-            val result = linter.lint(parser.parse().asSequence().toList())
+        val runner = Runner(listOf(ProgressPrinter()))
 
-            if (result.approved) {
-                println(result.messages)
-            } else {
-                result.messages.forEach {
-                    println(it)
-                }
-            }
-        } catch (e: Exception) {
-            println(e.message)
+        if (config == null) {
+            val configFile = File("/src/main/resources/defaultLinter.json")
+            runner.runAnalyze(file, configFile.path, CliErrorHandler())
+        } else {
+            runner.runAnalyze(file, config!!.path, CliErrorHandler())
         }
     }
 }

@@ -10,8 +10,9 @@ import ast.NumberExpr
 import ast.OperatorExpr
 import ast.StringExpr
 import ast.TypeExpr
+import source.PrintEmitter
 
-class Evaluator : ExpressionVisitor<Any, Scope> {
+class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any, Scope> {
     fun evaluate(
         expression: Expression,
         scope: Scope,
@@ -68,7 +69,7 @@ class Evaluator : ExpressionVisitor<Any, Scope> {
         context: Scope,
     ): Any {
         val valueToPrint = evaluate(expr.arg, context)
-        println(valueToPrint)
+        printEmitter.print(valueToPrint.toString())
         return valueToPrint
     }
 
