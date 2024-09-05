@@ -20,6 +20,7 @@ class FormatterTokenIterator(
 
         val token = tokens.next()
         when (token.type) {
+            TokenType.LET_KEYWORD -> formatKeyword(token)
             TokenType.COLON -> formatColon(token)
             TokenType.ASSIGNATION -> formatAssignation(token)
             TokenType.PRINT -> formatPrint(token)
@@ -80,5 +81,10 @@ class FormatterTokenIterator(
 
     private fun formatQuotes(token: Token) {
         nextTokens.add(Token(TokenType.STRING_LITERAL, "\"${token.literal}\"", token.start))
+    }
+
+    private fun formatKeyword(token: Token) {
+        nextTokens.add(token)
+        nextTokens.add(Token(TokenType.WHITESPACE, " ", token.start))
     }
 }
