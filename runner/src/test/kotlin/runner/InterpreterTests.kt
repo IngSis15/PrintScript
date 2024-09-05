@@ -36,14 +36,12 @@ class InterpreterTests {
                 listOf(
                     observer,
                 ),
-                errorHandler,
-                printCollector,
             )
 
         val file = File("src/test/resources/interpreter/$directory/main.ps")
         val expected = readLines("src/test/resources/interpreter/$directory/expected.txt")
 
-        runner.runExecute(file)
+        runner.runExecute(file, errorHandler, printCollector)
 
         val actual = printCollector.getMessages()
 

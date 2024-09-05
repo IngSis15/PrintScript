@@ -10,15 +10,18 @@ import parser.Grammar
 import parser.Parser
 import source.FileReader
 import source.PrintEmitter
+import source.TokenTranslator
+import source.Writer
 import java.io.File
-import java.nio.file.Path
 
 class Runner(
     private val observers: List<Observer>,
-    private val errorHandler: ErrorHandler,
-    private val printEmitter: PrintEmitter,
 ) : Observable {
-    fun runExecute(file: File) {
+    fun runExecute(
+        file: File,
+        errorHandler: ErrorHandler,
+        printEmitter: PrintEmitter,
+    ) {
         try {
             val fileSource = FileReader(file)
             val lexer = Lexer()
@@ -36,8 +39,9 @@ class Runner(
 
     fun runFormat(
         file: File,
-        outputPath: Path,
+        writer: Writer,
         config: File,
+        errorHandler: ErrorHandler,
     ) {
         try {
             val fileSource = FileReader(file)
@@ -46,16 +50,21 @@ class Runner(
 
             notifyObservers(Event(EventType.INFO, "Formatting file: ${file.name}"))
 
-            formatter.format(lexer.lex(fileSource))
+            val tokenTranslator = TokenTranslator(formatter.format(lexer.lex(fileSource)))
+            writer.write(tokenTranslator)
         } catch (e: Exception) {
             errorHandler.handleError(e)
         }
     }
 
-    fun runAnalyze(file: File) {
+    fun runAnalyze(
+        file: File,
+        config: String,
+        errorHandler: ErrorHandler,
+    ) {
         try {
             val lexer = Lexer()
-            val linter = Linter()
+            val linter = Linter(config)
             val fileSource = FileReader(file)
             val parser = Parser(lexer.lex(fileSource), Grammar())
             val result = linter.lint(parser.parse().asSequence().toList())
@@ -75,11 +84,11 @@ class Runner(
     }
 
     override fun addObserver(observer: Observer): Observable {
-        return Runner(observers + observer, errorHandler, printEmitter)
+        return Runner(observers + observer)
     }
 
     override fun removeObserver(observer: Observer): Observable {
-        return Runner(observers - observer, errorHandler, printEmitter)
+        return Runner(observers - observer)
     }
 
     override fun notifyObservers(event: Event) {

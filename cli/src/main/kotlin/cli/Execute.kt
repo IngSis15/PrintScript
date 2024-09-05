@@ -9,7 +9,7 @@ class Execute : CliktCommand(help = "Execute PrintScript file") {
     private val file by argument().file()
 
     override fun run() {
-        val runner = Runner(listOf(ProgressPrinter()), CliErrorHandler(), CliPrinter())
-        runner.runExecute(file)
+        val runner = Runner(listOf(ProgressPrinter()))
+        runner.runExecute(file, CliErrorHandler(), CliPrinter())
     }
 }

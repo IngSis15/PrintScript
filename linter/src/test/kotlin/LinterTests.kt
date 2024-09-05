@@ -12,7 +12,7 @@ import source.StringReader
 import java.io.File
 
 class LinterTests {
-    fun readLintingRulesConfig(path:String): LintingConfig {
+    fun readLintingRulesConfig(path: String): LintingConfig {
         val file = File(path)
         val gson = Gson()
         val jsonContent = file.readText()

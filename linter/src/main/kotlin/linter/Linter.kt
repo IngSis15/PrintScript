@@ -3,9 +3,7 @@ package linter
 import ast.Expression
 import linter.linterRules.LinterRuleSetter
 
-
 class Linter(val path: String) {
-
     private val ruleSet = LinterRuleSetter().setRules(path)
 
     fun lint(expressionList: List<Expression>): LinterResult {

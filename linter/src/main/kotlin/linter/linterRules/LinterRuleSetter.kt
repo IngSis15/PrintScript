@@ -7,7 +7,6 @@ import linter.linterRules.rules.PrintExpressionRule
 import java.io.File
 
 class LinterRuleSetter {
-
     private fun fileToConfig(path: String): LintingConfig {
         val file = File(path)
         val gson = Gson()
@@ -21,6 +20,4 @@ class LinterRuleSetter {
         val printExpressionRule = PrintExpressionRule(lintingRulesConfig.expressionAllowedInPrint)
         return AllRules(listOf(casingRule, printExpressionRule))
     }
-
-
 }

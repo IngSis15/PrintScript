@@ -7,6 +7,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.path
 import runner.Runner
+import source.FileWriter
 import java.io.File
 
 class Format : CliktCommand(help = "Format PrintScript file") {
@@ -15,13 +16,14 @@ class Format : CliktCommand(help = "Format PrintScript file") {
     private val outputPath by option("--output", "-o").path().default(file.toPath())
 
     override fun run() {
-        val runner = Runner(listOf(ProgressPrinter()), CliErrorHandler(), CliPrinter())
+        val runner = Runner(listOf(ProgressPrinter()))
+        val fileWriter = FileWriter(outputPath.toString())
 
         if (config == null) {
             val configFile = File("/src/main/resources/config.json")
-            runner.runFormat(file, outputPath, configFile)
+            runner.runFormat(file, fileWriter, configFile, CliErrorHandler())
         } else {
-            runner.runFormat(file, outputPath, config!!)
+            runner.runFormat(file, fileWriter, config!!, CliErrorHandler())
         }
     }
 }
