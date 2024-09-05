@@ -67,7 +67,7 @@ class Runner(
             val linter = Linter(config)
             val fileSource = FileReader(file)
             val parser = Parser(lexer.lex(fileSource), Grammar())
-            val result = linter.lint(parser.parse().asSequence().toList())
+            val result = linter.lint(parser.parse())
 
             notifyObservers(Event(EventType.INFO, "Analyzing file: ${file.name}"))
 

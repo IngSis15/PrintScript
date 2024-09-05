@@ -39,6 +39,9 @@ class FormatterTests {
 
         runner.runFormat(file, stringWriter, config, errorHandler)
 
+        println(stringWriter.toString())
+        println(expected)
+
         assertEquals(stringWriter.toString(), expected)
     }
 }
