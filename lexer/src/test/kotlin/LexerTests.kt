@@ -48,7 +48,7 @@ class LexerTests {
             listOf(
                 Token(TokenType.PRINT, "println", Position(1, 0)),
                 Token(TokenType.LEFT_PAR, "(", Position(1, 7)),
-                Token(TokenType.STRING_LITERAL, "\"Hello, World!\"", Position(1, 8)),
+                Token(TokenType.STRING_LITERAL, "Hello, World!", Position(1, 8)),
                 Token(TokenType.RIGHT_PAR, ")", Position(1, 23)),
                 Token(TokenType.SEMICOLON, ";", Position(1, 24)),
             )

@@ -3,7 +3,6 @@ package interpreter
 import ast.AssignExpr
 import ast.CallPrintExpr
 import ast.DeclareExpr
-import ast.Expression
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
@@ -17,8 +16,9 @@ import token.Position
 class EvaluatorTests {
     @Test
     fun `test number expression`() {
-        val evaluator = Evaluator()
+        val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
+
         val expr = NumberExpr(5, Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
@@ -27,8 +27,9 @@ class EvaluatorTests {
 
     @Test
     fun `test string expression`() {
-        val evaluator = Evaluator()
+        val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
+
         val expr = StringExpr("hello", Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
@@ -37,7 +38,7 @@ class EvaluatorTests {
 
     @Test
     fun `test variable declaration and retrieval`() {
-        val evaluator = Evaluator()
+        val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
         val declareExpr = DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0))
 
@@ -49,8 +50,9 @@ class EvaluatorTests {
 
     @Test
     fun `test variable assignment`() {
-        val evaluator = Evaluator()
+        val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
+
         val declareExpr = DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0))
         val assignExpr = AssignExpr(IdentifierExpr("x", Position(0, 0)), NumberExpr(20, Position(0, 0)), Position(0, 0))
 
@@ -63,7 +65,7 @@ class EvaluatorTests {
 
     @Test
     fun `test undefined variable access throws exception`() {
-        val evaluator = Evaluator()
+        val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
 
         val exception =
@@ -76,7 +78,7 @@ class EvaluatorTests {
 
     @Test
     fun `test operator expression addition`() {
-        val evaluator = Evaluator()
+        val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
         val expr = OperatorExpr(NumberExpr(5, Position(0, 0)), "+", NumberExpr(3, Position(0, 0)), Position(0, 0))
 
@@ -86,8 +88,9 @@ class EvaluatorTests {
 
     @Test
     fun `test operator expression division by zero`() {
-        val evaluator = Evaluator()
+        val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
+
         val expr = OperatorExpr(NumberExpr(5, Position(0, 0)), "/", NumberExpr(0, Position(0, 0)), Position(0, 0))
 
         val exception =
@@ -100,8 +103,10 @@ class EvaluatorTests {
 
     @Test
     fun `test print expression`() {
-        val evaluator = Evaluator()
+        val printEmitter = PrintCollector()
+        val evaluator = Evaluator(printEmitter)
         val scope = Scope()
+
         val expr = CallPrintExpr(StringExpr("test", Position(0, 0)), Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
@@ -110,7 +115,7 @@ class EvaluatorTests {
 
     @Test
     fun `test string variable declaration`() {
-        val evaluator = Evaluator()
+        val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
 
         val expr =
@@ -126,41 +131,9 @@ class EvaluatorTests {
     }
 
     @Test
-    fun `test interpret with single expression`() {
-        val interpreter = Interpreter()
-        val program =
-            listOf<Expression>(
-                DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0)),
-            ).iterator()
-
-        interpreter.interpret(program)
-
-        val scope = interpreter.scope
-        val result = scope.getVariable("x")?.value
-
-        assertEquals(10, result)
-    }
-
-    @Test
-    fun `test interpret with string expression`() {
-        val interpreter = Interpreter()
-        val program =
-            listOf<Expression>(
-                DeclareExpr(TypeExpr("message", "string", Position(0, 0)), StringExpr("Hello, world!", Position(0, 0)), Position(0, 0)),
-                CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
-            ).iterator()
-
-        interpreter.interpret(program)
-
-        val scope = interpreter.scope
-        val result = scope.getVariable("message")?.value
-
-        assertEquals("Hello, world!", result)
-    }
-
-    @Test
     fun `test sum of strings`() {
-        val evaluator = Evaluator()
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector)
         val scope = Scope()
 
         val left = StringExpr("Hello", Position(0, 0))
@@ -173,7 +146,8 @@ class EvaluatorTests {
 
     @Test
     fun `test sum of string and number`() {
-        val evaluator = Evaluator()
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector)
         val scope = Scope()
 
         val left = StringExpr("The number is ", Position(0, 0))
@@ -186,7 +160,8 @@ class EvaluatorTests {
 
     @Test
     fun `test sum of number and string`() {
-        val evaluator = Evaluator()
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector)
         val scope = Scope()
 
         val left = NumberExpr(42, Position(0, 0))

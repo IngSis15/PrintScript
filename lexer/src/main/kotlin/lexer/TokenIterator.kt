@@ -80,7 +80,6 @@ class TokenIterator(private val input: SourceReader) : Iterator<Token> {
             '"', '\'' -> {
                 val word = StringBuilder()
                 val startColumn = column
-                word.append(input.current())
                 input.advance()
                 column++
                 while (input.hasMore() && input.current() != ch) {
@@ -89,7 +88,6 @@ class TokenIterator(private val input: SourceReader) : Iterator<Token> {
                     column++
                 }
                 if (input.hasMore()) {
-                    word.append(input.current())
                     input.advance()
                     column++
                 }

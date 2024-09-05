@@ -2,25 +2,14 @@ package cli
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
-import interpreter.Interpreter
-import lexer.Lexer
-import parser.Grammar
-import parser.Parser
-import source.FileReader
-import java.io.File
+import com.github.ajalt.clikt.parameters.types.file
+import runner.Runner
 
 class Execute : CliktCommand(help = "Execute PrintScript file") {
-    private val filePath by argument()
+    private val file by argument().file()
 
     override fun run() {
-        try {
-            val fileSource = FileReader(File(filePath))
-            val lexer = Lexer()
-            val parser = Parser(lexer.lex(fileSource), Grammar())
-            val interpreter = Interpreter()
-            interpreter.interpret(parser.parse())
-        } catch (e: Exception) {
-            println(e.message)
-        }
+        val runner = Runner(listOf(ProgressPrinter()), CliErrorHandler(), CliPrinter())
+        runner.runExecute(file)
     }
 }
