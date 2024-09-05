@@ -105,4 +105,14 @@ class FormatterTest {
         val result = TokenStringBuilder(formattedTokens).buildString()
         assertEquals(expected, result)
     }
+
+    @Test
+    fun testFormatKeywords() {
+        val input = "let a: Int = 1"
+        val expected = "let a : Int = 1"
+        val tokens = lexer.lex(StringReader(input))
+        val formattedTokens = formatter.format(tokens)
+        val result = TokenStringBuilder(formattedTokens).buildString()
+        assertEquals(expected, result)
+    }
 }
