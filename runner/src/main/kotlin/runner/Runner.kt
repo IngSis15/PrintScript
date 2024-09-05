@@ -33,7 +33,7 @@ class Runner(
 
             interpreter.interpret(parser.parse(), scope, printEmitter)
         } catch (e: Exception) {
-            errorHandler.handleError(e)
+            errorHandler.handleError(Event(EventType.ERROR, e.message ?: "Unknown error"))
         }
     }
 
@@ -53,7 +53,7 @@ class Runner(
             val tokenTranslator = TokenTranslator(formatter.format(lexer.lex(fileSource)))
             writer.write(tokenTranslator)
         } catch (e: Exception) {
-            errorHandler.handleError(e)
+            errorHandler.handleError(Event(EventType.ERROR, e.message ?: "Unknown error"))
         }
     }
 
@@ -75,11 +75,11 @@ class Runner(
                 notifyObservers(Event(EventType.INFO, result.messages[0]))
             } else {
                 result.messages.forEach {
-                    notifyObservers(Event(EventType.ERROR, it))
+                    errorHandler.handleError(Event(EventType.ERROR, it))
                 }
             }
         } catch (e: Exception) {
-            errorHandler.handleError(e)
+            errorHandler.handleError(Event(EventType.ERROR, e.message ?: "Unknown error"))
         }
     }
 

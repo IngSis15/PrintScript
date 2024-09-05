@@ -1,21 +1,19 @@
 package runner
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import runner.utils.ErrorCollector
-import runner.utils.StringWriter
 import runner.utils.TestObserver
 import java.io.File
 import java.util.stream.Stream
 
-class FormatterTests {
+class LinterTests {
     companion object {
         @JvmStatic
         fun data(): Stream<String> {
             return Stream.of(
-                "simple-test",
-                "test-print",
+                "valid-camelcase",
+                "invalid-camelcase",
             )
         }
     }
@@ -32,14 +30,17 @@ class FormatterTests {
                 ),
             )
 
-        val file = File("src/test/resources/formatter/$directory/main.ps")
-        val expected = File("src/test/resources/formatter/$directory/formatted.ps").readText()
-        val config = File("src/test/resources/formatter/$directory/config.json")
+        val file = File("src/test/resources/linter/$directory/main.ps")
+        val config = "src/test/resources/linter/$directory/config.json"
 
-        val stringWriter = StringWriter()
+        runner.runAnalyze(file, config, errorHandler)
 
-        runner.runFormat(file, stringWriter, config, errorHandler)
+        println(errorHandler.getErrors())
 
-        assertEquals(stringWriter.toString(), expected)
+        if (directory.startsWith("invalid")) {
+            assert(errorHandler.getErrors().isNotEmpty())
+        } else {
+            assert(errorHandler.getErrors().isEmpty())
+        }
     }
 }

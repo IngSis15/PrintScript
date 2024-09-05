@@ -1,5 +1,5 @@
 package runner
 
 interface ErrorHandler {
-    fun handleError(error: Throwable)
+    fun handleError(error: Event)
 }
