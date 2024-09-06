@@ -15,7 +15,7 @@ class Analyze : CliktCommand(help = "Analyze PrintScript file") {
         val runner = Runner(listOf(ProgressPrinter()))
 
         if (config == null) {
-            val configFile = File("/src/main/resources/defaultLinter.json")
+            val configFile = File("src/main/resources/defaultLinter.json")
             runner.runAnalyze(file, configFile.path, CliErrorHandler())
         } else {
             runner.runAnalyze(file, config!!.path, CliErrorHandler())
