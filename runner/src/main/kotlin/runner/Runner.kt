@@ -24,7 +24,7 @@ class Runner(
     ) {
         try {
             val fileSource = FileReader(file)
-            val lexer = Lexer()
+            val lexer = Lexer("1.0")
             val parser = Parser(lexer.lex(fileSource), Grammar())
             val interpreter = Interpreter()
             val scope = Scope()
@@ -45,7 +45,7 @@ class Runner(
     ) {
         try {
             val fileSource = FileReader(file)
-            val lexer = Lexer()
+            val lexer = Lexer("1.0")
             val formatter = Formatter(FormatterConfig.fileToConfig(config))
 
             notifyObservers(Event(EventType.INFO, "Formatting file: ${file.name}"))
@@ -63,7 +63,7 @@ class Runner(
         errorHandler: ErrorHandler,
     ) {
         try {
-            val lexer = Lexer()
+            val lexer = Lexer("1.0")
             val linter = Linter(config)
             val fileSource = FileReader(file)
             val parser = Parser(lexer.lex(fileSource), Grammar())

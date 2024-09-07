@@ -14,7 +14,7 @@ class FormatterTest {
             newLinesBeforePrintln = 1,
         )
     private val formatter = Formatter(config)
-    private val lexer = Lexer()
+    private val lexer = Lexer("1.0")
 
     @Test
     fun testFormatSpaceAroundColon() {
