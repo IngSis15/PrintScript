@@ -1,29 +1,29 @@
 package lexer.tokenizeStrategies
 
 import lexer.TokenizeStrategy
-import source.SourceReader
 import token.Position
 import token.Token
 import token.TokenType
+import java.io.InputStream
 
 class StringLiteralStrategy(private val delimiter: Char) : TokenizeStrategy {
     override fun lex(
-        input: SourceReader,
+        input: InputStream,
         line: Int,
         column: Int,
     ): Pair<Token, Int> {
         val word = StringBuilder()
         val startColumn = column
         var col = column
-        input.advance()
+        var currentChar = input.read()
         col++
-        while (input.hasMore() && input.current() != delimiter) {
-            word.append(input.current())
-            input.advance()
+        while (currentChar != -1 && currentChar.toChar() != delimiter) {
+            word.append(currentChar.toChar())
+            currentChar = input.read()
             col++
         }
-        if (input.hasMore()) {
-            input.advance()
+        if (currentChar != -1) {
+            currentChar = input.read()
             col++
         }
         return Pair(Token(TokenType.STRING_LITERAL, word.toString(), Position(line, startColumn)), col)

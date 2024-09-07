@@ -1,25 +1,28 @@
 package lexer.tokenizeStrategies
 
 import lexer.TokenizeStrategy
-import source.SourceReader
 import token.Position
 import token.Token
 import token.TokenType
+import java.io.InputStream
 
 class NumberLiteralStrategy : TokenizeStrategy {
     override fun lex(
-        input: SourceReader,
+        input: InputStream,
         line: Int,
         column: Int,
     ): Pair<Token, Int> {
         val word = StringBuilder()
         val startColumn = column
         var col = column
-        while (input.hasMore() && (input.current() in '0'..'9' || input.current() == '.')) {
-            word.append(input.current())
-            input.advance()
+        var currentChar = input.read()
+
+        while (currentChar != -1 && (currentChar.toChar() in '0'..'9' || currentChar.toChar() == '.')) {
+            word.append(currentChar.toChar())
+            currentChar = input.read()
             col++
         }
+
         return Pair(Token(TokenType.NUMBER_LITERAL, word.toString(), Position(line, startColumn)), col)
     }
 }

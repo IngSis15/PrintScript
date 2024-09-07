@@ -1,16 +1,17 @@
 import lexer.Lexer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import source.StringReader
 import token.Position
 import token.Token
 import token.TokenType
+import java.io.ByteArrayInputStream
 
 class LexerTests {
     @Test
     fun testLetKeyword() {
         val lexer = Lexer("1.0")
-        val tokens = lexer.lex(StringReader("let x: number;"))
+        val inputStream = ByteArrayInputStream("let x: number;".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.LET_KEYWORD, "let", Position(1, 0)),
@@ -27,7 +28,8 @@ class LexerTests {
     @Test
     fun testVariableAssignment() {
         val lexer = Lexer("1.0")
-        val tokens = lexer.lex(StringReader("x = 5;"))
+        val inputStream = ByteArrayInputStream("x = 5;".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.IDENTIFIER, "x", Position(1, 0)),
@@ -43,7 +45,8 @@ class LexerTests {
     @Test
     fun testPrintLnFunction() {
         val lexer = Lexer("1.0")
-        val tokens = lexer.lex(StringReader("println(\"Hello, World!\");"))
+        val inputStream = ByteArrayInputStream("println(\"Hello, World!\");".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.PRINT, "println", Position(1, 0)),
@@ -60,7 +63,8 @@ class LexerTests {
     @Test
     fun testArithmeticExpression() {
         val lexer = Lexer("1.0")
-        val tokens = lexer.lex(StringReader("x = 5 + 3 - 2 * 4 / 2;"))
+        val inputStream = ByteArrayInputStream("x = 5 + 3 - 2 * 4 / 2;".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.IDENTIFIER, "x", Position(1, 0)),
@@ -84,7 +88,8 @@ class LexerTests {
     @Test
     fun testNewlineHandling() {
         val lexer = Lexer("1.0")
-        val tokens = lexer.lex(StringReader("let x = 5;\nprintln(x);"))
+        val inputStream = ByteArrayInputStream("let x = 5;\nprintln(x);".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.LET_KEYWORD, "let", Position(1, 0)),
@@ -106,7 +111,8 @@ class LexerTests {
     @Test
     fun testConstKeyword() {
         val lexer = Lexer("1.1")
-        val tokens = lexer.lex(StringReader("const x = 5;"))
+        val inputStream = ByteArrayInputStream("const x = 5;".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.CONST_KEYWORD, "const", Position(1, 0)),
@@ -122,7 +128,8 @@ class LexerTests {
     @Test
     fun testIfStatement() {
         val lexer = Lexer("1.1")
-        val tokens = lexer.lex(StringReader("if (true) { println(x); }"))
+        val inputStream = ByteArrayInputStream("if (true) { println(x); }".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.IF, "if", Position(1, 0)),
@@ -144,7 +151,8 @@ class LexerTests {
     @Test
     fun testBooleanDeclaration() {
         val lexer = Lexer("1.1")
-        val tokens = lexer.lex(StringReader("let x: boolean = true;"))
+        val inputStream = ByteArrayInputStream("let x: boolean = true;".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.LET_KEYWORD, "let", Position(1, 0)),
@@ -162,7 +170,8 @@ class LexerTests {
     @Test
     fun testElseStatement() {
         val lexer = Lexer("1.1")
-        val tokens = lexer.lex(StringReader("if (true) { println(x); } else { println(y); }"))
+        val inputStream = ByteArrayInputStream("if (true) { println(x); } else { println(y); }".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.IF, "if", Position(1, 0)),
@@ -192,7 +201,8 @@ class LexerTests {
     @Test
     fun testReadInputFunction() {
         val lexer = Lexer("1.1")
-        val tokens = lexer.lex(StringReader("let x = readInput();"))
+        val inputStream = ByteArrayInputStream("let x = readInput();".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.LET_KEYWORD, "let", Position(1, 0)),
@@ -210,7 +220,8 @@ class LexerTests {
     @Test
     fun testReadEnvFunction() {
         val lexer = Lexer("1.1")
-        val tokens = lexer.lex(StringReader("let x = readEnv();"))
+        val inputStream = ByteArrayInputStream("let x = readEnv();".toByteArray())
+        val tokens = lexer.lex(inputStream)
         val expected =
             listOf(
                 Token(TokenType.LET_KEYWORD, "let", Position(1, 0)),

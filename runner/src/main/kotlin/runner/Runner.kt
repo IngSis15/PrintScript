@@ -13,6 +13,7 @@ import source.PrintEmitter
 import source.TokenTranslator
 import source.Writer
 import java.io.File
+import java.io.InputStream
 
 class Runner(
     private val observers: List<Observer>,
@@ -38,15 +39,15 @@ class Runner(
     }
 
     fun runFormat(
-        file: File,
+        input: InputStream,
         writer: Writer,
-        config: File,
+        config: InputStream,
         errorHandler: ErrorHandler,
     ) {
         try {
             val fileSource = FileReader(file)
             val lexer = Lexer("1.0")
-            val formatter = Formatter(FormatterConfig.fileToConfig(config))
+            val formatter = Formatter(FormatterConfig.streamToConfig(config))
 
             notifyObservers(Event(EventType.INFO, "Formatting file: ${file.name}"))
 
