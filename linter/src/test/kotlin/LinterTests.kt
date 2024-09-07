@@ -22,7 +22,7 @@ class LinterTests {
     fun lintRunner(codeFilePath: String): Boolean {
         val codeLines = TxtFileReader().readTxtFile(codeFilePath)
 
-        val lexer = Lexer()
+        val lexer = Lexer("1.0")
         val linter = Linter("src/main/resources/lintingRulesConfig.json")
 
         val results = mutableListOf<LinterResult>()
