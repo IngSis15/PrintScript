@@ -40,4 +40,19 @@ interface ExpressionVisitor<R, C> {
         expr: StringExpr,
         context: C,
     ): R
+
+    fun visit(
+        expr: ReadEnvExpr,
+        context: C,
+    ): R
+
+    fun visit(
+        expr: ConditionalExpr,
+        context: C,
+    ): R
+
+    fun visit(
+        expr: ReadInputExpr,
+        context: C,
+    ): R
 }
