@@ -1,7 +1,7 @@
 package interpreter
 
 import ast.Expression
-import source.PrintEmitter
+import lib.PrintEmitter
 
 class Interpreter {
     fun interpret(

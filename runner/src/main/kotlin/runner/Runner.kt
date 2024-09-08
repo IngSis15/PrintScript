@@ -5,32 +5,29 @@ import formatter.FormatterConfig
 import interpreter.Interpreter
 import interpreter.Scope
 import lexer.Lexer
+import lib.PrintEmitter
+import lib.TokenWriter
 import linter.Linter
 import parser.Grammar
 import parser.Parser
-import source.FileReader
-import source.PrintEmitter
-import source.TokenTranslator
-import source.Writer
-import java.io.File
 import java.io.InputStream
+import java.io.Writer
 
 class Runner(
     private val observers: List<Observer>,
 ) : Observable {
     fun runExecute(
-        file: File,
+        input: InputStream,
         errorHandler: ErrorHandler,
         printEmitter: PrintEmitter,
     ) {
         try {
-            val fileSource = FileReader(file)
-            val lexer = Lexer("1.0")
-            val parser = Parser(lexer.lex(fileSource), Grammar())
+            val lexer = Lexer(input, "1.0")
+            val parser = Parser(lexer.lex(), Grammar())
             val interpreter = Interpreter()
             val scope = Scope()
 
-            notifyObservers(Event(EventType.INFO, "Parsing file: ${file.name}"))
+            notifyObservers(Event(EventType.INFO, "Parsing input."))
 
             interpreter.interpret(parser.parse(), scope, printEmitter)
         } catch (e: Exception) {
@@ -45,32 +42,30 @@ class Runner(
         errorHandler: ErrorHandler,
     ) {
         try {
-            val fileSource = FileReader(file)
-            val lexer = Lexer("1.0")
+            val lexer = Lexer(input, "1.0")
             val formatter = Formatter(FormatterConfig.streamToConfig(config))
 
-            notifyObservers(Event(EventType.INFO, "Formatting file: ${file.name}"))
+            notifyObservers(Event(EventType.INFO, "Formatting input."))
 
-            val tokenTranslator = TokenTranslator(formatter.format(lexer.lex(fileSource)))
-            writer.write(tokenTranslator)
+            val tokenWriter = TokenWriter(formatter.format(lexer.lex()), writer)
+            tokenWriter.write()
         } catch (e: Exception) {
             errorHandler.handleError(Event(EventType.ERROR, e.message ?: "Unknown error"))
         }
     }
 
     fun runAnalyze(
-        file: File,
-        config: String,
+        input: InputStream,
+        config: InputStream,
         errorHandler: ErrorHandler,
     ) {
         try {
-            val lexer = Lexer("1.0")
+            val lexer = Lexer(input, "1.0")
             val linter = Linter(config)
-            val fileSource = FileReader(file)
-            val parser = Parser(lexer.lex(fileSource), Grammar())
+            val parser = Parser(lexer.lex(), Grammar())
             val result = linter.lint(parser.parse())
 
-            notifyObservers(Event(EventType.INFO, "Analyzing file: ${file.name}"))
+            notifyObservers(Event(EventType.INFO, "Analyzing input."))
 
             if (result.approved) {
                 notifyObservers(Event(EventType.INFO, result.messages[0]))

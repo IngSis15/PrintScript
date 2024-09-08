@@ -4,9 +4,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import runner.utils.ErrorCollector
-import runner.utils.StringWriter
 import runner.utils.TestObserver
 import java.io.File
+import java.io.FileInputStream
+import java.io.StringWriter
 import java.util.stream.Stream
 
 class FormatterTests {
@@ -38,7 +39,7 @@ class FormatterTests {
 
         val stringWriter = StringWriter()
 
-        runner.runFormat(file, stringWriter, config, errorHandler)
+        runner.runFormat(FileInputStream(file), stringWriter, FileInputStream(config), errorHandler)
 
         assertEquals(stringWriter.toString(), expected)
     }
