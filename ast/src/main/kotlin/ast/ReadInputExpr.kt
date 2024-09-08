@@ -2,8 +2,11 @@ package ast
 
 import token.Position
 
-class ReadInputExpr(val value: Expression, val pos: Position): Expression {
-    override fun <R, C> accept(visitor: ExpressionVisitor<R, C>, context: C): R {
+class ReadInputExpr(val value: Expression, val pos: Position) : Expression {
+    override fun <R, C> accept(
+        visitor: ExpressionVisitor<R, C>,
+        context: C,
+    ): R {
         return visitor.visit(this, context)
     }
 
