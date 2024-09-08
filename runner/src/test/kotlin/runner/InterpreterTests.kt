@@ -7,6 +7,7 @@ import runner.utils.ErrorCollector
 import runner.utils.PrintCollector
 import runner.utils.TestObserver
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.util.Optional
 import java.util.stream.Stream
@@ -41,7 +42,7 @@ class InterpreterTests {
         val file = File("src/test/resources/interpreter/$directory/main.ps")
         val expected = readLines("src/test/resources/interpreter/$directory/expected.txt")
 
-        runner.runExecute(file, errorHandler, printCollector)
+        runner.runExecute(FileInputStream(file), errorHandler, printCollector)
 
         val actual = printCollector.getMessages()
 

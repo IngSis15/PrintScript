@@ -1,60 +1,40 @@
-import com.google.gson.Gson
 import lexer.Lexer
 import linter.Linter
-import linter.LinterResult
-import linter.linterRules.LintingConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import parser.Grammar
 import parser.Parser
-import source.StringReader
 import java.io.File
+import java.io.FileInputStream
 
 class LinterTests {
-    fun readLintingRulesConfig(path: String): LintingConfig {
-        val file = File(path)
-        val gson = Gson()
-        val jsonContent = file.readText()
-        return gson.fromJson(jsonContent, LintingConfig::class.java)
-    }
+    private fun lintRunner(codeFilePath: String): Boolean {
+        val file = File(codeFilePath)
 
-    fun lintRunner(codeFilePath: String): Boolean {
-        val codeLines = TxtFileReader().readTxtFile(codeFilePath)
+        val lexer = Lexer(FileInputStream(file), "1.0")
+        val linter = Linter(FileInputStream(File("src/main/resources/lintingRulesConfig.json")))
 
-        val lexer = Lexer("1.0")
-        val linter = Linter("src/main/resources/lintingRulesConfig.json")
+        val tokens = lexer.lex()
+        val parser = Parser(tokens, Grammar())
+        val expressionList = parser.parse()
+        val lintingResult = linter.lint(expressionList)
 
-        val results = mutableListOf<LinterResult>()
-
-        codeLines.forEachIndexed { _, line ->
-            val tokens = lexer.lex(StringReader(line))
-            val parser = Parser(tokens, Grammar())
-            val expressionList = parser.parse()
-            val lintingResult = linter.lint(expressionList)
-            if (!lintingResult.approved) {
-                results.addLast(lintingResult)
-            }
-        }
-        return results.size == 0
+        return lintingResult.approved
     }
 
     @Test
     fun camelCase() {
-        val lintingRules = readLintingRulesConfig("src/main/resources/lintingRulesConfig.json")
-        val expected = lintingRules.camelCase
         val path = "src/test/kotlin/camelCase.txt"
         val result = lintRunner(path)
-        assertEquals(expected, result)
+        assertEquals(false, result)
     }
 
     @Test
     fun printExpressionWithOperator() {
-        val lintingRules = readLintingRulesConfig("src/main/resources/lintingRulesConfig.json")
-        val expected = lintingRules.expressionAllowedInPrint
         val path = "src/test/kotlin/printExpression.txt"
         val result = lintRunner(path)
-        assertEquals(expected, result)
+        assertEquals(false, result)
     }
 
     @Test
@@ -66,10 +46,8 @@ class LinterTests {
 
     @Test
     fun snakeCase() {
-        val lintingRules = readLintingRulesConfig("src/main/resources/lintingRulesConfig.json")
-        val expected = !lintingRules.camelCase
         val path = "src/test/kotlin/snakeCase.txt"
         val result = lintRunner(path)
-        assertEquals(expected, result)
+        assertEquals(true, result)
     }
 }

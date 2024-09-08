@@ -1,6 +1,6 @@
 package runner.utils
 
-import source.PrintEmitter
+import lib.PrintEmitter
 
 class PrintCollector : PrintEmitter {
     private val messages = mutableListOf<String>()

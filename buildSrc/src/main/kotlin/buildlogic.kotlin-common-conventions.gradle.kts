@@ -73,7 +73,7 @@ kover {
     reports {
         filters {
             excludes {
-                packages("ast", "token", "cli")
+                packages("ast", "token", "cli", "lib")
                 classes("AppKt")
             }
         }
