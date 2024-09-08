@@ -8,10 +8,10 @@ import ast.NumberExpr
 import ast.OperatorExpr
 import ast.StringExpr
 import ast.TypeExpr
+import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import token.Position
 
 class EvaluatorTests {
     @Test

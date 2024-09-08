@@ -6,10 +6,10 @@ import interpreter.Interpreter
 import interpreter.Scope
 import lexer.Lexer
 import lib.PrintEmitter
-import lib.TokenWriter
 import linter.Linter
 import parser.Grammar
 import parser.Parser
+import token.TokenWriter
 import java.io.InputStream
 import java.io.Writer
 

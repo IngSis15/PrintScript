@@ -3,8 +3,8 @@ package linter.linterRules.rules
 import ast.DeclareExpr
 import ast.Expression
 import ast.TypeExpr
+import lib.Position
 import linter.linterRules.LintingRule
-import token.Position
 
 class CasingRule(val camelCase: Boolean) : LintingRule { // si no es camelCase entonces es snakeCase
     override fun isValid(expression: Expression): Pair<Boolean, Position> {

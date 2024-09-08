@@ -2,7 +2,7 @@ package lexer.tokenizeStrategies
 
 import lexer.Lexer
 import lexer.TokenizeStrategy
-import token.Position
+import lib.Position
 import token.Token
 import token.TokenType
 

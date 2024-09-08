@@ -1,7 +1,7 @@
 import lexer.Lexer
+import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import token.Position
 import token.Token
 import token.TokenType
 import java.io.ByteArrayInputStream

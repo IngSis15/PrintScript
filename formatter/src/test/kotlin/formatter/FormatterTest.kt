@@ -1,9 +1,9 @@
 package formatter
 
 import lexer.Lexer
-import lib.TokenWriter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import token.TokenWriter
 import java.io.StringWriter
 
 class FormatterTest {

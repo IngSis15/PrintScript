@@ -1,5 +1,5 @@
-import lexer.Lexer
-import lexer.TokenizeStrategyFactory
+package lexer
+
 import token.Token
 import token.TokenMapSuite
 import token.TokenType

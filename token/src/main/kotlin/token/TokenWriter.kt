@@ -1,6 +1,5 @@
-package lib
+package token
 
-import token.Token
 import java.io.Writer
 
 class TokenWriter(private val tokens: Iterator<Token>, private val writer: Writer) {

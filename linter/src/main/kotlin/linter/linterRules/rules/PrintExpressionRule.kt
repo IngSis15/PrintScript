@@ -1,10 +1,10 @@
 package linter.linterRules.rules
 
 import ast.Expression
+import lib.Position
 import linter.linterRules.LintingRule
-import token.Position
 
-class PrintExpressionRule(val on: Boolean) : LintingRule {
+class PrintExpressionRule(private val on: Boolean) : LintingRule {
     override fun isValid(expression: Expression): Pair<Boolean, Position> {
         if (!on) {
             if (expression is ast.CallPrintExpr) {

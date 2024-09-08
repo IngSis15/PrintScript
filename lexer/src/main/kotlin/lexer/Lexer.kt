@@ -1,7 +1,6 @@
 package lexer
 
-import TokenIterator
-import token.Position
+import lib.Position
 import token.Token
 import token.TokenMapSuite
 import token.TokenMapSuiteFactory
