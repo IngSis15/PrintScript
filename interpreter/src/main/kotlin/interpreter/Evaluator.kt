@@ -2,12 +2,15 @@ package interpreter
 
 import ast.AssignExpr
 import ast.CallPrintExpr
+import ast.ConditionalExpr
 import ast.DeclareExpr
 import ast.Expression
 import ast.ExpressionVisitor
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
+import ast.ReadEnvExpr
+import ast.ReadInputExpr
 import ast.StringExpr
 import ast.TypeExpr
 import lib.PrintEmitter
@@ -145,5 +148,26 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         context: Scope,
     ): Any {
         return expr.value
+    }
+
+    override fun visit(
+        expr: ReadEnvExpr,
+        context: Scope,
+    ): Any {
+        TODO("Not yet implemented")
+    }
+
+    override fun visit(
+        expr: ConditionalExpr,
+        context: Scope,
+    ): Any {
+        TODO("Not yet implemented")
+    }
+
+    override fun visit(
+        expr: ReadInputExpr,
+        context: Scope,
+    ): Any {
+        TODO("Not yet implemented")
     }
 }

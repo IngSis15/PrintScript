@@ -1,6 +1,6 @@
 package ast
 
-import token.Position
+import lib.Position
 
 class ReadInputExpr(val value: Expression, val pos: Position) : Expression {
     override fun <R, C> accept(

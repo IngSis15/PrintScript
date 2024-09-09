@@ -1,8 +1,14 @@
 package ast
 
-import token.Position
+import lib.Position
 
-class ConditionalExpr(val body: List<Expression>, val elseBody: List<Expression>, val position: Position) : Expression {
+class ConditionalExpr(
+    val condition: Expression,
+    val body: List<Expression>,
+    val elseBody: List<Expression>,
+    val
+    position: Position,
+) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,
