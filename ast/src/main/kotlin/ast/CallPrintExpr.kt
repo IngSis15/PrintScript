@@ -1,6 +1,6 @@
 package ast
 
-import token.Position
+import lib.Position
 
 /*
 PrintScript only supports print expressions.

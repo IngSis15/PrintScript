@@ -1,6 +1,6 @@
 package ast
 
-import token.Position
+import lib.Position
 
 /*
 Represents a string expression: "hello", "world", etc.

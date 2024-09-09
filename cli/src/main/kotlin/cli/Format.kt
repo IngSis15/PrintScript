@@ -7,8 +7,9 @@ import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.path
 import runner.Runner
-import source.FileWriter
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileWriter
 
 class Format : CliktCommand(help = "Format PrintScript file") {
     private val file by argument().file()
@@ -21,9 +22,9 @@ class Format : CliktCommand(help = "Format PrintScript file") {
 
         if (config == null) {
             val configFile = File("src/main/resources/defaultFormatter.json")
-            runner.runFormat(file, fileWriter, configFile, CliErrorHandler())
+            runner.runFormat(FileInputStream(file), fileWriter, FileInputStream(configFile), CliErrorHandler())
         } else {
-            runner.runFormat(file, fileWriter, config!!, CliErrorHandler())
+            runner.runFormat(FileInputStream(file), fileWriter, FileInputStream(config!!), CliErrorHandler())
         }
     }
 }

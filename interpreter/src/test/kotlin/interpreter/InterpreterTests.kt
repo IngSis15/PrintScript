@@ -7,9 +7,9 @@ import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.StringExpr
 import ast.TypeExpr
+import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import token.Position
 
 class InterpreterTests {
     @Test

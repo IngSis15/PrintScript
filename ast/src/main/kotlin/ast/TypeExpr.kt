@@ -1,6 +1,6 @@
 package ast
 
-import token.Position
+import lib.Position
 
 /*
 Represents a type declaration: a: string

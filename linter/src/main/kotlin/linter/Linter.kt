@@ -2,9 +2,10 @@ package linter
 
 import ast.Expression
 import linter.linterRules.LinterRuleSetter
+import java.io.InputStream
 
-class Linter(val path: String) {
-    private val ruleSet = LinterRuleSetter().setRules(path)
+class Linter(config: InputStream) {
+    private val ruleSet = LinterRuleSetter().setRules(config)
 
     fun lint(expressionList: Iterator<Expression>): LinterResult {
         val listOfMessages = mutableListOf<String>()

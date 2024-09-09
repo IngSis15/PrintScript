@@ -4,8 +4,8 @@ import ast.DeclareExpr
 import ast.Expression
 import ast.NumberExpr
 import ast.TypeExpr
+import lib.Position
 import parser.exception.ParseException
-import token.Position
 import token.Token
 import token.TokenType
 

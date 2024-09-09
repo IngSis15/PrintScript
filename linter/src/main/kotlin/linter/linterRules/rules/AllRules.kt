@@ -1,8 +1,8 @@
 package linter.linterRules.rules
 
 import ast.Expression
+import lib.Position
 import linter.linterRules.LintingRule
-import token.Position
 
 class AllRules(val ruleSet: List<LintingRule>) : LintingRule {
     override fun isValid(expression: Expression): Pair<Boolean, Position> {

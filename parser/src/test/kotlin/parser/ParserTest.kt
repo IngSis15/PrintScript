@@ -8,11 +8,11 @@ import ast.NumberExpr
 import ast.OperatorExpr
 import ast.StringExpr
 import ast.TypeExpr
+import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import parser.exception.ParseException
-import token.Position
 import token.Token
 import token.TokenType
 
