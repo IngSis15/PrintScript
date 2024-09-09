@@ -1,6 +1,6 @@
 package ast
 
-import token.Position
+import lib.Position
 
 /*
 Variable declaration expression: let x: string = "hello";

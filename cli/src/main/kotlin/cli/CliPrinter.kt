@@ -1,6 +1,6 @@
 package cli
 
-import source.PrintEmitter
+import lib.PrintEmitter
 
 class CliPrinter : PrintEmitter {
     override fun print(value: String) {

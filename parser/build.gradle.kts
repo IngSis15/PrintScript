@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":ast"))
-    api(project(":token"))
+    implementation(project(":ast"))
+    implementation(project(":token"))
+    implementation(project(":lib"))
 }

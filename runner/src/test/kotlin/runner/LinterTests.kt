@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import runner.utils.ErrorCollector
 import runner.utils.TestObserver
 import java.io.File
+import java.io.FileInputStream
 import java.util.stream.Stream
 
 class LinterTests {
@@ -31,11 +32,9 @@ class LinterTests {
             )
 
         val file = File("src/test/resources/linter/$directory/main.ps")
-        val config = "src/test/resources/linter/$directory/config.json"
+        val config = File("src/test/resources/linter/$directory/config.json")
 
-        runner.runAnalyze(file, config, errorHandler)
-
-        println(errorHandler.getErrors())
+        runner.runAnalyze(FileInputStream(file), FileInputStream(config), errorHandler)
 
         if (directory.startsWith("invalid")) {
             assert(errorHandler.getErrors().isNotEmpty())

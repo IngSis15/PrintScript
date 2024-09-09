@@ -1,6 +1,6 @@
 package ast
 
-import token.Position
+import lib.Position
 
 /*
 Represents an operator expression: a + b, a * b, a / b, a - b

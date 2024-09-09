@@ -1,53 +1,26 @@
-import lexer.TokenizeStrategyFactory
-import source.SourceReader
-import token.Position
+package lexer
+
 import token.Token
 import token.TokenMapSuite
 import token.TokenType
 
-class TokenIterator(private val input: SourceReader, private val tokens: TokenMapSuite, private val version: String) : Iterator<Token> {
-    private val keywords: Map<String, TokenType> = tokens.keywords
-    private val types: Map<String, TokenType> = tokens.types
-    private val operators: Map<Char, TokenType> = tokens.operators
-    private val symbols: Map<Char, TokenType> = tokens.symbols
-
-    private val strategyFactory = TokenizeStrategyFactory(keywords, types, operators, symbols)
-
-    private var line = 1
-    private var column = 0
+class TokenIterator(val lexer: Lexer, tokens: TokenMapSuite, private val version: String) : Iterator<Token> {
+    private val strategyFactory = TokenizeStrategyFactory(tokens)
 
     override fun hasNext(): Boolean {
-        while (input.hasMore() && input.current().isWhitespace()) {
-            if (input.current() == '\n') {
-                line++
-                column = 0
-            } else {
-                column++
-            }
-            input.advance()
-        }
-        return input.hasMore()
+        lexer.skipWhitespace()
+        return lexer.hasMore()
     }
 
     override fun next(): Token {
-        while (input.hasMore() && input.current().isWhitespace()) {
-            if (input.current() == '\n') {
-                line++
-                column = 0
-            } else {
-                column++
-            }
-            input.advance()
+        lexer.skipWhitespace()
+
+        if (!lexer.hasMore()) {
+            return Token(TokenType.EOF, "", lexer.pos())
         }
 
-        if (!input.hasMore()) {
-            return Token(TokenType.EOF, "", Position(line, column))
-        }
-
-        val ch = input.current()
-        val strategy = strategyFactory.getStrategy(version, ch)
-        val lexingResult = strategy.lex(input, line, column)
-        column = lexingResult.second
-        return lexingResult.first
+        val strategy = strategyFactory.getStrategy(version, lexer.current())
+        val token = strategy.lex(lexer)
+        return token
     }
 }

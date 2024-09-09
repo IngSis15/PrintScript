@@ -1,7 +1,7 @@
 package linter.linterRules
 
 import ast.Expression
-import token.Position
+import lib.Position
 
 interface LintingRule {
     fun isValid(expression: Expression): Pair<Boolean, Position>
