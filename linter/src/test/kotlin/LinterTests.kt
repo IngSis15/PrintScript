@@ -3,8 +3,8 @@ import linter.Linter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import parser.Grammar
 import parser.Parser
+import parser.grammar.GrammarV1
 import java.io.File
 import java.io.FileInputStream
 
@@ -16,7 +16,7 @@ class LinterTests {
         val linter = Linter(FileInputStream(File("src/main/resources/lintingRulesConfig.json")))
 
         val tokens = lexer.lex()
-        val parser = Parser(tokens, Grammar())
+        val parser = Parser(tokens, GrammarV1())
         val expressionList = parser.parse()
         val lintingResult = linter.lint(expressionList)
 

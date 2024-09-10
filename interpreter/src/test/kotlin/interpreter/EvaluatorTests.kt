@@ -7,7 +7,6 @@ import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
 import ast.StringExpr
-import ast.TypeExpr
 import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -40,7 +39,7 @@ class EvaluatorTests {
     fun `test variable declaration and retrieval`() {
         val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
-        val declareExpr = DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0))
+        val declareExpr = DeclareExpr("x", "number", NumberExpr(10, Position(0, 0)), true, Position(0, 0))
 
         evaluator.evaluate(declareExpr, scope)
         val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
@@ -53,7 +52,7 @@ class EvaluatorTests {
         val evaluator = Evaluator(PrintCollector())
         val scope = Scope()
 
-        val declareExpr = DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0))
+        val declareExpr = DeclareExpr("x", "number", NumberExpr(10, Position(0, 0)), true, Position(0, 0))
         val assignExpr = AssignExpr(IdentifierExpr("x", Position(0, 0)), NumberExpr(20, Position(0, 0)), Position(0, 0))
 
         evaluator.evaluate(declareExpr, scope)
@@ -120,8 +119,10 @@ class EvaluatorTests {
 
         val expr =
             DeclareExpr(
-                TypeExpr("x", "string", Position(0, 0)),
+                "x",
+                "string",
                 StringExpr("hello", Position(0, 0)),
+                true,
                 Position(0, 0),
             )
 

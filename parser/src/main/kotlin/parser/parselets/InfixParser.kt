@@ -1,6 +1,7 @@
-package parser
+package parser.parselets
 
 import ast.Expression
+import parser.Parser
 import token.Token
 
 interface InfixParser {

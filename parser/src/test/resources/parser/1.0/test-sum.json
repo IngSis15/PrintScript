@@ -1,0 +1,70 @@
+{
+  "tokens": [
+    {
+      "type": "NUMBER_LITERAL",
+      "literal": "1",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "SUM",
+      "literal": "+",
+      "position": {
+        "line": 0,
+        "column": 2
+      }
+    },
+    {
+      "type": "NUMBER_LITERAL",
+      "literal": "2",
+      "position": {
+        "line": 0,
+        "column": 4
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 5
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 0,
+        "column": 6
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "OperatorExpr",
+      "left": {
+        "type": "NumberExpr",
+        "value": "1",
+        "position": {
+          "line": 0,
+          "column": 0
+        }
+      },
+      "operator": "+",
+      "right": {
+        "type": "NumberExpr",
+        "value": "2",
+        "position": {
+          "line": 0,
+          "column": 4
+        }
+      },
+      "position": {
+        "line": 0,
+        "column": 2
+      }
+    }
+  ]
+}

@@ -22,11 +22,6 @@ interface ExpressionVisitor<R, C> {
     ): R
 
     fun visit(
-        expr: TypeExpr,
-        context: C,
-    ): R
-
-    fun visit(
         expr: OperatorExpr,
         context: C,
     ): R
@@ -38,6 +33,26 @@ interface ExpressionVisitor<R, C> {
 
     fun visit(
         expr: StringExpr,
+        context: C,
+    ): R
+
+    fun visit(
+        expr: BooleanExpr,
+        context: C,
+    ): R
+
+    fun visit(
+        expr: ReadEnvExpr,
+        context: C,
+    ): R
+
+    fun visit(
+        expr: ConditionalExpr,
+        context: C,
+    ): R
+
+    fun visit(
+        expr: ReadInputExpr,
         context: C,
     ): R
 }

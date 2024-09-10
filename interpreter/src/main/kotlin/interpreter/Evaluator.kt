@@ -1,15 +1,18 @@
 package interpreter
 
 import ast.AssignExpr
+import ast.BooleanExpr
 import ast.CallPrintExpr
+import ast.ConditionalExpr
 import ast.DeclareExpr
 import ast.Expression
 import ast.ExpressionVisitor
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
+import ast.ReadEnvExpr
+import ast.ReadInputExpr
 import ast.StringExpr
-import ast.TypeExpr
 import lib.PrintEmitter
 
 class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any, Scope> {
@@ -55,13 +58,12 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         expr: DeclareExpr,
         context: Scope,
     ): Any {
-        val variable = evaluate(expr.variable, context) as TypeExpr
-        val value = evaluate(expr.value, context)
+        val value = expr.value?.let { evaluate(it, context) }
 
-        val variableName = variable.name
-        val variableType = variable.type
+        val variableName = expr.name
+        val variableType = expr.type
         context.setVariable(variableName, variableType, value)
-        return value
+        return variableName
     }
 
     override fun visit(
@@ -80,17 +82,13 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         val variable = context.getVariable(expr.name)
 
         if (variable != null) {
-            return variable.value
-        } else {
-            throw IllegalArgumentException("Undefined variable: ${expr.name}")
+            if (variable.value != null) {
+                return variable.value
+            } else {
+                throw IllegalArgumentException("Undefined variable: ${expr.name}")
+            }
         }
-    }
-
-    override fun visit(
-        expr: TypeExpr,
-        context: Scope,
-    ): Any {
-        return expr
+        throw IllegalArgumentException("Undefined variable: ${expr.name}")
     }
 
     override fun visit(
@@ -111,6 +109,7 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
                     } else {
                         throw ArithmeticException("Division by zero")
                     }
+
                 else -> throw IllegalArgumentException("Unsupported operator: ${expr.op}")
             }
         } else if (leftValue is String && rightValue is String) {
@@ -145,5 +144,33 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         context: Scope,
     ): Any {
         return expr.value
+    }
+
+    override fun visit(
+        expr: ReadEnvExpr,
+        context: Scope,
+    ): Any {
+        TODO("Not yet implemented")
+    }
+
+    override fun visit(
+        expr: ConditionalExpr,
+        context: Scope,
+    ): Any {
+        TODO("Not yet implemented")
+    }
+
+    override fun visit(
+        expr: ReadInputExpr,
+        context: Scope,
+    ): Any {
+        TODO("Not yet implemented")
+    }
+
+    override fun visit(
+        expr: BooleanExpr,
+        context: Scope,
+    ): Any {
+        TODO("Not yet implemented")
     }
 }

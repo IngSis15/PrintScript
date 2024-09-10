@@ -1,0 +1,69 @@
+{
+  "tokens": [
+    {
+      "type": "PRINT",
+      "literal": "println",
+      "position": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "type": "LEFT_PAR",
+      "literal": "(",
+      "position": {
+        "line": 1,
+        "column": 8
+      }
+    },
+    {
+      "type": "STRING_LITERAL",
+      "literal": "Hello, World!",
+      "position": {
+        "line": 1,
+        "column": 9
+      }
+    },
+    {
+      "type": "RIGHT_PAR",
+      "literal": ")",
+      "position": {
+        "line": 1,
+        "column": 23
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 1,
+        "column": 24
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 1,
+        "column": 25
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "CallPrintExpr",
+      "arg": {
+        "type": "StringExpr",
+        "value": "Hello, World!",
+        "position": {
+          "line": 1,
+          "column": 9
+        }
+      },
+      "position": {
+        "line": 1,
+        "column": 1
+      }
+    }
+  ]
+}

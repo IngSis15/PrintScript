@@ -7,8 +7,8 @@ import interpreter.Scope
 import lexer.Lexer
 import lib.PrintEmitter
 import linter.Linter
-import parser.Grammar
 import parser.Parser
+import parser.grammar.GrammarV1
 import token.TokenWriter
 import java.io.InputStream
 import java.io.Writer
@@ -23,7 +23,7 @@ class Runner(
     ) {
         try {
             val lexer = Lexer(input, "1.0")
-            val parser = Parser(lexer.lex(), Grammar())
+            val parser = Parser(lexer.lex(), GrammarV1())
             val interpreter = Interpreter()
             val scope = Scope()
 
@@ -62,7 +62,7 @@ class Runner(
         try {
             val lexer = Lexer(input, "1.0")
             val linter = Linter(config)
-            val parser = Parser(lexer.lex(), Grammar())
+            val parser = Parser(lexer.lex(), GrammarV1())
             val result = linter.lint(parser.parse())
 
             notifyObservers(Event(EventType.INFO, "Analyzing input."))
