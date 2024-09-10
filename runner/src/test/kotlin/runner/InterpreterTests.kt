@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import runner.utils.ErrorCollector
 import runner.utils.PrintCollector
+import runner.utils.QueueInputProvider
 import runner.utils.TestObserver
 import java.io.File
 import java.io.FileInputStream
@@ -42,7 +43,7 @@ class InterpreterTests {
         val file = File("src/test/resources/interpreter/$directory/main.ps")
         val expected = readLines("src/test/resources/interpreter/$directory/expected.txt")
 
-        runner.runExecute(FileInputStream(file), errorHandler, printCollector)
+        runner.runExecute(FileInputStream(file), errorHandler, printCollector, QueueInputProvider())
 
         val actual = printCollector.getMessages()
 

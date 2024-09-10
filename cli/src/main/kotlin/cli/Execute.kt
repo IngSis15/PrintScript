@@ -11,6 +11,6 @@ class Execute : CliktCommand(help = "Execute PrintScript file") {
 
     override fun run() {
         val runner = Runner(listOf(ProgressPrinter()))
-        runner.runExecute(FileInputStream(file), CliErrorHandler(), CliPrinter())
+        runner.runExecute(FileInputStream(file), CliErrorHandler(), CliPrinter(), CliInputProvider())
     }
 }

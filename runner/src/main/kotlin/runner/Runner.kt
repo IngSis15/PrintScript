@@ -5,6 +5,7 @@ import formatter.FormatterConfig
 import interpreter.Interpreter
 import interpreter.Scope
 import lexer.Lexer
+import lib.InputProvider
 import lib.PrintEmitter
 import linter.Linter
 import parser.Parser
@@ -20,16 +21,17 @@ class Runner(
         input: InputStream,
         errorHandler: ErrorHandler,
         printEmitter: PrintEmitter,
+        inputProvider: InputProvider,
     ) {
         try {
             val lexer = Lexer(input, "1.0")
             val parser = Parser(lexer.lex(), GrammarV1())
             val interpreter = Interpreter()
-            val scope = Scope()
+            val scope = Scope(null)
 
             notifyObservers(Event(EventType.INFO, "Parsing input."))
 
-            interpreter.interpret(parser.parse(), scope, printEmitter)
+            interpreter.interpret(parser.parse(), scope, printEmitter, inputProvider)
         } catch (e: Exception) {
             errorHandler.handleError(Event(EventType.ERROR, e.message ?: "Unknown error"))
         }
