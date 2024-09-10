@@ -1,0 +1,69 @@
+{
+  "tokens": [
+    {
+      "type": "READ_INPUT",
+      "literal": "readEnv",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "LEFT_PAR",
+      "literal": "(",
+      "position": {
+        "line": 0,
+        "column": 7
+      }
+    },
+    {
+      "type": "STRING_LITERAL",
+      "literal": "Insert name:",
+      "position": {
+        "line": 0,
+        "column": 8
+      }
+    },
+    {
+      "type": "RIGHT_PAR",
+      "literal": ")",
+      "position": {
+        "line": 0,
+        "column": 20
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 21
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 0,
+        "column": 22
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "ReadInputExpr",
+      "value": {
+        "type": "StringExpr",
+        "value": "Insert name:",
+        "position": {
+          "line": 0,
+          "column": 8
+        }
+      },
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    }
+  ]
+}

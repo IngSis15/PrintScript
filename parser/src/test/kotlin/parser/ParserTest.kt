@@ -1,12 +1,16 @@
 package parser
 
 import ast.AssignExpr
+import ast.BooleanExpr
 import ast.CallPrintExpr
+import ast.ConditionalExpr
 import ast.DeclareExpr
 import ast.Expression
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
+import ast.ReadEnvExpr
+import ast.ReadInputExpr
 import ast.StringExpr
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -29,6 +33,7 @@ class ParserTest {
         @JvmStatic
         fun data(): Stream<Arguments> {
             return Stream.of(
+                // Version 1.0
                 Arguments.of("test-variable", "1.0"),
                 Arguments.of("test-sum", "1.0"),
                 Arguments.of("test-print", "1.0"),
@@ -36,6 +41,12 @@ class ParserTest {
                 Arguments.of("test-precedence", "1.0"),
                 Arguments.of("test-complex-op", "1.0"),
                 Arguments.of("test-assignation", "1.0"),
+                // Version 1.1
+                Arguments.of("test-const", "1.1"),
+                Arguments.of("test-if", "1.1"),
+                Arguments.of("test-readenv", "1.1"),
+                Arguments.of("test-readinput", "1.1"),
+                Arguments.of("test-boolean", "1.1"),
             )
         }
 
@@ -130,6 +141,12 @@ class ParserTest {
                     PositionJson(expression.pos.line, expression.pos.column),
                 )
 
+            is BooleanExpr ->
+                BooleanExprJson(
+                    expression.value,
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
             is OperatorExpr ->
                 OperatorExprJson(
                     parseExpressionToJson(expression.left),
@@ -148,13 +165,34 @@ class ParserTest {
                 DeclareExprJson(
                     expression.name,
                     expression.type,
-                    parseExpressionToJson(expression.value),
+                    expression.value?.let { parseExpressionToJson(it) },
+                    expression.mutable,
                     PositionJson(expression.pos.line, expression.pos.column),
                 )
 
             is AssignExpr ->
                 AssignExprJson(
                     parseExpressionToJson(expression.left),
+                    parseExpressionToJson(expression.value),
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
+            is ConditionalExpr ->
+                ConditionalExprJson(
+                    parseExpressionToJson(expression.condition),
+                    expression.body.map { parseExpressionToJson(it) },
+                    expression.elseBody.map { parseExpressionToJson(it) },
+                    PositionJson(expression.position.line, expression.position.column),
+                )
+
+            is ReadEnvExpr ->
+                ReadEnvExprJson(
+                    parseExpressionToJson(expression.name),
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
+            is ReadInputExpr ->
+                ReadInputExprJson(
                     parseExpressionToJson(expression.value),
                     PositionJson(expression.pos.line, expression.pos.column),
                 )

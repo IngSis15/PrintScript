@@ -1,6 +1,7 @@
 package interpreter
 
 import ast.AssignExpr
+import ast.BooleanExpr
 import ast.CallPrintExpr
 import ast.ConditionalExpr
 import ast.DeclareExpr
@@ -57,12 +58,12 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         expr: DeclareExpr,
         context: Scope,
     ): Any {
-        val value = evaluate(expr.value, context)
+        val value = expr.value?.let { evaluate(it, context) }
 
         val variableName = expr.name
         val variableType = expr.type
         context.setVariable(variableName, variableType, value)
-        return value
+        return variableName
     }
 
     override fun visit(
@@ -81,10 +82,13 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         val variable = context.getVariable(expr.name)
 
         if (variable != null) {
-            return variable.value
-        } else {
-            throw IllegalArgumentException("Undefined variable: ${expr.name}")
+            if (variable.value != null) {
+                return variable.value
+            } else {
+                throw IllegalArgumentException("Undefined variable: ${expr.name}")
+            }
         }
+        throw IllegalArgumentException("Undefined variable: ${expr.name}")
     }
 
     override fun visit(
@@ -105,6 +109,7 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
                     } else {
                         throw ArithmeticException("Division by zero")
                     }
+
                 else -> throw IllegalArgumentException("Unsupported operator: ${expr.op}")
             }
         } else if (leftValue is String && rightValue is String) {
@@ -157,6 +162,13 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
 
     override fun visit(
         expr: ReadInputExpr,
+        context: Scope,
+    ): Any {
+        TODO("Not yet implemented")
+    }
+
+    override fun visit(
+        expr: BooleanExpr,
         context: Scope,
     ): Any {
         TODO("Not yet implemented")

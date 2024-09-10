@@ -56,17 +56,16 @@ data class StringExprJson(
 ) : ExpectedExprJson()
 
 @Serializable
-@SerialName("IdentifierExpr")
-data class IdentifierExprJson(
-    val name: String,
+@SerialName("BooleanExpr")
+data class BooleanExprJson(
+    val value: Boolean,
     val position: PositionJson,
 ) : ExpectedExprJson()
 
 @Serializable
-@SerialName("TypeExpr")
-data class TypeExprJson(
+@SerialName("IdentifierExpr")
+data class IdentifierExprJson(
     val name: String,
-    val vType: String,
     val position: PositionJson,
 ) : ExpectedExprJson()
 
@@ -75,7 +74,8 @@ data class TypeExprJson(
 data class DeclareExprJson(
     val name: String,
     val vtype: String,
-    val value: ExpectedExprJson,
+    val value: ExpectedExprJson?,
+    val mutable: Boolean,
     val position: PositionJson,
 ) : ExpectedExprJson()
 
@@ -83,6 +83,29 @@ data class DeclareExprJson(
 @SerialName("AssignExpr")
 data class AssignExprJson(
     val left: ExpectedExprJson,
+    val value: ExpectedExprJson,
+    val position: PositionJson,
+) : ExpectedExprJson()
+
+@Serializable
+@SerialName("ConditionalExpr")
+data class ConditionalExprJson(
+    val condition: ExpectedExprJson,
+    val body: List<ExpectedExprJson>,
+    val elseBody: List<ExpectedExprJson>,
+    val position: PositionJson,
+) : ExpectedExprJson()
+
+@Serializable
+@SerialName("ReadEnvExpr")
+data class ReadEnvExprJson(
+    val name: ExpectedExprJson,
+    val position: PositionJson,
+) : ExpectedExprJson()
+
+@Serializable
+@SerialName("ReadInputExpr")
+data class ReadInputExprJson(
     val value: ExpectedExprJson,
     val position: PositionJson,
 ) : ExpectedExprJson()

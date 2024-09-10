@@ -1,0 +1,88 @@
+{
+  "tokens": [
+    {
+      "type": "CONST_KEYWORD",
+      "literal": "const",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "IDENTIFIER",
+      "literal": "x",
+      "position": {
+        "line": 0,
+        "column": 6
+      }
+    },
+    {
+      "type": "COLON",
+      "literal": ":",
+      "position": {
+        "line": 0,
+        "column": 7
+      }
+    },
+    {
+      "type": "NUMBER_TYPE",
+      "literal": "number",
+      "position": {
+        "line": 0,
+        "column": 9
+      }
+    },
+    {
+      "type": "ASSIGNATION",
+      "literal": "=",
+      "position": {
+        "line": 0,
+        "column": 16
+      }
+    },
+    {
+      "type": "NUMBER_LITERAL",
+      "literal": "42",
+      "position": {
+        "line": 0,
+        "column": 18
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 20
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 0,
+        "column": 21
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "DeclareExpr",
+      "name": "x",
+      "vtype": "number",
+      "value": {
+        "type": "NumberExpr",
+        "value": "42",
+        "position": {
+          "line": 0,
+          "column": 18
+        }
+      },
+      "mutable": false,
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    }
+  ]
+}

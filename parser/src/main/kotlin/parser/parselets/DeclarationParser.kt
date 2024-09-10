@@ -2,14 +2,12 @@ package parser.parselets
 
 import ast.DeclareExpr
 import ast.Expression
-import ast.NumberExpr
-import lib.Position
 import parser.Parser
 import parser.exception.ParseException
 import token.Token
 import token.TokenType
 
-class DeclarationParser : PrefixParser {
+class DeclarationParser(val mutable: Boolean) : PrefixParser {
     override fun parse(
         parser: Parser,
         token: Token,
@@ -19,11 +17,11 @@ class DeclarationParser : PrefixParser {
 
         if (parser.match(TokenType.ASSIGNATION)) {
             val value = parser.parseExpression()
-            return DeclareExpr(name, type, value, true, token.start)
+            return DeclareExpr(name, type, value, mutable, token.start)
         }
 
         // TODO: If is not assigned return null value
-        return DeclareExpr(name, type, NumberExpr(0, Position(0, 0)), true, token.start)
+        return DeclareExpr(name, type, null, mutable, token.start)
     }
 
     fun parseType(parser: Parser): String {

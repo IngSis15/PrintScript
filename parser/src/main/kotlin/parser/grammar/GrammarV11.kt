@@ -2,12 +2,13 @@ package parser.grammar
 
 import parser.parselets.AssignParser
 import parser.parselets.BinaryOperatorParser
+import parser.parselets.ConditionParser
 import parser.parselets.DeclarationParser
+import parser.parselets.FnParser
 import parser.parselets.IdentifierParser
 import parser.parselets.InfixParser
 import parser.parselets.LiteralParser
 import parser.parselets.PrefixParser
-import parser.parselets.PrintCallParser
 import token.TokenType
 
 class GrammarV11 : Grammar {
@@ -18,9 +19,14 @@ class GrammarV11 : Grammar {
         prefix(TokenType.IDENTIFIER, IdentifierParser())
         prefix(TokenType.NUMBER_LITERAL, LiteralParser())
         prefix(TokenType.STRING_LITERAL, LiteralParser())
+        prefix(TokenType.BOOLEAN_LITERAL, LiteralParser())
 
-        prefix(TokenType.LET_KEYWORD, DeclarationParser())
-        prefix(TokenType.PRINT, PrintCallParser())
+        prefix(TokenType.CONST_KEYWORD, DeclarationParser(false))
+        prefix(TokenType.LET_KEYWORD, DeclarationParser(true))
+        prefix(TokenType.PRINT, FnParser())
+        prefix(TokenType.READ_INPUT, FnParser())
+        prefix(TokenType.READ_ENV, FnParser())
+        prefix(TokenType.IF, ConditionParser())
 
         infix(TokenType.ASSIGNATION, AssignParser(1))
         infix(TokenType.SUM, BinaryOperatorParser(2))

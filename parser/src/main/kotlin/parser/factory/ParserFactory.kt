@@ -2,6 +2,7 @@ package parser.factory
 
 import parser.Parser
 import parser.grammar.GrammarV1
+import parser.grammar.GrammarV11
 import token.Token
 
 class ParserFactory {
@@ -22,7 +23,7 @@ class ParserFactory {
         }
 
         private fun createParserV11(tokens: Iterator<Token>): Parser {
-            return Parser(tokens, GrammarV1())
+            return Parser(tokens, GrammarV11())
         }
     }
 }

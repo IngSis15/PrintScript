@@ -6,7 +6,7 @@ class Scope {
     fun setVariable(
         name: String,
         type: String,
-        value: Any,
+        value: Any?,
     ) {
         variables[name] = Variable(type, value)
     }

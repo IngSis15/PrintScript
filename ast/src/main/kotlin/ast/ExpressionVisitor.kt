@@ -37,6 +37,11 @@ interface ExpressionVisitor<R, C> {
     ): R
 
     fun visit(
+        expr: BooleanExpr,
+        context: C,
+    ): R
+
+    fun visit(
         expr: ReadEnvExpr,
         context: C,
     ): R

@@ -1,0 +1,135 @@
+{
+  "tokens": [
+    {
+      "type": "IF",
+      "literal": "if",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "LEFT_PAR",
+      "literal": "(",
+      "position": {
+        "line": 0,
+        "column": 3
+      }
+    },
+    {
+      "type": "IDENTIFIER",
+      "literal": "x",
+      "position": {
+        "line": 0,
+        "column": 4
+      }
+    },
+    {
+      "type": "RIGHT_PAR",
+      "literal": ")",
+      "position": {
+        "line": 0,
+        "column": 11
+      }
+    },
+    {
+      "type": "LEFT_BRACE",
+      "literal": "{",
+      "position": {
+        "line": 0,
+        "column": 13
+      }
+    },
+    {
+      "type": "IDENTIFIER",
+      "literal": "y",
+      "position": {
+        "line": 1,
+        "column": 2
+      }
+    },
+    {
+      "type": "ASSIGNATION",
+      "literal": "=",
+      "position": {
+        "line": 1,
+        "column": 4
+      }
+    },
+    {
+      "type": "NUMBER_LITERAL",
+      "literal": "1",
+      "position": {
+        "line": 1,
+        "column": 6
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 1,
+        "column": 7
+      }
+    },
+    {
+      "type": "RIGHT_BRACE",
+      "literal": "}",
+      "position": {
+        "line": 2,
+        "column": 0
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 2,
+        "column": 1
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "ConditionalExpr",
+      "condition": {
+        "type": "IdentifierExpr",
+        "name": "x",
+        "position": {
+          "line": 0,
+          "column": 4
+        }
+      },
+      "body": [
+        {
+          "type": "AssignExpr",
+          "left": {
+            "type": "IdentifierExpr",
+            "name": "y",
+            "position": {
+              "line": 1,
+              "column": 2
+            }
+          },
+          "value": {
+            "type": "NumberExpr",
+            "value": "1",
+            "position": {
+              "line": 1,
+              "column": 6
+            }
+          },
+          "position": {
+            "line": 1,
+            "column": 4
+          }
+        }
+      ],
+      "elseBody": [],
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    }
+  ]
+}

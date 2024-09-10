@@ -1,7 +1,7 @@
-package parser.parselets
+package parser
 
+import ast.ConditionalExpr
 import ast.Expression
-import parser.Parser
 import token.TokenType
 
 class ExpressionIterator(val parser: Parser) : Iterator<Expression> {
@@ -11,7 +11,9 @@ class ExpressionIterator(val parser: Parser) : Iterator<Expression> {
 
     override fun next(): Expression {
         val expr = parser.parseExpression()
-        parser.consume(TokenType.SEMICOLON)
+        if (expr !is ConditionalExpr) {
+            parser.consume(TokenType.SEMICOLON)
+        }
         return expr
     }
 }

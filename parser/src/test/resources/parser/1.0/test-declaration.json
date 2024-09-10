@@ -78,6 +78,7 @@
           "column": 16
         }
       },
+      "mutable": true,
       "position": {
         "line": 0,
         "column": 0

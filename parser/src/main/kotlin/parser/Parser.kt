@@ -2,12 +2,11 @@ package parser
 
 import ast.Expression
 import parser.exception.ParseException
-import parser.grammar.GrammarV1
-import parser.parselets.ExpressionIterator
+import parser.grammar.Grammar
 import token.Token
 import token.TokenType
 
-class Parser(private val tokens: Iterator<Token>, private val grammar: GrammarV1) {
+class Parser(private val tokens: Iterator<Token>, private val grammar: Grammar) {
     private val tokensRead = mutableListOf<Token>()
 
     fun parse(): Iterator<Expression> = ExpressionIterator(this)
