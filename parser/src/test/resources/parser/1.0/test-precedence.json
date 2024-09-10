@@ -1,0 +1,102 @@
+{
+  "tokens": [
+    {
+      "type": "IDENTIFIER",
+      "literal": "x",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "SUM",
+      "literal": "+",
+      "position": {
+        "line": 0,
+        "column": 2
+      }
+    },
+    {
+      "type": "NUMBER_LITERAL",
+      "literal": "1",
+      "position": {
+        "line": 0,
+        "column": 4
+      }
+    },
+    {
+      "type": "MUL",
+      "literal": "*",
+      "position": {
+        "line": 0,
+        "column": 6
+      }
+    },
+    {
+      "type": "NUMBER_LITERAL",
+      "literal": "2",
+      "position": {
+        "line": 0,
+        "column": 8
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 9
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 0,
+        "column": 10
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "OperatorExpr",
+      "left": {
+        "type": "IdentifierExpr",
+        "name": "x",
+        "position": {
+          "line": 0,
+          "column": 0
+        }
+      },
+      "operator": "+",
+      "right": {
+        "type": "OperatorExpr",
+        "left": {
+          "type": "NumberExpr",
+          "value": "1",
+          "position": {
+            "line": 0,
+            "column": 4
+          }
+        },
+        "operator": "*",
+        "right": {
+          "type": "NumberExpr",
+          "value": "2",
+          "position": {
+            "line": 0,
+            "column": 8
+          }
+        },
+        "position": {
+          "line": 0,
+          "column": 6
+        }
+      },
+      "position": {
+        "line": 0,
+        "column": 2
+      }
+    }
+  ]
+}

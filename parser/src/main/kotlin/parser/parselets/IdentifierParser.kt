@@ -1,7 +1,8 @@
-package parser
+package parser.parselets
 
 import ast.Expression
 import ast.IdentifierExpr
+import parser.Parser
 import token.Token
 
 class IdentifierParser : PrefixParser {

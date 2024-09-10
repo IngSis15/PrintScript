@@ -1,8 +1,16 @@
-package parser
+package parser.grammar
 
+import parser.parselets.AssignParser
+import parser.parselets.BinaryOperatorParser
+import parser.parselets.DeclarationParser
+import parser.parselets.IdentifierParser
+import parser.parselets.InfixParser
+import parser.parselets.LiteralParser
+import parser.parselets.PrefixParser
+import parser.parselets.PrintCallParser
 import token.TokenType
 
-class Grammar {
+class GrammarV11 : Grammar {
     private val prefixParsers = mutableMapOf<TokenType, PrefixParser>()
     private val infixParsers = mutableMapOf<TokenType, InfixParser>()
 
@@ -21,29 +29,29 @@ class Grammar {
         infix(TokenType.DIV, BinaryOperatorParser(4))
     }
 
-    fun getPrefixParser(type: TokenType): PrefixParser? {
+    override fun getPrefixParser(type: TokenType): PrefixParser? {
         return prefixParsers[type]
     }
 
-    fun getInfixParser(type: TokenType): InfixParser? {
+    override fun getInfixParser(type: TokenType): InfixParser? {
         return infixParsers[type]
     }
 
-    fun prefix(
+    private fun prefix(
         type: TokenType,
         parser: PrefixParser,
     ) {
         prefixParsers[type] = parser
     }
 
-    fun infix(
+    private fun infix(
         type: TokenType,
         parser: InfixParser,
     ) {
         infixParsers[type] = parser
     }
 
-    fun getPrecedence(type: TokenType): Int {
+    override fun getPrecedence(type: TokenType): Int {
         return infixParsers[type]?.getPrecedence() ?: 0
     }
 }

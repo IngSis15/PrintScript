@@ -1,5 +1,6 @@
 package parser
 
+import ast.AssignExpr
 import ast.CallPrintExpr
 import ast.DeclareExpr
 import ast.Expression
@@ -7,197 +8,158 @@ import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
 import ast.StringExpr
-import ast.TypeExpr
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import parser.exception.ParseException
+import parser.factory.ParserFactory
 import token.Token
 import token.TokenType
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.stream.Stream
 
 class ParserTest {
-    private fun test(
-        tokens: List<Token>,
-        expected: List<Expression>,
-    ) {
-        val parser = Parser(tokens.iterator(), Grammar())
-        val actual = parser.parse().asSequence().toList()
-        assertEquals(expected, actual)
-    }
-
-    @Test
-    fun `test simple variable`() {
-        val tokens =
-            listOf(
-                Token(TokenType.IDENTIFIER, "x", Position(0, 0)),
-                Token(TokenType.SEMICOLON, ";", Position(0, 1)),
-                Token(TokenType.EOF, "", Position(0, 2)),
+    companion object {
+        @JvmStatic
+        fun data(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of("test-variable", "1.0"),
+                Arguments.of("test-sum", "1.0"),
+                Arguments.of("test-print", "1.0"),
+                Arguments.of("test-declaration", "1.0"),
+                Arguments.of("test-precedence", "1.0"),
+                Arguments.of("test-complex-op", "1.0"),
+                Arguments.of("test-assignation", "1.0"),
             )
+        }
 
-        val expected = listOf(IdentifierExpr("x", Position(0, 0)))
-
-        test(tokens, expected)
-    }
-
-    @Test
-    fun `test print call`() {
-        val tokens =
-            listOf(
-                Token(TokenType.PRINT, "println", Position(0, 0)),
-                Token(TokenType.LEFT_PAR, "(", Position(0, 7)),
-                Token(TokenType.STRING_LITERAL, "hello", Position(0, 8)),
-                Token(TokenType.RIGHT_PAR, ")", Position(0, 13)),
-                Token(TokenType.SEMICOLON, ";", Position(0, 14)),
-                Token(TokenType.EOF, "", Position(0, 15)),
+        @JvmStatic
+        fun invalidData(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of("test-invalid-declaration", "1.0"),
             )
-
-        val expected = listOf(CallPrintExpr(StringExpr("hello", Position(0, 8)), Position(0, 0)))
-
-        test(tokens, expected)
-    }
-
-    @Test
-    fun `test simple declaration`() {
-        val tokens =
-            listOf(
-                Token(TokenType.LET_KEYWORD, "let", Position(0, 0)),
-                Token(TokenType.IDENTIFIER, "x", Position(0, 4)),
-                Token(TokenType.COLON, ":", Position(0, 5)),
-                Token(TokenType.NUMBER_TYPE, "number", Position(0, 6)),
-                Token(TokenType.ASSIGNATION, "=", Position(0, 8)),
-                Token(TokenType.NUMBER_LITERAL, "42", Position(0, 10)),
-                Token(TokenType.SEMICOLON, ";", Position(0, 11)),
-                Token(TokenType.EOF, "", Position(0, 11)),
-            )
-
-        val expected =
-            listOf(
-                DeclareExpr(
-                    TypeExpr("x", "number", Position(0, 4)),
-                    NumberExpr(42, Position(0, 10)),
-                    Position(0, 0),
-                ),
-            )
-
-        test(tokens, expected)
-    }
-
-    @Test
-    fun `test unexpected token`() {
-        val tokens =
-            listOf(
-                Token(TokenType.LET_KEYWORD, "let", Position(0, 0)),
-                Token(TokenType.IDENTIFIER, "x", Position(0, 3)),
-                Token(TokenType.COLON, ":", Position(0, 4)),
-                Token(TokenType.SEMICOLON, ";", Position(0, 5)),
-                Token(TokenType.EOF, "", Position(0, 5)),
-            )
-
-        val parser = Parser(tokens.iterator(), Grammar())
-
-        assertThrows<ParseException> {
-            parser.parse().next()
         }
     }
 
-    @Test
-    fun `test basic sum`() {
-        val tokens =
-            listOf(
-                Token(TokenType.NUMBER_LITERAL, "1", Position(0, 0)),
-                Token(TokenType.SUM, "+", Position(0, 2)),
-                Token(TokenType.NUMBER_LITERAL, "2", Position(0, 4)),
-                Token(TokenType.SEMICOLON, ";", Position(0, 5)),
-                Token(TokenType.EOF, "", Position(0, 6)),
-            )
+    @ParameterizedTest
+    @MethodSource("data")
+    fun testParser(
+        testFile: String,
+        version: String,
+    ) {
+        val testCaseJson = Files.readString(Paths.get("src/test/resources/parser/$version/$testFile.json"))
 
-        val expected =
-            listOf(
-                OperatorExpr(
-                    NumberExpr(1, Position(0, 0)),
-                    "+",
-                    NumberExpr(2, Position(0, 4)),
-                    Position(0, 2),
-                ),
-            )
+        val json =
+            Json {
+                prettyPrint = true
+                classDiscriminator = "type" // This is needed for polymorphic serialization
+                ignoreUnknownKeys = true
+            }
 
-        test(tokens, expected)
+        val testCase = json.decodeFromString<TestCaseJson>(testCaseJson)
+
+        val tokens = parseTokensFromJson(testCase.tokens)
+
+        val parser = ParserFactory.createParser(version, tokens.iterator())
+        val actual =
+            parser.parse().asSequence().toList().map {
+                parseExpressionToJson(it)
+            }
+
+        val expectedJson = json.encodeToString(testCase.expected)
+        val actualJson = json.encodeToString(actual)
+
+        assertEquals(expectedJson, actualJson)
     }
 
-    @Test
-    fun `test basic operation with precedence`() {
-        val tokens =
-            listOf(
-                Token(TokenType.NUMBER_LITERAL, "1", Position(0, 0)),
-                Token(TokenType.SUM, "+", Position(0, 2)),
-                Token(TokenType.NUMBER_LITERAL, "2", Position(0, 4)),
-                Token(TokenType.MUL, "*", Position(0, 6)),
-                Token(TokenType.NUMBER_LITERAL, "3", Position(0, 8)),
-                Token(TokenType.SEMICOLON, ";", Position(0, 9)),
-                Token(TokenType.EOF, "", Position(0, 9)),
-            )
+    @ParameterizedTest
+    @MethodSource("invalidData")
+    fun testInvalid(
+        testFile: String,
+        version: String,
+    ) {
+        val testCaseJson = Files.readString(Paths.get("src/test/resources/parser/$version/$testFile.json"))
 
-        val expected =
-            listOf(
-                OperatorExpr(
-                    NumberExpr(1, Position(0, 0)),
-                    "+",
-                    OperatorExpr(
-                        NumberExpr(2, Position(0, 4)),
-                        "*",
-                        NumberExpr(3, Position(0, 8)),
-                        Position(0, 6),
-                    ),
-                    Position(0, 2),
-                ),
-            )
+        val json =
+            Json {
+                prettyPrint = true
+                classDiscriminator = "type" // This is needed for polymorphic serialization
+                ignoreUnknownKeys = true
+            }
 
-        test(tokens, expected)
+        val testTokens = json.decodeFromString<List<TokenJson>>(testCaseJson)
+
+        val tokens = parseTokensFromJson(testTokens)
+
+        val parser = ParserFactory.createParser(version, tokens.iterator())
+
+        assertThrows<ParseException> {
+            parser.parse().asSequence().toList()
+        }
     }
 
-    @Test
-    fun `test complex operation`() {
-        val tokens =
-            listOf(
-                Token(TokenType.NUMBER_LITERAL, "1", Position(0, 0)),
-                Token(TokenType.SUM, "+", Position(0, 2)),
-                Token(TokenType.NUMBER_LITERAL, "2", Position(0, 4)),
-                Token(TokenType.MUL, "*", Position(0, 6)),
-                Token(TokenType.NUMBER_LITERAL, "3", Position(0, 8)),
-                Token(TokenType.SUM, "+", Position(0, 10)),
-                Token(TokenType.NUMBER_LITERAL, "4", Position(0, 12)),
-                Token(TokenType.MUL, "*", Position(0, 14)),
-                Token(TokenType.NUMBER_LITERAL, "5", Position(0, 16)),
-                Token(TokenType.SEMICOLON, ";", Position(0, 17)),
-                Token(TokenType.EOF, "", Position(0, 17)),
-            )
+    fun parseTokensFromJson(jsonTokens: List<TokenJson>): List<Token> {
+        return jsonTokens.map {
+            Token(TokenType.valueOf(it.type), it.literal, Position(it.position.line, it.position.column))
+        }
+    }
 
-        val expected =
-            listOf(
-                OperatorExpr(
-                    OperatorExpr(
-                        NumberExpr(1, Position(0, 0)),
-                        "+",
-                        OperatorExpr(
-                            NumberExpr(2, Position(0, 4)),
-                            "*",
-                            NumberExpr(3, Position(0, 8)),
-                            Position(0, 6),
-                        ),
-                        Position(0, 2),
-                    ),
-                    "+",
-                    OperatorExpr(
-                        NumberExpr(4, Position(0, 12)),
-                        "*",
-                        NumberExpr(5, Position(0, 16)),
-                        Position(0, 14),
-                    ),
-                    Position(0, 10),
-                ),
-            )
+    fun parseExpressionToJson(expression: Expression): ExpectedExprJson {
+        return when (expression) {
+            is IdentifierExpr ->
+                IdentifierExprJson(
+                    expression.name,
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
 
-        test(tokens, expected)
+            is NumberExpr ->
+                NumberExprJson(
+                    expression.value.toString(),
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
+            is StringExpr ->
+                StringExprJson(
+                    expression.value,
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
+            is OperatorExpr ->
+                OperatorExprJson(
+                    parseExpressionToJson(expression.left),
+                    expression.op,
+                    parseExpressionToJson(expression.right),
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
+            is CallPrintExpr ->
+                CallPrintExprJson(
+                    parseExpressionToJson(expression.arg),
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
+            is DeclareExpr ->
+                DeclareExprJson(
+                    expression.name,
+                    expression.type,
+                    parseExpressionToJson(expression.value),
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
+            is AssignExpr ->
+                AssignExprJson(
+                    parseExpressionToJson(expression.left),
+                    parseExpressionToJson(expression.value),
+                    PositionJson(expression.pos.line, expression.pos.column),
+                )
+
+            else -> throw IllegalArgumentException("Invalid type")
+        }
     }
 }

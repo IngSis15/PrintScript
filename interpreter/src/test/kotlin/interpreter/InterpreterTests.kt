@@ -6,7 +6,6 @@ import ast.Expression
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.StringExpr
-import ast.TypeExpr
 import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -19,7 +18,7 @@ class InterpreterTests {
         val interpreter = Interpreter()
         val program =
             listOf<Expression>(
-                DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0)),
+                DeclareExpr("x", "number", NumberExpr(10, Position(0, 0)), true, Position(0, 0)),
             ).iterator()
 
         interpreter.interpret(program, scope, printCollector)
@@ -37,7 +36,7 @@ class InterpreterTests {
 
         val program =
             listOf<Expression>(
-                DeclareExpr(TypeExpr("message", "string", Position(0, 0)), StringExpr("Hello, world!", Position(0, 0)), Position(0, 0)),
+                DeclareExpr("message", "string", StringExpr("Hello, world!", Position(0, 0)), true, Position(0, 0)),
                 CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
             ).iterator()
 
@@ -56,7 +55,7 @@ class InterpreterTests {
 
         val program =
             listOf<Expression>(
-                DeclareExpr(TypeExpr("message", "string", Position(0, 0)), StringExpr("Hello, world!", Position(0, 0)), Position(0, 0)),
+                DeclareExpr("message", "string", StringExpr("Hello, world!", Position(0, 0)), true, Position(0, 0)),
                 CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
             ).iterator()
 

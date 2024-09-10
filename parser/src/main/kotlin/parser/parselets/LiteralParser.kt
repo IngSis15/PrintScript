@@ -1,8 +1,9 @@
-package parser
+package parser.parselets
 
 import ast.Expression
 import ast.NumberExpr
 import ast.StringExpr
+import parser.Parser
 import parser.exception.ParseException
 import token.Token
 import token.TokenType

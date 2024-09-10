@@ -3,9 +3,11 @@ package ast
 import lib.Position
 
 /*
-Variable declaration expression: let x: string = "hello";
+Variable declaration expression:    let x: string = "hello";
+                                    const x: string = "world";
  */
-class DeclareExpr(val variable: Expression, val value: Expression, val pos: Position) : Expression {
+class DeclareExpr(val name: String, val type: String, val value: Expression, val mutable: Boolean, val pos: Position) :
+    Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,
@@ -17,8 +19,10 @@ class DeclareExpr(val variable: Expression, val value: Expression, val pos: Posi
         if (this === other) return true
         if (other !is DeclareExpr) return false
 
-        if (variable != other.variable) return false
+        if (name != other.name) return false
+        if (type != other.type) return false
         if (value != other.value) return false
+        if (mutable != other.mutable) return false
         if (pos != other.pos) return false
 
         return true

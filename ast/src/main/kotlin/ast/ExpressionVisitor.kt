@@ -22,11 +22,6 @@ interface ExpressionVisitor<R, C> {
     ): R
 
     fun visit(
-        expr: TypeExpr,
-        context: C,
-    ): R
-
-    fun visit(
         expr: OperatorExpr,
         context: C,
     ): R

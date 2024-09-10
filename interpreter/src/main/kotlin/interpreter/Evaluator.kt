@@ -12,7 +12,6 @@ import ast.OperatorExpr
 import ast.ReadEnvExpr
 import ast.ReadInputExpr
 import ast.StringExpr
-import ast.TypeExpr
 import lib.PrintEmitter
 
 class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any, Scope> {
@@ -58,11 +57,10 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         expr: DeclareExpr,
         context: Scope,
     ): Any {
-        val variable = evaluate(expr.variable, context) as TypeExpr
         val value = evaluate(expr.value, context)
 
-        val variableName = variable.name
-        val variableType = variable.type
+        val variableName = expr.name
+        val variableType = expr.type
         context.setVariable(variableName, variableType, value)
         return value
     }
@@ -87,13 +85,6 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         } else {
             throw IllegalArgumentException("Undefined variable: ${expr.name}")
         }
-    }
-
-    override fun visit(
-        expr: TypeExpr,
-        context: Scope,
-    ): Any {
-        return expr
     }
 
     override fun visit(
