@@ -58,7 +58,7 @@
       },
       "value": {
         "type": "NumberExpr",
-        "value": "1",
+        "value": "1.0",
         "position": {
           "line": 0,
           "column": 4

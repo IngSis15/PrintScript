@@ -10,7 +10,7 @@
     },
     {
       "type": "IDENTIFIER",
-      "literal": "x",
+      "literal": "a",
       "position": {
         "line": 0,
         "column": 4
@@ -25,8 +25,8 @@
       }
     },
     {
-      "type": "NUMBER_TYPE",
-      "literal": "number",
+      "type": "BOOLEAN_TYPE",
+      "literal": "boolean",
       "position": {
         "line": 0,
         "column": 7
@@ -41,8 +41,8 @@
       }
     },
     {
-      "type": "NUMBER_LITERAL",
-      "literal": "42",
+      "type": "BOOLEAN_LITERAL",
+      "literal": "true",
       "position": {
         "line": 0,
         "column": 16
@@ -53,7 +53,7 @@
       "literal": ";",
       "position": {
         "line": 0,
-        "column": 18
+        "column": 20
       }
     },
     {
@@ -61,24 +61,24 @@
       "literal": "",
       "position": {
         "line": 0,
-        "column": 19
+        "column": 21
       }
     }
   ],
   "expected": [
     {
       "type": "DeclareExpr",
-      "name": "x",
-      "vtype": "number",
+      "vtype": "boolean",
+      "mutable": true,
+      "name": "a",
       "value": {
-        "type": "NumberExpr",
-        "value": "42.0",
+        "type": "BooleanExpr",
+        "value": true,
         "position": {
           "line": 0,
           "column": 16
         }
       },
-      "mutable": true,
       "position": {
         "line": 0,
         "column": 0

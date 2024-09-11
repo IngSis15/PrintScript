@@ -47,6 +47,7 @@ class ParserTest {
                 Arguments.of("test-readenv", "1.1"),
                 Arguments.of("test-readinput", "1.1"),
                 Arguments.of("test-boolean", "1.1"),
+                Arguments.of("test-boolean-declaration", "1.1"),
             )
         }
 

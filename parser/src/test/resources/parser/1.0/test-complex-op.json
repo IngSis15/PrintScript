@@ -78,7 +78,7 @@
       "type": "OperatorExpr",
       "left": {
         "type": "NumberExpr",
-        "value": "1",
+        "value": "1.0",
         "position": {
           "line": 0,
           "column": 0
@@ -89,7 +89,7 @@
         "type": "OperatorExpr",
         "left": {
           "type": "NumberExpr",
-          "value": "2",
+          "value": "2.0",
           "position": {
             "line": 0,
             "column": 4
@@ -100,7 +100,7 @@
           "type": "OperatorExpr",
           "left": {
             "type": "NumberExpr",
-            "value": "3",
+            "value": "3.0",
             "position": {
               "line": 0,
               "column": 8
@@ -109,7 +109,7 @@
           "operator": "/",
           "right": {
             "type": "NumberExpr",
-            "value": "4",
+            "value": "4.0",
             "position": {
               "line": 0,
               "column": 12

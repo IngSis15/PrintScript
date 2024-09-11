@@ -9,6 +9,7 @@ import lib.InputProvider
 import lib.PrintEmitter
 import linter.Linter
 import parser.Parser
+import parser.factory.ParserFactory
 import parser.grammar.GrammarV1
 import token.TokenWriter
 import java.io.InputStream
@@ -19,13 +20,14 @@ class Runner(
 ) : Observable {
     fun runExecute(
         input: InputStream,
+        version: String,
         errorHandler: ErrorHandler,
         printEmitter: PrintEmitter,
         inputProvider: InputProvider,
     ) {
         try {
-            val lexer = Lexer(input, "1.0")
-            val parser = Parser(lexer.lex(), GrammarV1())
+            val lexer = Lexer(input, version)
+            val parser = ParserFactory.createParser(version, lexer.lex())
             val interpreter = Interpreter()
             val scope = Scope(null)
 

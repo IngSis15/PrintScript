@@ -25,10 +25,10 @@ class EvaluatorTests {
         val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
         val scope = Scope(null)
 
-        val expr = NumberExpr(5, Position(0, 0))
+        val expr = NumberExpr(5.0, Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
-        assertEquals(5, result)
+        assertEquals(5.0, result)
     }
 
     @Test
@@ -46,12 +46,12 @@ class EvaluatorTests {
     fun `test variable declaration and retrieval`() {
         val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
         val scope = Scope(null)
-        val declareExpr = DeclareExpr("x", "number", NumberExpr(10, Position(0, 0)), true, Position(0, 0))
+        val declareExpr = DeclareExpr("x", "number", NumberExpr(10.0, Position(0, 0)), true, Position(0, 0))
 
         evaluator.evaluate(declareExpr, scope)
         val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
 
-        assertEquals(10, result)
+        assertEquals(10.0, result)
     }
 
     @Test
@@ -59,14 +59,14 @@ class EvaluatorTests {
         val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
         val scope = Scope(null)
 
-        val declareExpr = DeclareExpr("x", "number", NumberExpr(10, Position(0, 0)), true, Position(0, 0))
-        val assignExpr = AssignExpr(IdentifierExpr("x", Position(0, 0)), NumberExpr(20, Position(0, 0)), Position(0, 0))
+        val declareExpr = DeclareExpr("x", "number", NumberExpr(10.0, Position(0, 0)), true, Position(0, 0))
+        val assignExpr = AssignExpr(IdentifierExpr("x", Position(0, 0)), NumberExpr(20.0, Position(0, 0)), Position(0, 0))
 
         evaluator.evaluate(declareExpr, scope)
         evaluator.evaluate(assignExpr, scope)
         val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
 
-        assertEquals(20, result)
+        assertEquals(20.0, result)
     }
 
     @Test
@@ -83,7 +83,7 @@ class EvaluatorTests {
     fun `test operator expression addition`() {
         val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
         val scope = Scope(null)
-        val expr = OperatorExpr(NumberExpr(5, Position(0, 0)), "+", NumberExpr(3, Position(0, 0)), Position(0, 0))
+        val expr = OperatorExpr(NumberExpr(5.0, Position(0, 0)), "+", NumberExpr(3.0, Position(0, 0)), Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
         assertEquals(8.0, result)
@@ -94,7 +94,7 @@ class EvaluatorTests {
         val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
         val scope = Scope(null)
 
-        val expr = OperatorExpr(NumberExpr(5, Position(0, 0)), "/", NumberExpr(0, Position(0, 0)), Position(0, 0))
+        val expr = OperatorExpr(NumberExpr(5.0, Position(0, 0)), "/", NumberExpr(0.0, Position(0, 0)), Position(0, 0))
 
         val exception =
             assertThrows<ArithmeticException> {
@@ -156,7 +156,7 @@ class EvaluatorTests {
         val scope = Scope(null)
 
         val left = StringExpr("The number is ", Position(0, 0))
-        val right = NumberExpr(42, Position(0, 0))
+        val right = NumberExpr(42.0, Position(0, 0))
         val expr = OperatorExpr(left, "+", right, Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
@@ -169,7 +169,7 @@ class EvaluatorTests {
         val evaluator = Evaluator(printCollector, QueueInputProvider())
         val scope = Scope(null)
 
-        val left = NumberExpr(42, Position(0, 0))
+        val left = NumberExpr(42.0, Position(0, 0))
         val right = StringExpr(" is the answer", Position(0, 0))
         val expr = OperatorExpr(left, "+", right, Position(0, 0))
 
@@ -234,6 +234,55 @@ class EvaluatorTests {
         val expr = BooleanExpr(true, Position(0, 0))
 
         val result = evaluator.evaluate(expr, scope)
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `test read input number`() {
+        val inputProvider = QueueInputProvider()
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector, inputProvider)
+        val scope = Scope(null)
+
+        val expr =
+            DeclareExpr(
+                "x",
+                "number",
+                ReadInputExpr(StringExpr("Enter number", Position(0, 0)), Position(0, 0)),
+                true,
+                Position(0, 0),
+            )
+
+        inputProvider.addInput("42")
+
+        evaluator.evaluate(expr, scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
+        assertEquals(42.0, result)
+    }
+
+    @Test
+    fun `test read input boolean`() {
+        val inputProvider = QueueInputProvider()
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector, inputProvider)
+        val scope = Scope(null)
+
+        val expr =
+            DeclareExpr(
+                "x",
+                "boolean",
+                ReadInputExpr(
+                    StringExpr("Enter boolean", Position(0, 0)),
+                    Position(0, 0),
+                ),
+                true,
+                Position(0, 0),
+            )
+
+        inputProvider.addInput("true")
+
+        evaluator.evaluate(expr, scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
         assertEquals(true, result)
     }
 }

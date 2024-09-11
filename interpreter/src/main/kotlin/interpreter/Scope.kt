@@ -6,9 +6,10 @@ class Scope(private val parent: Scope?) {
     fun setVariable(
         name: String,
         type: String,
+        mutable: Boolean,
         value: Any?,
     ) {
-        variables[name] = Variable(type, value)
+        variables[name] = Variable(type, mutable, value)
     }
 
     fun getVariable(name: String): Variable? {

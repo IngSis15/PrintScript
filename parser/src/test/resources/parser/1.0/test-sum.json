@@ -46,7 +46,7 @@
       "type": "OperatorExpr",
       "left": {
         "type": "NumberExpr",
-        "value": "1",
+        "value": "1.0",
         "position": {
           "line": 0,
           "column": 0
@@ -55,7 +55,7 @@
       "operator": "+",
       "right": {
         "type": "NumberExpr",
-        "value": "2",
+        "value": "2.0",
         "position": {
           "line": 0,
           "column": 4

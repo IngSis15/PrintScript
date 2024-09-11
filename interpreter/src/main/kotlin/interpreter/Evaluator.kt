@@ -17,12 +17,43 @@ import interpreter.exception.EvaluatorException
 import lib.InputProvider
 import lib.PrintEmitter
 
-class Evaluator(private val printEmitter: PrintEmitter, private val inputProvider: InputProvider) : ExpressionVisitor<Any, Scope> {
+class Evaluator(private val printEmitter: PrintEmitter, private val inputProvider: InputProvider) :
+    ExpressionVisitor<Any, Scope> {
     fun evaluate(
         expression: Expression,
         scope: Scope,
     ): Any {
         return expression.accept(this, scope)
+    }
+
+    private fun numberToString(number: Number): String {
+        return if (number.toDouble() % 1 == 0.0) {
+            number.toInt().toString()
+        } else {
+            number.toString()
+        }
+    }
+
+    private fun matchTypes(
+        type: String,
+        value: Any,
+    ): Any {
+        return when (type) {
+            "number" ->
+                value.toString().toDoubleOrNull()
+                    ?: throw IllegalArgumentException("Value cannot be converted to a number: $value")
+
+            "string" -> value.toString()
+            "boolean" ->
+                when (value) {
+                    is Boolean -> value
+                    is String -> value.equals("true", ignoreCase = true) || value.equals("false", ignoreCase = true)
+                    is Number -> value != 0
+                    else -> throw IllegalArgumentException("Value cannot be converted to a boolean: $value")
+                }
+
+            else -> throw IllegalArgumentException("Unsupported value type: ${value::class.simpleName}")
+        }
     }
 
     override fun visit(
@@ -31,29 +62,25 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
     ): Any {
         val value = evaluate(expr.value, context)
 
-        if (expr.left is IdentifierExpr) {
-            val variableName = (expr.left as IdentifierExpr).name
-            val variable =
-                context.getVariable(variableName)
-                    ?: throw IllegalArgumentException("Undefined variable: $variableName")
-
-            val expectedType = variable.type
-            val valueType =
-                when (value) {
-                    is Int -> "number"
-                    is String -> "string"
-                    else -> throw IllegalArgumentException("Unsupported value type: ${value::class.simpleName}")
-                }
-
-            if (expectedType != valueType) {
-                throw IllegalArgumentException("Type mismatch: expected $expectedType, but found $valueType")
-            }
-
-            context.setVariable(variableName, expectedType, value)
-            return value
-        } else {
-            throw IllegalArgumentException("Expected a variable on the left-hand side of the assignment")
+        if (expr.left !is IdentifierExpr) {
+            throw EvaluatorException("Expected variable at ${expr.pos.line}:${expr.pos.column}")
         }
+
+        val variableName = (expr.left as IdentifierExpr).name
+        val variable =
+            context.getVariable(variableName)
+                ?: throw IllegalArgumentException("Undefined variable: $variableName")
+
+        if (!variable.mutable) {
+            throw EvaluatorException("Variable is not mutable: <$variableName> at ${expr.pos.line}:${expr.pos.column}")
+        }
+
+        val expectedType = variable.type
+
+        matchTypes(expectedType, value)
+
+        context.setVariable(variableName, expectedType, true, value)
+        return value
     }
 
     override fun visit(
@@ -61,10 +88,16 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         context: Scope,
     ): Any {
         val value = expr.value?.let { evaluate(it, context) }
-
         val variableName = expr.name
         val variableType = expr.type
-        context.setVariable(variableName, variableType, value)
+
+        if (context.getVariable(variableName) != null) {
+            throw EvaluatorException("Variable already declared: <$variableName> at ${expr.pos.line}:${expr.pos.column}")
+        }
+
+        val newValue = matchTypes(variableType, value ?: throw EvaluatorException("Variable must be initialized"))
+
+        context.setVariable(variableName, variableType, expr.mutable, newValue)
         return variableName
     }
 
@@ -73,7 +106,14 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         context: Scope,
     ): Any {
         val valueToPrint = evaluate(expr.arg, context)
-        printEmitter.print(valueToPrint.toString())
+
+        val formattedValue =
+            when (valueToPrint) {
+                is Number -> numberToString(valueToPrint)
+                else -> valueToPrint
+            }
+
+        printEmitter.print(formattedValue.toString())
         return valueToPrint
     }
 
@@ -121,12 +161,12 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
             }
         } else if (leftValue is String && rightValue is Number) {
             return when (expr.op) {
-                "+" -> leftValue + rightValue.toString()
+                "+" -> leftValue + numberToString(rightValue)
                 else -> throw IllegalArgumentException("Unsupported operator for string and number: ${expr.op}")
             }
         } else if (leftValue is Number && rightValue is String) {
             return when (expr.op) {
-                "+" -> leftValue.toString() + rightValue
+                "+" -> numberToString(leftValue) + rightValue
                 else -> throw IllegalArgumentException("Unsupported operator for number and string: ${expr.op}")
             }
         } else {
@@ -154,7 +194,8 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
     ): Any {
         val envName = evaluate(expr.name, context) as String
         val envValue = System.getenv(envName)
-        return envValue ?: throw EvaluatorException("Environment variable not found: $envName at ${expr.pos.line}:${expr.pos.column}")
+        return envValue
+            ?: throw EvaluatorException("Environment variable not found: <$envName> at ${expr.pos.line}:${expr.pos.column}")
     }
 
     override fun visit(
