@@ -31,8 +31,8 @@ class InterpreterTests {
                 Arguments.of("test-const", "1.1"),
                 Arguments.of("test-readinput", "1.1"),
                 Arguments.of("test-many-inputs", "1.1"),
-              //  Arguments.of("test-conditional", "1.1"),
-                Arguments.of("test-conditional-variable", "1.1")
+                Arguments.of("test-conditional", "1.1"),
+                Arguments.of("test-conditional-variable", "1.1"),
             )
         }
     }

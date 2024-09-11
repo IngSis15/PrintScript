@@ -236,4 +236,53 @@ class EvaluatorTests {
         val result = evaluator.evaluate(expr, scope)
         assertEquals(true, result)
     }
+
+    @Test
+    fun `test read input number`() {
+        val inputProvider = QueueInputProvider()
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector, inputProvider)
+        val scope = Scope(null)
+
+        val expr =
+            DeclareExpr(
+                "x",
+                "number",
+                ReadInputExpr(StringExpr("Enter number", Position(0, 0)), Position(0, 0)),
+                true,
+                Position(0, 0),
+            )
+
+        inputProvider.addInput("42")
+
+        evaluator.evaluate(expr, scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
+        assertEquals(42.0, result)
+    }
+
+    @Test
+    fun `test read input boolean`() {
+        val inputProvider = QueueInputProvider()
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector, inputProvider)
+        val scope = Scope(null)
+
+        val expr =
+            DeclareExpr(
+                "x",
+                "boolean",
+                ReadInputExpr(
+                    StringExpr("Enter boolean", Position(0, 0)),
+                    Position(0, 0),
+                ),
+                true,
+                Position(0, 0),
+            )
+
+        inputProvider.addInput("true")
+
+        evaluator.evaluate(expr, scope)
+        val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
+        assertEquals(true, result)
+    }
 }
