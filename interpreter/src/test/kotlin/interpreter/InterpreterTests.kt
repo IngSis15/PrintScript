@@ -6,6 +6,8 @@ import ast.Expression
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.StringExpr
+import interpreter.utils.PrintCollector
+import interpreter.utils.QueueInputProvider
 import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -14,14 +16,14 @@ class InterpreterTests {
     @Test
     fun `test interpret with single expression`() {
         val printCollector = PrintCollector()
-        val scope = Scope()
+        val scope = Scope(null)
         val interpreter = Interpreter()
         val program =
             listOf<Expression>(
                 DeclareExpr("x", "number", NumberExpr(10, Position(0, 0)), true, Position(0, 0)),
             ).iterator()
 
-        interpreter.interpret(program, scope, printCollector)
+        interpreter.interpret(program, scope, printCollector, QueueInputProvider())
 
         val result = scope.getVariable("x")?.value
 
@@ -31,7 +33,7 @@ class InterpreterTests {
     @Test
     fun `test interpret with string expression`() {
         val printCollector = PrintCollector()
-        val scope = Scope()
+        val scope = Scope(null)
         val interpreter = Interpreter()
 
         val program =
@@ -40,7 +42,7 @@ class InterpreterTests {
                 CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
             ).iterator()
 
-        interpreter.interpret(program, scope, printCollector)
+        interpreter.interpret(program, scope, printCollector, QueueInputProvider())
 
         val result = scope.getVariable("message")?.value
 
@@ -50,7 +52,7 @@ class InterpreterTests {
     @Test
     fun `test interpreter print`() {
         val printCollector = PrintCollector()
-        val scope = Scope()
+        val scope = Scope(null)
         val interpreter = Interpreter()
 
         val program =
@@ -59,7 +61,7 @@ class InterpreterTests {
                 CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
             ).iterator()
 
-        interpreter.interpret(program, scope, printCollector)
+        interpreter.interpret(program, scope, printCollector, QueueInputProvider())
 
         val result = printCollector.getMessages()
 

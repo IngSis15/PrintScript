@@ -13,9 +13,11 @@ import ast.OperatorExpr
 import ast.ReadEnvExpr
 import ast.ReadInputExpr
 import ast.StringExpr
+import interpreter.exception.EvaluatorException
+import lib.InputProvider
 import lib.PrintEmitter
 
-class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any, Scope> {
+class Evaluator(private val printEmitter: PrintEmitter, private val inputProvider: InputProvider) : ExpressionVisitor<Any, Scope> {
     fun evaluate(
         expression: Expression,
         scope: Scope,
@@ -85,10 +87,10 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
             if (variable.value != null) {
                 return variable.value
             } else {
-                throw IllegalArgumentException("Undefined variable: ${expr.name}")
+                throw EvaluatorException("Variable not initialized: <${expr.name}> at ${expr.pos.line}:${expr.pos.column}")
             }
         }
-        throw IllegalArgumentException("Undefined variable: ${expr.name}")
+        throw EvaluatorException("Undefined variable: <${expr.name}> at ${expr.pos.line}:${expr.pos.column}")
     }
 
     override fun visit(
@@ -110,7 +112,7 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
                         throw ArithmeticException("Division by zero")
                     }
 
-                else -> throw IllegalArgumentException("Unsupported operator: ${expr.op}")
+                else -> throw EvaluatorException("Unsupported operator: <${expr.op}> at ${expr.pos.line}:${expr.pos.column}")
             }
         } else if (leftValue is String && rightValue is String) {
             return when (expr.op) {
@@ -150,27 +152,39 @@ class Evaluator(private val printEmitter: PrintEmitter) : ExpressionVisitor<Any,
         expr: ReadEnvExpr,
         context: Scope,
     ): Any {
-        TODO("Not yet implemented")
+        val envName = evaluate(expr.name, context) as String
+        val envValue = System.getenv(envName)
+        return envValue ?: throw EvaluatorException("Environment variable not found: $envName at ${expr.pos.line}:${expr.pos.column}")
     }
 
     override fun visit(
         expr: ConditionalExpr,
         context: Scope,
     ): Any {
-        TODO("Not yet implemented")
+        val condition = evaluate(expr.condition, context)
+        val isTrue = condition as Boolean
+
+        if (isTrue) {
+            expr.body.forEach { evaluate(it, Scope(context)) }
+        } else {
+            expr.elseBody.forEach { evaluate(it, Scope(context)) }
+        }
+
+        return isTrue
     }
 
     override fun visit(
         expr: ReadInputExpr,
         context: Scope,
     ): Any {
-        TODO("Not yet implemented")
+        val input = inputProvider.input()
+        return input
     }
 
     override fun visit(
         expr: BooleanExpr,
         context: Scope,
     ): Any {
-        TODO("Not yet implemented")
+        return expr.value
     }
 }

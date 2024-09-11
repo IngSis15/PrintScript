@@ -1,6 +1,6 @@
 package interpreter
 
-class Scope {
+class Scope(private val parent: Scope?) {
     private val variables = mutableMapOf<String, Variable>()
 
     fun setVariable(
@@ -12,6 +12,6 @@ class Scope {
     }
 
     fun getVariable(name: String): Variable? {
-        return variables[name]
+        return variables[name] ?: parent?.getVariable(name)
     }
 }

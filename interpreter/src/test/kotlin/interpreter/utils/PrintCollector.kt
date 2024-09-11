@@ -1,4 +1,4 @@
-package interpreter
+package interpreter.utils
 
 import lib.PrintEmitter
 
