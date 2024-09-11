@@ -10,7 +10,7 @@ import java.io.FileInputStream
 
 class Execute : CliktCommand(help = "Execute PrintScript file") {
     private val file by argument().file()
-    private val version by option(help = "PrintScript version").default("1.0")
+    private val version by option("--version", "-v").default("1.0")
 
     override fun run() {
         val runner = Runner(listOf(ProgressPrinter()))

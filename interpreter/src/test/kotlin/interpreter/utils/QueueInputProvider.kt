@@ -9,7 +9,7 @@ class QueueInputProvider : InputProvider {
         queue.add(input)
     }
 
-    override fun input(): String {
+    override fun input(message: String): String {
         return queue.removeAt(0)
     }
 }

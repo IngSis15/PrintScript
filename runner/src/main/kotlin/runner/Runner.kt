@@ -8,9 +8,7 @@ import lexer.Lexer
 import lib.InputProvider
 import lib.PrintEmitter
 import linter.Linter
-import parser.Parser
 import parser.factory.ParserFactory
-import parser.grammar.GrammarV1
 import token.TokenWriter
 import java.io.InputStream
 import java.io.Writer
@@ -41,12 +39,13 @@ class Runner(
 
     fun runFormat(
         input: InputStream,
+        version: String,
         writer: Writer,
         config: InputStream,
         errorHandler: ErrorHandler,
     ) {
         try {
-            val lexer = Lexer(input, "1.0")
+            val lexer = Lexer(input, version)
             val formatter = Formatter(FormatterConfig.streamToConfig(config))
 
             notifyObservers(Event(EventType.INFO, "Formatting input."))
@@ -60,13 +59,14 @@ class Runner(
 
     fun runAnalyze(
         input: InputStream,
+        version: String,
         config: InputStream,
         errorHandler: ErrorHandler,
     ) {
         try {
-            val lexer = Lexer(input, "1.0")
-            val linter = Linter(config, "1.0")
-            val parser = Parser(lexer.lex(), GrammarV1())
+            val lexer = Lexer(input, version)
+            val linter = Linter(config, version)
+            val parser = ParserFactory.createParser(version, lexer.lex())
             val result = linter.lint(parser.parse())
 
             notifyObservers(Event(EventType.INFO, "Analyzing input."))

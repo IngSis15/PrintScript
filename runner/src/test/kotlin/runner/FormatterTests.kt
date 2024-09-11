@@ -39,7 +39,7 @@ class FormatterTests {
 
         val stringWriter = StringWriter()
 
-        runner.runFormat(FileInputStream(file), stringWriter, FileInputStream(config), errorHandler)
+        runner.runFormat(FileInputStream(file), "1.0", stringWriter, FileInputStream(config), errorHandler)
 
         assertEquals(stringWriter.toString(), expected)
     }
