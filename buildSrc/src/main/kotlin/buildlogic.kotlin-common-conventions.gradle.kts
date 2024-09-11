@@ -33,7 +33,7 @@ dependencies {
 }
 
 group = "org.example"
-version = "1.1-SNAPSHOT"
+version = "1.1.${System.getenv("GITHUB_RUN_NUMBER")}"
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
@@ -99,7 +99,6 @@ publishing {
 
     publications {
         create<MavenPublication>("gpr") {
-            version = "1.1-SNAPSHOT"
             from(components["kotlin"])
         }
     }
