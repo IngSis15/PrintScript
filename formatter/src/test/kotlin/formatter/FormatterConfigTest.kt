@@ -61,4 +61,19 @@ class FormatterConfigTest {
         val actualConfig = FormatterConfig.streamToConfig(stream)
         assertEquals(expectedConfig, actualConfig)
     }
+
+    @Test
+    fun testStreamToConfigWithTest3() {
+        val stream = FileInputStream("src/test/resources/Test3.JSON")
+        val expectedConfig =
+            FormatterConfig(
+                spaceBeforeColon = true,
+                spaceAfterColon = true,
+                spaceAroundAssignment = false,
+                newLinesBeforePrintln = 1,
+                indentSpaces = 6,
+            )
+        val actualConfig = FormatterConfig.streamToConfig(stream)
+        assertEquals(expectedConfig, actualConfig)
+    }
 }

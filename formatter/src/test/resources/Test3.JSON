@@ -1,0 +1,7 @@
+{
+  "spaceBeforeColon" : true,
+  "spaceAfterColon" : true,
+  "spaceAroundAssignment" : false,
+  "newLinesBeforePrintln" : 1,
+  "indentSpaces" : 6
+}
