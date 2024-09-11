@@ -1,0 +1,88 @@
+{
+  "tokens": [
+    {
+      "type": "LET_KEYWORD",
+      "literal": "let",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "IDENTIFIER",
+      "literal": "a",
+      "position": {
+        "line": 0,
+        "column": 4
+      }
+    },
+    {
+      "type": "COLON",
+      "literal": ":",
+      "position": {
+        "line": 0,
+        "column": 5
+      }
+    },
+    {
+      "type": "BOOLEAN_TYPE",
+      "literal": "boolean",
+      "position": {
+        "line": 0,
+        "column": 7
+      }
+    },
+    {
+      "type": "ASSIGNATION",
+      "literal": "=",
+      "position": {
+        "line": 0,
+        "column": 14
+      }
+    },
+    {
+      "type": "BOOLEAN_LITERAL",
+      "literal": "true",
+      "position": {
+        "line": 0,
+        "column": 16
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 20
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 0,
+        "column": 21
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "DeclareExpr",
+      "vtype": "boolean",
+      "mutable": true,
+      "name": "a",
+      "value": {
+        "type": "BooleanExpr",
+        "value": true,
+        "position": {
+          "line": 0,
+          "column": 16
+        }
+      },
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    }
+  ]
+}

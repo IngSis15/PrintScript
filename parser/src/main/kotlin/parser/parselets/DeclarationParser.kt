@@ -20,7 +20,6 @@ class DeclarationParser(val mutable: Boolean) : PrefixParser {
             return DeclareExpr(name, type, value, mutable, token.start)
         }
 
-        // TODO: If is not assigned return null value
         return DeclareExpr(name, type, null, mutable, token.start)
     }
 
@@ -30,6 +29,8 @@ class DeclarationParser(val mutable: Boolean) : PrefixParser {
             "string"
         } else if (parser.match(TokenType.NUMBER_TYPE)) {
             "number"
+        } else if (parser.match(TokenType.BOOLEAN_TYPE)) {
+            "boolean"
         } else {
             throw ParseException("Expected type declaration")
         }
