@@ -65,7 +65,7 @@ class Runner(
     ) {
         try {
             val lexer = Lexer(input, "1.0")
-            val linter = Linter(config)
+            val linter = Linter(config, "1.0")
             val parser = Parser(lexer.lex(), GrammarV1())
             val result = linter.lint(parser.parse())
 
