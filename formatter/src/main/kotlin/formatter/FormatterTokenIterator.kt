@@ -8,6 +8,7 @@ class FormatterTokenIterator(
     private val config: FormatterConfig,
 ) : Iterator<Token> {
     private var nextTokens: MutableList<Token> = mutableListOf()
+    private var indentLevel = 0
 
     override fun hasNext(): Boolean {
         return nextTokens.isNotEmpty() || tokens.hasNext()
@@ -28,6 +29,10 @@ class FormatterTokenIterator(
             TokenType.SUM, TokenType.SUB, TokenType.MUL, TokenType.DIV -> formatOperator(token)
             TokenType.WHITESPACE -> formatWhitespace(token)
             TokenType.STRING_LITERAL -> formatQuotes(token)
+            TokenType.IF -> formatIf(token)
+            TokenType.LEFT_BRACE -> formatLeftBrace(token)
+            TokenType.RIGHT_BRACE -> formatRightBrace(token)
+            TokenType.READ_ENV, TokenType.READ_INPUT -> formatKeyword(token)
             else -> return token
         }
 
@@ -58,6 +63,7 @@ class FormatterTokenIterator(
         repeat(config.newLinesBeforePrintln) {
             nextTokens.add(Token(TokenType.LINEBREAK, "\n", token.start))
         }
+        nextTokens.add(Token(TokenType.WHITESPACE, " ".repeat(config.indentSpaces * indentLevel), token.start))
         nextTokens.add(token)
     }
 
@@ -84,7 +90,29 @@ class FormatterTokenIterator(
     }
 
     private fun formatKeyword(token: Token) {
+        nextTokens.add(Token(TokenType.WHITESPACE, " ".repeat(config.indentSpaces * indentLevel), token.start))
         nextTokens.add(token)
         nextTokens.add(Token(TokenType.WHITESPACE, " ", token.start))
+    }
+
+    private fun formatIf(token: Token) {
+        nextTokens.add(Token(TokenType.WHITESPACE, " ".repeat(config.indentSpaces * indentLevel), token.start))
+        nextTokens.add(token)
+        nextTokens.add(Token(TokenType.WHITESPACE, " ", token.start))
+    }
+
+    private fun formatLeftBrace(token: Token) {
+        nextTokens.add(token)
+        indentLevel++
+        nextTokens.add(Token(TokenType.LINEBREAK, "\n", token.start))
+    }
+
+    private fun formatRightBrace(token: Token) {
+        indentLevel--
+        nextTokens.add(Token(TokenType.WHITESPACE, " ".repeat(config.indentSpaces * indentLevel), token.start))
+        nextTokens.add(token)
+        if (tokens.hasNext()) {
+            nextTokens.add(Token(TokenType.LINEBREAK, "\n", token.start))
+        }
     }
 }
