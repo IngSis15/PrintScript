@@ -72,7 +72,7 @@
       "vtype": "number",
       "value": {
         "type": "NumberExpr",
-        "value": "42",
+        "value": "42.0",
         "position": {
           "line": 0,
           "column": 16

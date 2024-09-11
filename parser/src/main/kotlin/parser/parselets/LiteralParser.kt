@@ -15,7 +15,7 @@ class LiteralParser : PrefixParser {
         token: Token,
     ): Expression {
         return when (token.type) {
-            TokenType.NUMBER_LITERAL -> NumberExpr(token.literal.toInt(), token.start)
+            TokenType.NUMBER_LITERAL -> NumberExpr(token.literal.toDouble(), token.start)
             TokenType.STRING_LITERAL -> StringExpr(token.literal, token.start)
             TokenType.BOOLEAN_LITERAL -> BooleanExpr(getBoolean(token), token.start)
             else -> throw ParseException("Unexpected token $token")

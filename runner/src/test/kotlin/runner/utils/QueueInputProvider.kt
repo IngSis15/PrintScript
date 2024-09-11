@@ -1,15 +1,10 @@
 package runner.utils
 
 import lib.InputProvider
+import java.util.Queue
 
-class QueueInputProvider : InputProvider {
-    private val queue = mutableListOf<String>()
-
-    fun addInput(input: String) {
-        queue.add(input)
-    }
-
+class QueueInputProvider(private val queue: Queue<String>) : InputProvider {
     override fun input(): String {
-        return queue.removeAt(0)
+        return queue.poll()
     }
 }

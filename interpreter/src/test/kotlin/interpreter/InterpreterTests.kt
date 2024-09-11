@@ -27,7 +27,7 @@ class InterpreterTests {
 
         val result = scope.getVariable("x")?.value
 
-        assertEquals(10, result)
+        assertEquals(10.0, result)
     }
 
     @Test
