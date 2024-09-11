@@ -1,11 +1,15 @@
 package interpreter
 
 import ast.AssignExpr
+import ast.BooleanExpr
 import ast.CallPrintExpr
+import ast.ConditionalExpr
 import ast.DeclareExpr
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.OperatorExpr
+import ast.ReadEnvExpr
+import ast.ReadInputExpr
 import ast.StringExpr
 import interpreter.exception.EvaluatorException
 import interpreter.utils.PrintCollector
@@ -171,5 +175,65 @@ class EvaluatorTests {
 
         val result = evaluator.evaluate(expr, scope)
         assertEquals("42 is the answer", result)
+    }
+
+    @Test
+    fun `test read input expression`() {
+        val inputProvider = QueueInputProvider()
+        val evaluator = Evaluator(PrintCollector(), inputProvider)
+        val scope = Scope(null)
+
+        inputProvider.addInput("user input")
+
+        val valueExpr = StringExpr("Enter input", Position(0, 0))
+
+        val expr = ReadInputExpr(valueExpr, Position(0, 0))
+
+        val result = evaluator.evaluate(expr, scope)
+        assertEquals("user input", result)
+    }
+
+    @Test
+    fun `test conditional expression`() {
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector, QueueInputProvider())
+        val scope = Scope(null)
+
+        val expr =
+            ConditionalExpr(
+                BooleanExpr(true, Position(0, 0)),
+                listOf(
+                    CallPrintExpr(StringExpr("true", Position(0, 0)), Position(0, 0)),
+                ),
+                listOf(
+                    CallPrintExpr(StringExpr("false", Position(0, 0)), Position(0, 0)),
+                ),
+                Position(0, 0),
+            )
+
+        evaluator.evaluate(expr, scope)
+        assertEquals(printCollector.getMessages(), listOf("true"))
+    }
+
+    @Test
+    fun `test read environment variable expression`() {
+        val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
+        val scope = Scope(null)
+
+        val expr = ReadEnvExpr(StringExpr("PATH", Position(0, 0)), Position(0, 0))
+
+        val result = evaluator.evaluate(expr, scope)
+        assertEquals(System.getenv("PATH"), result)
+    }
+
+    @Test
+    fun `test boolean expression`() {
+        val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
+        val scope = Scope(null)
+
+        val expr = BooleanExpr(true, Position(0, 0))
+
+        val result = evaluator.evaluate(expr, scope)
+        assertEquals(true, result)
     }
 }
