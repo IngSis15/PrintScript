@@ -34,7 +34,7 @@ class LinterTests {
         val file = File("src/test/resources/linter/$directory/main.ps")
         val config = File("src/test/resources/linter/$directory/config.json")
 
-        runner.runAnalyze(FileInputStream(file), FileInputStream(config), errorHandler)
+        runner.runAnalyze(FileInputStream(file), "1.0", FileInputStream(config), errorHandler)
 
         if (directory.startsWith("invalid")) {
             assert(errorHandler.getErrors().isNotEmpty())

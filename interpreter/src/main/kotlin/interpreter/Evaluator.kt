@@ -95,7 +95,12 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
             throw EvaluatorException("Variable already declared: <$variableName> at ${expr.pos.line}:${expr.pos.column}")
         }
 
-        val newValue = matchTypes(variableType, value ?: throw EvaluatorException("Variable must be initialized"))
+        val newValue =
+            if (value != null) {
+                matchTypes(variableType, value)
+            } else {
+                null
+            }
 
         context.setVariable(variableName, variableType, expr.mutable, newValue)
         return variableName
@@ -218,7 +223,8 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         expr: ReadInputExpr,
         context: Scope,
     ): Any {
-        val input = inputProvider.input()
+        val message = evaluate(expr.value, context) as String
+        val input = inputProvider.input(message)
         return input
     }
 

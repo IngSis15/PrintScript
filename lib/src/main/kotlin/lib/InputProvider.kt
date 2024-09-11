@@ -1,5 +1,5 @@
 package lib
 
 interface InputProvider {
-    fun input(): String
+    fun input(message: String): String
 }
