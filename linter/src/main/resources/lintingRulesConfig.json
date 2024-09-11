@@ -1,4 +1,5 @@
 {
   "camelCase": false,
-  "expressionAllowedInPrint": false
+  "expressionAllowedInPrint": false,
+  "expressionAllowedInReadInput": false
 }

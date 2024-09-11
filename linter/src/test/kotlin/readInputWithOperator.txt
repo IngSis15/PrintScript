@@ -1,0 +1,1 @@
+let reading : number = 3 + readInput("Enter" + " a number: ") + 2 + readInput("Enter another number: ") + 1;
