@@ -1,0 +1,87 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+object Lexer{
+    Lexer
+    TokenIterator
+    TokenizeStrategy
+}
+object Interpreter{
+    Evaluator
+    Interpreter
+    Scope
+    Variable
+}
+object Runner{
+    Runner
+    ErrorHandler
+    Event
+    Observer
+    Observable
+}
+object Parser{
+    Parser
+    ExpressionIterator
+    ParseException
+    Grammar
+    InfixParser
+    PrefixParser
+}
+object Token{
+    Token
+    TokenWriter
+    TokenMapSuite
+    TokenType
+}
+object AST{
+    Expression
+    ExpressionVisitor
+}
+object CLI{
+    Analyze
+    CLI
+    CliErrorHandler
+    CliInputProvider
+    CliPrinter
+    Execute
+    Format
+}
+object Linter{
+    Linter
+    LinterResult
+    LintingRule
+    LinterRuleSetter
+    LintingConfig
+}
+object Formatter{
+    Formatter
+    FormatterConfig
+    FormatterTokenIterator
+    }
+object Lib{
+    InputProvider
+    Position
+    PrintEmitter
+}
+
+Interpreter -down-> Runner
+Parser -down-> Runner
+Linter -down-> Runner
+Formatter -down-> Runner
+Lexer -down-> Runner
+Runner -down-> CLI
+Token -down-> Lexer
+Token -down-> Parser
+Token -down-> Formatter
+Token -down-> Linter
+AST -down-> Parser
+AST -down-> Interpreter
+Lib -down-> Token
+Lib -down-> AST
+Lib -down-> Runner
+Lib -down-> Interpreter
+
+
+
+
+@enduml

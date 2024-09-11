@@ -6,7 +6,8 @@ import ast.Expression
 import ast.IdentifierExpr
 import ast.NumberExpr
 import ast.StringExpr
-import ast.TypeExpr
+import interpreter.utils.PrintCollector
+import interpreter.utils.QueueInputProvider
 import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -15,33 +16,33 @@ class InterpreterTests {
     @Test
     fun `test interpret with single expression`() {
         val printCollector = PrintCollector()
-        val scope = Scope()
+        val scope = Scope(null)
         val interpreter = Interpreter()
         val program =
             listOf<Expression>(
-                DeclareExpr(TypeExpr("x", "number", Position(0, 0)), NumberExpr(10, Position(0, 0)), Position(0, 0)),
+                DeclareExpr("x", "number", NumberExpr(10, Position(0, 0)), true, Position(0, 0)),
             ).iterator()
 
-        interpreter.interpret(program, scope, printCollector)
+        interpreter.interpret(program, scope, printCollector, QueueInputProvider())
 
         val result = scope.getVariable("x")?.value
 
-        assertEquals(10, result)
+        assertEquals(10.0, result)
     }
 
     @Test
     fun `test interpret with string expression`() {
         val printCollector = PrintCollector()
-        val scope = Scope()
+        val scope = Scope(null)
         val interpreter = Interpreter()
 
         val program =
             listOf<Expression>(
-                DeclareExpr(TypeExpr("message", "string", Position(0, 0)), StringExpr("Hello, world!", Position(0, 0)), Position(0, 0)),
+                DeclareExpr("message", "string", StringExpr("Hello, world!", Position(0, 0)), true, Position(0, 0)),
                 CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
             ).iterator()
 
-        interpreter.interpret(program, scope, printCollector)
+        interpreter.interpret(program, scope, printCollector, QueueInputProvider())
 
         val result = scope.getVariable("message")?.value
 
@@ -51,16 +52,16 @@ class InterpreterTests {
     @Test
     fun `test interpreter print`() {
         val printCollector = PrintCollector()
-        val scope = Scope()
+        val scope = Scope(null)
         val interpreter = Interpreter()
 
         val program =
             listOf<Expression>(
-                DeclareExpr(TypeExpr("message", "string", Position(0, 0)), StringExpr("Hello, world!", Position(0, 0)), Position(0, 0)),
+                DeclareExpr("message", "string", StringExpr("Hello, world!", Position(0, 0)), true, Position(0, 0)),
                 CallPrintExpr(IdentifierExpr("message", Position(0, 0)), Position(0, 0)),
             ).iterator()
 
-        interpreter.interpret(program, scope, printCollector)
+        interpreter.interpret(program, scope, printCollector, QueueInputProvider())
 
         val result = printCollector.getMessages()
 

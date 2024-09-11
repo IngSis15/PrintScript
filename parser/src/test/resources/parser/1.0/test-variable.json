@@ -1,0 +1,38 @@
+{
+  "tokens": [
+    {
+      "type": "IDENTIFIER",
+      "literal": "x",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 1
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 0,
+        "column": 2
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "IdentifierExpr",
+      "name": "x",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    }
+  ]
+}

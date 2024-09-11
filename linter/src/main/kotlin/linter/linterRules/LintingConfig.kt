@@ -1,6 +1,7 @@
 package linter.linterRules
 
 data class LintingConfig(
-    val camelCase: Boolean,
-    val expressionAllowedInPrint: Boolean,
+    val camelCase: Boolean?,
+    val expressionAllowedInPrint: Boolean?,
+    val expressionAllowedInReadInput: Boolean?,
 )

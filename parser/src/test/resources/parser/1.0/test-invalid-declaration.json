@@ -1,0 +1,26 @@
+[
+  {
+    "type": "LET_KEYWORD",
+    "literal": "let",
+    "position": {
+      "line": 0,
+      "column": 0
+    }
+  },
+  {
+    "type": "NUMBER_LITERAL",
+    "literal": "42",
+    "position": {
+      "line": 0,
+      "column": 4
+    }
+  },
+  {
+    "type": "EOF",
+    "literal": "",
+    "position": {
+      "line": 0,
+      "column": 5
+    }
+  }
+]

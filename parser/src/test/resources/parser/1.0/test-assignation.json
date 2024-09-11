@@ -1,0 +1,69 @@
+{
+  "tokens": [
+    {
+      "type": "IDENTIFIER",
+      "literal": "x",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "ASSIGNATION",
+      "literal": "=",
+      "position": {
+        "line": 0,
+        "column": 2
+      }
+    },
+    {
+      "type": "NUMBER_LITERAL",
+      "literal": "1",
+      "position": {
+        "line": 0,
+        "column": 4
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 5
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 0,
+        "column": 6
+      }
+    }
+  ],
+  "expected": [
+    {
+      "type": "AssignExpr",
+      "position": {
+        "line": 0,
+        "column": 2
+      },
+      "left": {
+        "type": "IdentifierExpr",
+        "name": "x",
+        "position": {
+          "line": 0,
+          "column": 0
+        }
+      },
+      "value": {
+        "type": "NumberExpr",
+        "value": "1.0",
+        "position": {
+          "line": 0,
+          "column": 4
+        }
+      }
+    }
+  ]
+}

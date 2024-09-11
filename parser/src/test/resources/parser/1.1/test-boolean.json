@@ -1,0 +1,38 @@
+{
+  "tokens": [
+    {
+      "type": "BOOLEAN_LITERAL",
+      "literal": "true",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 4
+      }
+    },
+    {
+      "type": "EOF",
+      "literal": "",
+      "position": {
+        "line": 0,
+        "column": 5
+      }
+    }
+  ],
+    "expected": [
+        {
+        "type": "BooleanExpr",
+        "value": true,
+        "position": {
+            "line": 0,
+            "column": 0
+        }
+        }
+    ]
+}

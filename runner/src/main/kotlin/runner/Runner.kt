@@ -5,10 +5,12 @@ import formatter.FormatterConfig
 import interpreter.Interpreter
 import interpreter.Scope
 import lexer.Lexer
+import lib.InputProvider
 import lib.PrintEmitter
 import linter.Linter
-import parser.Grammar
 import parser.Parser
+import parser.factory.ParserFactory
+import parser.grammar.GrammarV1
 import token.TokenWriter
 import java.io.InputStream
 import java.io.Writer
@@ -18,18 +20,20 @@ class Runner(
 ) : Observable {
     fun runExecute(
         input: InputStream,
+        version: String,
         errorHandler: ErrorHandler,
         printEmitter: PrintEmitter,
+        inputProvider: InputProvider,
     ) {
         try {
-            val lexer = Lexer(input, "1.0")
-            val parser = Parser(lexer.lex(), Grammar())
+            val lexer = Lexer(input, version)
+            val parser = ParserFactory.createParser(version, lexer.lex())
             val interpreter = Interpreter()
-            val scope = Scope()
+            val scope = Scope(null)
 
             notifyObservers(Event(EventType.INFO, "Parsing input."))
 
-            interpreter.interpret(parser.parse(), scope, printEmitter)
+            interpreter.interpret(parser.parse(), scope, printEmitter, inputProvider)
         } catch (e: Exception) {
             errorHandler.handleError(Event(EventType.ERROR, e.message ?: "Unknown error"))
         }
@@ -61,8 +65,8 @@ class Runner(
     ) {
         try {
             val lexer = Lexer(input, "1.0")
-            val linter = Linter(config)
-            val parser = Parser(lexer.lex(), Grammar())
+            val linter = Linter(config, "1.0")
+            val parser = Parser(lexer.lex(), GrammarV1())
             val result = linter.lint(parser.parse())
 
             notifyObservers(Event(EventType.INFO, "Analyzing input."))

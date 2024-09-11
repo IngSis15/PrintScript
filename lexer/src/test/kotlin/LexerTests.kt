@@ -1,6 +1,8 @@
 import lexer.Lexer
+import lexer.tokenizeStrategies.NumberLiteralStrategy
 import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import token.Token
 import token.TokenType
@@ -216,5 +218,57 @@ class LexerTests {
             )
         assertEquals(expected, tokens.asSequence().toList())
         assertEquals(Token(TokenType.EOF, "", Position(1, 19)), tokens.next())
+    }
+
+    @Test
+    fun testLexInteger() {
+        val inputStream = ByteArrayInputStream("123".toByteArray())
+        val lexer = Lexer(inputStream, "1.1")
+        val strategy = NumberLiteralStrategy()
+        val token = strategy.lex(lexer)
+
+        val expected = Token(TokenType.NUMBER_LITERAL, "123", Position(1, 1))
+
+        assertEquals(expected, token)
+    }
+
+    @Test
+    fun testLexFloat() {
+        val inputStream = ByteArrayInputStream("123.456".toByteArray())
+        val lexer = Lexer(inputStream, "1.1")
+        val strategy = NumberLiteralStrategy()
+        val token = strategy.lex(lexer)
+
+        val expected = Token(TokenType.NUMBER_LITERAL, "123.456", Position(1, 1))
+
+        assertEquals(expected, token)
+    }
+
+    @Test
+    fun testMalformedNumberWithMultipleDecimalPoints() {
+        val inputStream = ByteArrayInputStream("123.45.6".toByteArray())
+        val lexer = Lexer(inputStream, "1.1")
+        val strategy = NumberLiteralStrategy()
+
+        val exception =
+            assertThrows(IllegalArgumentException::class.java) {
+                strategy.lex(lexer)
+            }
+
+        assertEquals("Malformed number: multiple decimal points", exception.message)
+    }
+
+    @Test
+    fun testMalformedNumberWithTrailingDecimalPoint() {
+        val inputStream = ByteArrayInputStream("123.".toByteArray())
+        val lexer = Lexer(inputStream, "1.1")
+        val strategy = NumberLiteralStrategy()
+
+        val exception =
+            assertThrows(IllegalArgumentException::class.java) {
+                strategy.lex(lexer)
+            }
+
+        assertEquals("Malformed number: decimal point without digits", exception.message)
     }
 }

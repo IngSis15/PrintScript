@@ -5,13 +5,16 @@ import lib.Position
 import linter.linterRules.LintingRule
 
 class AllRules(val ruleSet: List<LintingRule>) : LintingRule {
-    override fun isValid(expression: Expression): Pair<Boolean, Position> {
+    override fun isValid(expression: Expression): List<Pair<Boolean, Position>> {
+        val results = mutableListOf<Pair<Boolean, Position>>()
         for (rule in ruleSet) {
-            val (valid, pos) = rule.isValid(expression)
-            if (!valid) {
-                return Pair(false, pos)
+            val ruleResult = rule.isValid(expression)
+            for (result in ruleResult) {
+                if (!result.first) {
+                    results.add(result)
+                }
             }
         }
-        return Pair(true, Position(0, 0))
+        return results
     }
 }
