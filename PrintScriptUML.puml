@@ -1,24 +1,94 @@
 @startuml
-object Runner
-Lexer <- Runner
-Parser <- Runner
-Interpreter <- Runner
-object FS
-
-object Lexer{
-    +lex(input: String): List<Token>
-}
-object Parser{
-    +parse(tokens: List<Token>): List<AST>
-}
-object AST
-object Interpreter{
-    +interpret(ast: AST): void
+' Grouping related components and organizing arrows for better clarity
+package Lib {
+    interface InputProvider
+    class Position
+    interface PrintEmitter
 }
 
-FS <- Lexer
-AST <- Parser
-AST <- Interpreter
+package AST {
+    interface Expression
+    interface ExpressionVisitor
+}
 
+package Token {
+    class Token
+    class TokenWriter
+    class TokenMapSuite
+    enum TokenType
+}
 
+package Lexer {
+    class Lexer
+    class TokenIterator
+    interface TokenizeStrategy
+}
+
+package Interpreter {
+    class Evaluator
+    class Interpreter
+    class Scope
+    class Variable
+}
+
+package Parser {
+    class Parser
+    class ExpressionIterator
+    class ParseException
+    interface Grammar
+    interface InfixParser
+    interface PrefixParser
+}
+
+package Linter {
+    class Linter
+    class LinterResult
+    interface LintingRule
+    class LinterRuleSetter
+    class LintingConfig
+}
+
+package Formatter {
+    class Formatter
+    class FormatterConfig
+    class FormatterTokenIterator
+}
+
+package Runner {
+    class Runner
+    interface ErrorHandler
+    class Event
+    interface Observer
+    interface Observable
+}
+
+package CLI {
+    class Analyze
+    class CLI
+    class CliErrorHandler
+    class CliInputProvider
+    class CliPrinter
+    class Execute
+    class Format
+}
+
+Lib -down-> Token
+Lib -down-> AST
+Lib -down-> Interpreter
+
+AST -down-> Parser
+AST -left-> Interpreter
+
+Token -down-> Lexer
+Token -left-> Parser
+Token -right-> Formatter
+Token -down-> Linter
+
+Lexer -down-> Runner
+Interpreter -down-> Runner
+Parser -down-> Runner
+Linter -down-> Runner
+Formatter -down-> Runner
+
+Runner -down-> CLI
 @enduml
