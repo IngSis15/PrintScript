@@ -1,0 +1,5 @@
+{
+  "identifier_format": "camel case",
+  "mandatory-variable-or-literal-in-println": true,
+  "mandatory-variable-or-literal-in-readInput": true
+}
