@@ -5,6 +5,7 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
+import org.apache.commons.io.input.ObservableInputStream
 import runner.Runner
 import java.io.FileInputStream
 
@@ -14,6 +15,9 @@ class Execute : CliktCommand(help = "Execute PrintScript file") {
 
     override fun run() {
         val runner = Runner()
-        runner.runExecute(FileInputStream(file), version, CliErrorHandler(), CliPrinter(), CliInputProvider())
+        val fileInputStream = FileInputStream(file)
+        val inputStream = ObservableInputStream(fileInputStream)
+        inputStream.add(ProgressObserver(file.length()))
+        runner.runExecute(inputStream, version, CliErrorHandler(), CliPrinter(), CliInputProvider())
     }
 }
