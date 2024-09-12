@@ -1,5 +1,5 @@
 package runner
 
 interface ErrorHandler {
-    fun handleError(error: Event)
+    fun handleError(message: String)
 }
