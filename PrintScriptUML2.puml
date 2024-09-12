@@ -80,6 +80,8 @@ Lib -down-> Token
 Lib -down-> AST
 Lib -down-> Runner
 Lib -down-> Interpreter
+Lib -down-> Parser
+Lib -down-> Lexer
 
 
 

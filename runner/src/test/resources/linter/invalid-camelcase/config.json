@@ -1,4 +1,4 @@
 {
-  "camelCase": true,
-  "expressionAllowedInPrint": false
+  "identifier_format": "camel case",
+  "mandatory-variable-or-literal-in-println": true
 }

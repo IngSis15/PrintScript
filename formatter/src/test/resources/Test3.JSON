@@ -1,7 +1,7 @@
 {
-  "spaceBeforeColon" : true,
-  "spaceAfterColon" : true,
-  "spaceAroundAssignment" : false,
+  "enforce-spacing-before-colon-in-declaration" : true,
+  "enforce-spacing-after-colon-in-declaration" : true,
+  "enforce-no-spacing-around-equals" : true,
   "newLinesBeforePrintln" : 1,
-  "indentSpaces" : 6
+  "indent-inside-if" : 6
 }

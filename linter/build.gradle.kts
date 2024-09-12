@@ -3,9 +3,10 @@ plugins {
 }
 
 dependencies {
-    api(project(":ast"))
-    api(project(":token"))
-    api(project(":parser"))
-    api(project(":lexer"))
+    implementation(project(":ast"))
+    implementation(project(":token"))
+    testImplementation(project(":parser"))
+    testImplementation(project(":lexer"))
+    implementation(project(":lib"))
     implementation("com.google.code.gson:gson:2.11.0")
 }

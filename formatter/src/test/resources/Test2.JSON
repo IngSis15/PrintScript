@@ -1,6 +1,6 @@
 {
-  "spaceBeforeColon": true,
-  "spaceAfterColon": false,
-  "spaceAroundAssignment": true,
+  "enforce-spacing-before-colon-in-declaration": true,
+  "enforce-spacing-after-colon-in-declaration": false,
+  "enforce-no-spacing-around-equals": false,
   "newLinesBeforePrintln": 0
 }

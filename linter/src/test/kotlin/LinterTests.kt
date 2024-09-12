@@ -22,13 +22,13 @@ class LinterTests {
 
         val tokens = lexer.lex()
 
-        var gramm: Grammar = GrammarV1()
+        val gramm: Grammar =
+            if (version == "1.0") {
+                GrammarV1()
+            } else {
+                GrammarV11()
+            }
 
-        if (version == "1.0") {
-            gramm = GrammarV1()
-        } else {
-            gramm = GrammarV11()
-        }
         val parser = Parser(tokens, gramm)
         val expressionList = parser.parse()
         val lintingResult = linter.lint(expressionList)
