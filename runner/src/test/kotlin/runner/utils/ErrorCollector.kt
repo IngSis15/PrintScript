@@ -1,16 +1,15 @@
 package runner.utils
 
 import runner.ErrorHandler
-import runner.Event
 
 class ErrorCollector : ErrorHandler {
-    private val errors = mutableListOf<Event>()
+    private val errors = mutableListOf<String>()
 
-    override fun handleError(error: Event) {
-        errors.add(error)
+    override fun handleError(message: String) {
+        errors.add(message)
     }
 
-    fun getErrors(): List<Event> {
+    fun getErrors(): List<String> {
         return errors
     }
 }
