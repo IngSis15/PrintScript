@@ -64,26 +64,24 @@ object Lib{
     PrintEmitter
 }
 
-Interpreter -down-> Runner
-Parser -down-> Runner
-Linter -down-> Runner
-Formatter -down-> Runner
-Lexer -down-> Runner
-Runner -down-> CLI
-Token -down-> Lexer
-Token -down-> Parser
-Token -down-> Formatter
-Token -down-> Linter
-AST -down-> Parser
-AST -down-> Interpreter
-Lib -down-> Token
-Lib -down-> AST
-Lib -down-> Runner
-Lib -down-> Interpreter
-Lib -down-> Parser
-Lib -down-> Lexer
-
-
-
+Runner -down-> Interpreter
+Runner -down-> Parser
+Runner -down-> Linter
+Runner -down-> Formatter
+Runner -down-> Lexer
+CLI -down-> Runner
+Lexer -down-> Token
+Parser -down-> Token
+Formatter -down-> Token
+Linter -down-> Token
+Parser -down-> AST
+Interpreter -down-> AST
+Token -down-> Lib
+AST -down-> Lib
+Runner -down-> Lib
+Interpreter -down-> Lib
+Parser -down-> Lib
+Lexer -down-> Lib
+CLI -down-> Lib
 
 @enduml

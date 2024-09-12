@@ -1,0 +1,4 @@
+{
+  "identifier_format": "snake case",
+  "mandatory-variable-or-literal-in-println": true
+}
