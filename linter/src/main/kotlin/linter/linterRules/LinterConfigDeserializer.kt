@@ -15,17 +15,17 @@ class LinterConfigDeserializer : JsonDeserializer<LintingConfig> {
         val identifierFormat =
             if (jsonObject.get("identifier_format") != null) jsonObject.get("identifier_format").asString == "camel case" else null
         val mandatoryVariableOrLiteralInPrint =
-            if (jsonObject.get("mandatory_variable_or_literal_in_print") != null) {
+            if (jsonObject.get("mandatory-variable-or-literal-in-println") != null) {
                 !jsonObject.get(
-                    "mandatory_variable_or_literal_in_print",
+                    "mandatory-variable-or-literal-in-println",
                 ).asBoolean
             } else {
                 null
             }
         val mandatoryVariableOrLiteralInReadInput =
-            if (jsonObject.get("mandatory_variable_or_literal_in_read_input") != null) {
+            if (jsonObject.get("mandatory-variable-or-literal-in-readInput") != null) {
                 !jsonObject.get(
-                    "mandatory_variable_or_literal_in_read_input",
+                    "mandatory-variable-or-literal-in-readInput",
                 ).asBoolean
             } else {
                 null
