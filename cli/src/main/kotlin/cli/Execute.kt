@@ -13,7 +13,7 @@ class Execute : CliktCommand(help = "Execute PrintScript file") {
     private val version by option("--version", "-v").default("1.0")
 
     override fun run() {
-        val runner = Runner(listOf(ProgressPrinter()))
+        val runner = Runner()
         runner.runExecute(FileInputStream(file), version, CliErrorHandler(), CliPrinter(), CliInputProvider())
     }
 }

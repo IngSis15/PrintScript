@@ -15,7 +15,7 @@ class Analyze : CliktCommand(help = "Analyze PrintScript file") {
     private val version by option("--version", "-v").default("1.0")
 
     override fun run() {
-        val runner = Runner(listOf(ProgressPrinter()))
+        val runner = Runner()
 
         if (config == null) {
             val configFile = File("src/main/resources/defaultLinter.json")

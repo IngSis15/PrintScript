@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import runner.utils.ErrorCollector
-import runner.utils.TestObserver
 import java.io.File
 import java.io.FileInputStream
 import java.io.StringWriter
@@ -24,14 +23,8 @@ class FormatterTests {
     @ParameterizedTest
     @MethodSource("data")
     fun testFormatter(directory: String) {
-        val observer = TestObserver()
         val errorHandler = ErrorCollector()
-        val runner =
-            Runner(
-                listOf(
-                    observer,
-                ),
-            )
+        val runner = Runner()
 
         val file = File("src/test/resources/formatter/$directory/main.ps")
         val expected = File("src/test/resources/formatter/$directory/formatted.ps").readText()

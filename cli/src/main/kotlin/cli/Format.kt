@@ -19,7 +19,7 @@ class Format : CliktCommand(help = "Format PrintScript file") {
     private val version by option("-v", "--version").default("1.0")
 
     override fun run() {
-        val runner = Runner(listOf(ProgressPrinter()))
+        val runner = Runner()
         val fileWriter = FileWriter(outputPath.toString())
 
         if (config == null) {
