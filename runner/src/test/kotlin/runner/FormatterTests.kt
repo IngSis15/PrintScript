@@ -2,6 +2,7 @@ package runner
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import runner.utils.ErrorCollector
 import java.io.File
@@ -12,27 +13,37 @@ import java.util.stream.Stream
 class FormatterTests {
     companion object {
         @JvmStatic
-        fun data(): Stream<String> {
+        fun data(): Stream<Arguments> {
             return Stream.of(
-                "simple-test",
-                "test-print",
+                // Version 1.0
+                Arguments.of("simple-test", "1.0"),
+                Arguments.of("test-assignation-and-print", "1.0"),
+                Arguments.of("test-print", "1.0"),
+                // Version 1.1
+                Arguments.of("test-if-block", "1.1"),
+                Arguments.of("test-nested-if", "1.1"),
+                Arguments.of("test-same-line-brace", "1.1"),
+                Arguments.of("test-multiple-statements", "1.1"),
             )
         }
     }
 
     @ParameterizedTest
     @MethodSource("data")
-    fun testFormatter(directory: String) {
+    fun testFormatter(
+        directory: String,
+        version: String,
+    ) {
         val errorHandler = ErrorCollector()
         val runner = Runner()
 
-        val file = File("src/test/resources/formatter/$directory/main.ps")
-        val expected = File("src/test/resources/formatter/$directory/formatted.ps").readText()
-        val config = File("src/test/resources/formatter/$directory/config.json")
+        val file = File("src/test/resources/formatter/$version/$directory/main.ps")
+        val expected = File("src/test/resources/formatter/$version/$directory/formatted.ps").readText()
+        val config = File("src/test/resources/formatter/$version/$directory/config.json")
 
         val stringWriter = StringWriter()
 
-        runner.runFormat(FileInputStream(file), "1.0", stringWriter, FileInputStream(config), errorHandler)
+        runner.runFormat(FileInputStream(file), version, stringWriter, FileInputStream(config), errorHandler)
 
         assertEquals(stringWriter.toString(), expected)
     }
