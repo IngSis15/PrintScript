@@ -1,0 +1,7 @@
+{
+  "enforce-spacing-before-colon-in-declaration": true,
+  "enforce-spacing-after-colon-in-declaration": true,
+  "enforce-no-spacing-around-equals": false,
+  "newLinesBeforePrintln": 1,
+  "indent-inside-if": 4
+}
