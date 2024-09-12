@@ -3,7 +3,6 @@ package runner
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import runner.utils.ErrorCollector
-import runner.utils.TestObserver
 import java.io.File
 import java.io.FileInputStream
 import java.util.stream.Stream
@@ -22,14 +21,8 @@ class LinterTests {
     @ParameterizedTest
     @MethodSource("data")
     fun testFormatter(directory: String) {
-        val observer = TestObserver()
         val errorHandler = ErrorCollector()
-        val runner =
-            Runner(
-                listOf(
-                    observer,
-                ),
-            )
+        val runner = Runner()
 
         val file = File("src/test/resources/linter/$directory/main.ps")
         val config = File("src/test/resources/linter/$directory/config.json")

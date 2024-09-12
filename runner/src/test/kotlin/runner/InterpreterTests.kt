@@ -8,7 +8,6 @@ import runner.utils.ErrorCollector
 import runner.utils.PrintCollector
 import runner.utils.QueueInputProvider
 import runner.utils.Queues.Companion.toQueue
-import runner.utils.TestObserver
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -43,15 +42,9 @@ class InterpreterTests {
         directory: String,
         version: String,
     ) {
-        val observer = TestObserver()
         val errorHandler = ErrorCollector()
         val printCollector = PrintCollector()
-        val runner =
-            Runner(
-                listOf(
-                    observer,
-                ),
-            )
+        val runner = Runner()
 
         val file = File("src/test/resources/interpreter/$version/$directory/main.ps")
         val expected = readLines("src/test/resources/interpreter/$version/$directory/expected.txt")
