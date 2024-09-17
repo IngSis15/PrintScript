@@ -1,20 +1,7 @@
 package parser
 
-import ast.AssignExpr
-import ast.BooleanExpr
-import ast.CallPrintExpr
-import ast.ConditionalExpr
-import ast.DeclareExpr
-import ast.Expression
-import ast.IdentifierExpr
-import ast.NumberExpr
-import ast.OperatorExpr
-import ast.ReadEnvExpr
-import ast.ReadInputExpr
-import ast.StringExpr
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import lib.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -22,8 +9,6 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import parser.exception.ParseException
 import parser.factory.ParserFactory
-import token.Token
-import token.TokenType
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Stream
@@ -113,92 +98,6 @@ class ParserTest {
 
         assertThrows<ParseException> {
             parser.parse().asSequence().toList()
-        }
-    }
-
-    fun parseTokensFromJson(jsonTokens: List<TokenJson>): List<Token> {
-        return jsonTokens.map {
-            Token(TokenType.valueOf(it.type), it.literal, Position(it.position.line, it.position.column))
-        }
-    }
-
-    fun parseExpressionToJson(expression: Expression): ExpectedExprJson {
-        return when (expression) {
-            is IdentifierExpr ->
-                IdentifierExprJson(
-                    expression.name,
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is NumberExpr ->
-                NumberExprJson(
-                    expression.value.toString(),
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is StringExpr ->
-                StringExprJson(
-                    expression.value,
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is BooleanExpr ->
-                BooleanExprJson(
-                    expression.value,
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is OperatorExpr ->
-                OperatorExprJson(
-                    parseExpressionToJson(expression.left),
-                    expression.op,
-                    parseExpressionToJson(expression.right),
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is CallPrintExpr ->
-                CallPrintExprJson(
-                    parseExpressionToJson(expression.arg),
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is DeclareExpr ->
-                DeclareExprJson(
-                    expression.name,
-                    expression.type,
-                    expression.value?.let { parseExpressionToJson(it) },
-                    expression.mutable,
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is AssignExpr ->
-                AssignExprJson(
-                    parseExpressionToJson(expression.left),
-                    parseExpressionToJson(expression.value),
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is ConditionalExpr ->
-                ConditionalExprJson(
-                    parseExpressionToJson(expression.condition),
-                    expression.body.map { parseExpressionToJson(it) },
-                    expression.elseBody.map { parseExpressionToJson(it) },
-                    PositionJson(expression.position.line, expression.position.column),
-                )
-
-            is ReadEnvExpr ->
-                ReadEnvExprJson(
-                    parseExpressionToJson(expression.name),
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            is ReadInputExpr ->
-                ReadInputExprJson(
-                    parseExpressionToJson(expression.value),
-                    PositionJson(expression.pos.line, expression.pos.column),
-                )
-
-            else -> throw IllegalArgumentException("Invalid type")
         }
     }
 }

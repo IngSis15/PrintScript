@@ -1,0 +1,26 @@
+[
+  {
+
+    "type": "AssignExpr",
+    "position": {
+      "line": 0,
+      "column": 2
+    },
+    "left": {
+      "type": "IdentifierExpr",
+      "name": "x",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    "value": {
+      "type": "NumberExpr",
+      "value": "1.0",
+      "position": {
+        "line": 0,
+        "column": 4
+      }
+    }
+  }
+]
