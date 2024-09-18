@@ -285,4 +285,88 @@ class EvaluatorTests {
         val result = evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
         assertEquals(true, result)
     }
+
+    @Test
+    fun `test assignment to non-mutable variable throws exception`() {
+        val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
+        val scope = Scope(null)
+
+        val declareExpr = DeclareExpr("x", "number", NumberExpr(10.0, Position(0, 0)), false, Position(0, 0))
+        val assignExpr = AssignExpr(IdentifierExpr("x", Position(0, 0)), NumberExpr(20.0, Position(0, 0)), Position(0, 0))
+
+        evaluator.evaluate(declareExpr, scope)
+
+        assertThrows<EvaluatorException> {
+            evaluator.evaluate(assignExpr, scope)
+        }
+    }
+
+    @Test
+    fun `test variable declaration with incorrect type throws exception`() {
+        val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
+        val scope = Scope(null)
+
+        val declareExpr = DeclareExpr("x", "unknownType", NumberExpr(10.0, Position(0, 0)), true, Position(0, 0))
+
+        assertThrows<IllegalArgumentException> {
+            evaluator.evaluate(declareExpr, scope)
+        }
+    }
+
+    @Test
+    fun `test unsupported operator throws exception`() {
+        val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
+        val scope = Scope(null)
+        val expr = OperatorExpr(NumberExpr(5.0, Position(0, 0)), "%", NumberExpr(2.0, Position(0, 0)), Position(0, 0))
+
+        assertThrows<EvaluatorException> {
+            evaluator.evaluate(expr, scope)
+        }
+    }
+
+    @Test
+    fun `test access to uninitialized variable throws exception`() {
+        val evaluator = Evaluator(PrintCollector(), QueueInputProvider())
+        val scope = Scope(null)
+        val declareExpr = DeclareExpr("x", "number", null, true, Position(0, 0))
+
+        evaluator.evaluate(declareExpr, scope)
+
+        assertThrows<EvaluatorException> {
+            evaluator.evaluate(IdentifierExpr("x", Position(0, 0)), scope)
+        }
+    }
+
+    @Test
+    fun `test conditional expression with empty else body`() {
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector, QueueInputProvider())
+        val scope = Scope(null)
+
+        val expr =
+            ConditionalExpr(
+                BooleanExpr(true, Position(0, 0)),
+                listOf(CallPrintExpr(StringExpr("true", Position(0, 0)), Position(0, 0))),
+                emptyList(),
+                Position(0, 0),
+            )
+
+        evaluator.evaluate(expr, scope)
+        assertEquals(printCollector.getMessages(), listOf("true"))
+    }
+
+    @Test
+    fun `test concatenation of multiple strings`() {
+        val printCollector = PrintCollector()
+        val evaluator = Evaluator(printCollector, QueueInputProvider())
+        val scope = Scope(null)
+
+        val left = StringExpr("Hello", Position(0, 0))
+        val middle = StringExpr(", beautiful", Position(0, 0))
+        val right = StringExpr(" World!", Position(0, 0))
+        val expr = OperatorExpr(OperatorExpr(left, "+", middle, Position(0, 0)), "+", right, Position(0, 0))
+
+        val result = evaluator.evaluate(expr, scope)
+        assertEquals("Hello, beautiful World!", result)
+    }
 }
