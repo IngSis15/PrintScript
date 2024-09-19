@@ -72,4 +72,18 @@ class Runner() {
             errorHandler.handleError(e.message ?: "Unknown error")
         }
     }
+
+    fun runValidate(
+        input: InputStream,
+        version: String,
+        errorHandler: ErrorHandler,
+    ) {
+        try {
+            val lexer = Lexer(input, version)
+            val parser = ParserFactory.createParser(version, lexer.lex())
+            parser.parse()
+        } catch (e: Exception) {
+            errorHandler.handleError(e.message ?: "Unknown error")
+        }
+    }
 }

@@ -1,0 +1,43 @@
+[
+  {
+    "type": "DeclareExpr",
+    "name": "x",
+    "vtype": "number",
+    "value": {
+      "type": "NumberExpr",
+      "value": "42.0",
+      "position": {
+        "line": 0,
+        "column": 16
+      }
+    },
+    "mutable": true,
+    "position": {
+      "line": 0,
+      "column": 0
+    }
+  },
+  {
+    "type": "AssignExpr",
+    "position": {
+      "line": 1,
+      "column": 2
+    },
+    "left": {
+      "type": "IdentifierExpr",
+      "name": "x",
+      "position": {
+        "line": 1,
+        "column": 0
+      }
+    },
+    "value": {
+      "type": "NumberExpr",
+      "value": "1.0",
+      "position": {
+        "line": 1,
+        "column": 4
+      }
+    }
+  }
+]

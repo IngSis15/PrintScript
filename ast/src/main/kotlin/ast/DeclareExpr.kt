@@ -6,7 +6,13 @@ import lib.Position
 Variable declaration expression:    let x: string = "hello";
                                     const x: string = "world";
  */
-class DeclareExpr(val name: String, val type: String, val value: Expression?, val mutable: Boolean, val pos: Position) :
+class DeclareExpr(
+    val name: String,
+    val type: String,
+    val value: Expression?,
+    val mutable: Boolean,
+    override val pos: Position,
+) :
     Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,

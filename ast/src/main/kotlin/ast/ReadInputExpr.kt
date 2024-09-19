@@ -2,7 +2,7 @@ package ast
 
 import lib.Position
 
-class ReadInputExpr(val value: Expression, val pos: Position) : Expression {
+class ReadInputExpr(val value: Expression, override val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

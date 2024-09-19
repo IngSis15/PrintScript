@@ -1,0 +1,19 @@
+[
+  {
+    "type": "ConditionalExpr",
+    "condition": {
+      "type": "StringExpr",
+      "value": "true",
+        "position": {
+            "line": 0,
+            "column": 0
+        }
+    },
+    "body": [],
+    "elseBody": [],
+    "position": {
+      "line": 0,
+      "column": 0
+    }
+  }
+]

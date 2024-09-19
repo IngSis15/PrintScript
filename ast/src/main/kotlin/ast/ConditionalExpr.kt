@@ -6,8 +6,7 @@ class ConditionalExpr(
     val condition: Expression,
     val body: List<Expression>,
     val elseBody: List<Expression>,
-    val
-    position: Position,
+    override val pos: Position,
 ) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,

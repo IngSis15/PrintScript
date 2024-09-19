@@ -14,11 +14,23 @@ import ast.ReadEnvExpr
 import ast.ReadInputExpr
 import ast.StringExpr
 import interpreter.exception.EvaluatorException
+import interpreter.strategies.AdditionStrategy
+import interpreter.strategies.DivisionStrategy
+import interpreter.strategies.MultiplicationStrategy
+import interpreter.strategies.SubtractionStrategy
 import lib.InputProvider
 import lib.PrintEmitter
 
 class Evaluator(private val printEmitter: PrintEmitter, private val inputProvider: InputProvider) :
     ExpressionVisitor<Any, Scope> {
+    private val operatorStrategies =
+        mapOf(
+            "+" to AdditionStrategy(),
+            "-" to SubtractionStrategy(),
+            "*" to MultiplicationStrategy(),
+            "/" to DivisionStrategy(),
+        )
+
     fun evaluate(
         expression: Expression,
         scope: Scope,
@@ -42,7 +54,6 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
             "number" ->
                 value.toString().toDoubleOrNull()
                     ?: throw IllegalArgumentException("Value cannot be converted to a number: $value")
-
             "string" -> value.toString()
             "boolean" ->
                 when (value) {
@@ -51,7 +62,6 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
                     is Number -> value != 0
                     else -> throw IllegalArgumentException("Value cannot be converted to a boolean: $value")
                 }
-
             else -> throw IllegalArgumentException("Unsupported value type: ${value::class.simpleName}")
         }
     }
@@ -76,9 +86,7 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         }
 
         val expectedType = variable.type
-
         matchTypes(expectedType, value)
-
         context.setVariable(variableName, expectedType, true, value)
         return value
     }
@@ -95,13 +103,7 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
             throw EvaluatorException("Variable already declared: <$variableName> at ${expr.pos.line}:${expr.pos.column}")
         }
 
-        val newValue =
-            if (value != null) {
-                matchTypes(variableType, value)
-            } else {
-                null
-            }
-
+        val newValue = value?.let { matchTypes(variableType, it) }
         context.setVariable(variableName, variableType, expr.mutable, newValue)
         return variableName
     }
@@ -111,13 +113,11 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         context: Scope,
     ): Any {
         val valueToPrint = evaluate(expr.arg, context)
-
         val formattedValue =
             when (valueToPrint) {
                 is Number -> numberToString(valueToPrint)
                 else -> valueToPrint
             }
-
         printEmitter.print(formattedValue.toString())
         return valueToPrint
     }
@@ -126,16 +126,11 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         expr: IdentifierExpr,
         context: Scope,
     ): Any {
-        val variable = context.getVariable(expr.name)
+        val variable =
+            context.getVariable(expr.name)
+                ?: throw EvaluatorException("Undefined variable: <${expr.name}> at ${expr.pos.line}:${expr.pos.column}")
 
-        if (variable != null) {
-            if (variable.value != null) {
-                return variable.value
-            } else {
-                throw EvaluatorException("Variable not initialized: <${expr.name}> at ${expr.pos.line}:${expr.pos.column}")
-            }
-        }
-        throw EvaluatorException("Undefined variable: <${expr.name}> at ${expr.pos.line}:${expr.pos.column}")
+        return variable.value ?: throw EvaluatorException("Variable not initialized: <${expr.name}> at ${expr.pos.line}:${expr.pos.column}")
     }
 
     override fun visit(
@@ -145,38 +140,11 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         val leftValue = evaluate(expr.left, context)
         val rightValue = evaluate(expr.right, context)
 
-        if (leftValue is Number && rightValue is Number) {
-            return when (expr.op) {
-                "+" -> leftValue.toDouble() + rightValue.toDouble()
-                "-" -> leftValue.toDouble() - rightValue.toDouble()
-                "*" -> leftValue.toDouble() * rightValue.toDouble()
-                "/" ->
-                    if (rightValue.toDouble() != 0.0) {
-                        leftValue.toDouble() / rightValue.toDouble()
-                    } else {
-                        throw ArithmeticException("Division by zero")
-                    }
+        val strategy =
+            operatorStrategies[expr.op]
+                ?: throw EvaluatorException("Unsupported operator: ${expr.op}")
 
-                else -> throw EvaluatorException("Unsupported operator: <${expr.op}> at ${expr.pos.line}:${expr.pos.column}")
-            }
-        } else if (leftValue is String && rightValue is String) {
-            return when (expr.op) {
-                "+" -> leftValue + rightValue
-                else -> throw IllegalArgumentException("Unsupported operator for strings: ${expr.op}")
-            }
-        } else if (leftValue is String && rightValue is Number) {
-            return when (expr.op) {
-                "+" -> leftValue + numberToString(rightValue)
-                else -> throw IllegalArgumentException("Unsupported operator for string and number: ${expr.op}")
-            }
-        } else if (leftValue is Number && rightValue is String) {
-            return when (expr.op) {
-                "+" -> numberToString(leftValue) + rightValue
-                else -> throw IllegalArgumentException("Unsupported operator for number and string: ${expr.op}")
-            }
-        } else {
-            throw IllegalArgumentException("Operands must be both numbers, both strings, or one string and one number")
-        }
+        return strategy.execute(leftValue, rightValue)
     }
 
     override fun visit(
@@ -198,25 +166,20 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         context: Scope,
     ): Any {
         val envName = evaluate(expr.name, context) as String
-        val envValue = System.getenv(envName)
-        return envValue
-            ?: throw EvaluatorException("Environment variable not found: <$envName> at ${expr.pos.line}:${expr.pos.column}")
+        return System.getenv(envName) ?: throw EvaluatorException("Environment variable not found: <$envName>")
     }
 
     override fun visit(
         expr: ConditionalExpr,
         context: Scope,
     ): Any {
-        val condition = evaluate(expr.condition, context)
-        val isTrue = condition as Boolean
-
-        if (isTrue) {
+        val condition = evaluate(expr.condition, context) as Boolean
+        if (condition) {
             expr.body.forEach { evaluate(it, Scope(context)) }
         } else {
             expr.elseBody.forEach { evaluate(it, Scope(context)) }
         }
-
-        return isTrue
+        return condition
     }
 
     override fun visit(
@@ -224,8 +187,7 @@ class Evaluator(private val printEmitter: PrintEmitter, private val inputProvide
         context: Scope,
     ): Any {
         val message = evaluate(expr.value, context) as String
-        val input = inputProvider.input(message)
-        return input
+        return inputProvider.input(message)
     }
 
     override fun visit(

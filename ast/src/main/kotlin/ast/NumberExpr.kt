@@ -5,7 +5,7 @@ import lib.Position
 /*
 Represents a number expression: 1, 2, 3, etc.
 */
-class NumberExpr(val value: Number, val pos: Position) : Expression {
+class NumberExpr(val value: Number, override val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

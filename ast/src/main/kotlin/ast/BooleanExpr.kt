@@ -2,7 +2,7 @@ package ast
 
 import lib.Position
 
-class BooleanExpr(val value: Boolean, val pos: Position) : Expression {
+class BooleanExpr(val value: Boolean, override val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,
