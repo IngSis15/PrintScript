@@ -50,6 +50,8 @@ class SemanticAnalyzer : ExpressionVisitor<SemanticResult, SymbolMap> {
             return SemanticResult.failure("Identifier ${identifier.name} not declared", identifier.pos)
         } else if (identifierType != valueType && valueType != VariableType.ANY) {
             return SemanticResult.failure("Cannot assign value of type $valueType to identifier of type $identifierType", value.pos)
+        } else if (context.getSymbol(identifier.name)?.mutable == false) {
+            return SemanticResult.failure("Cannot reassign constant ${identifier.name}", identifier.pos)
         }
 
         return SemanticResult.success()
@@ -173,6 +175,14 @@ class SemanticAnalyzer : ExpressionVisitor<SemanticResult, SymbolMap> {
         expr: ReadInputExpr,
         context: SymbolMap,
     ): SemanticResult {
+        val valueType = typeVisitor.getType(expr.value, context)
+
+        if (valueType == null) {
+            return SemanticResult.failure("Cannot infer type of value", expr.value.pos)
+        } else if (valueType != VariableType.STRING) {
+            return SemanticResult.failure("Cannot read input into type $valueType", expr.value.pos)
+        }
+
         return analyze(expr.value)
     }
 }

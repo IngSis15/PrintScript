@@ -18,10 +18,14 @@ class SemanticAnalyzerTest {
                 // Valid
                 Arguments.of("assignation", "valid"),
                 Arguments.of("concat-string-number", "valid"),
+                Arguments.of("concat-readinput", "valid"),
                 // Invalid
                 Arguments.of("not-declared", "invalid"),
                 Arguments.of("multiply", "invalid"),
                 Arguments.of("string-in-condition", "invalid"),
+                Arguments.of("boolean-in-readinput", "invalid"),
+                Arguments.of("reassign-wrong-type", "invalid"),
+                Arguments.of("reassign-const", "invalid"),
             )
         }
     }
