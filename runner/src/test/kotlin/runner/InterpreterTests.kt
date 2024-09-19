@@ -26,6 +26,7 @@ class InterpreterTests {
                 Arguments.of("test-operation", "1.0"),
                 Arguments.of("test-complex-operation", "1.0"),
                 Arguments.of("test-decimal", "1.0"),
+                Arguments.of("test-concat-string-number", "1.0"),
                 // Version 1.1
                 Arguments.of("test-const", "1.1"),
                 Arguments.of("test-readinput", "1.1"),

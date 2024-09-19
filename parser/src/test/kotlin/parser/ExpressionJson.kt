@@ -192,7 +192,7 @@ fun parseExpressionToJson(expression: Expression): ExpectedExprJson {
                 parseExpressionToJson(expression.condition),
                 expression.body.map { parseExpressionToJson(it) },
                 expression.elseBody.map { parseExpressionToJson(it) },
-                PositionJson(expression.position.line, expression.position.column),
+                PositionJson(expression.pos.line, expression.pos.column),
             )
 
         is ReadEnvExpr ->
@@ -274,7 +274,5 @@ fun parseJsonToExpression(json: ExpectedExprJson): Expression {
                 parseJsonToExpression(json.value),
                 Position(json.position.line, json.position.column),
             )
-
-        else -> throw IllegalArgumentException("Invalid type")
     }
 }

@@ -1,9 +1,14 @@
 package parser.semantic
 
-data class SemanticResult(val success: Boolean, val message: String) {
-    companion object {
-        fun success() = SemanticResult(true, "")
+import lib.Position
 
-        fun failure(message: String) = SemanticResult(false, message)
+data class SemanticResult(val success: Boolean, val message: String, val position: Position) {
+    companion object {
+        fun success() = SemanticResult(true, "", Position(0, 0))
+
+        fun failure(
+            message: String,
+            position: Position,
+        ) = SemanticResult(false, message, position)
     }
 }

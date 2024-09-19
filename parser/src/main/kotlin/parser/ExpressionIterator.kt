@@ -2,7 +2,7 @@ package parser
 
 import ast.ConditionalExpr
 import ast.Expression
-import parser.exception.ParseException
+import parser.exception.SemanticException
 import parser.semantic.SemanticAnalyzer
 import token.TokenType
 
@@ -22,7 +22,7 @@ class ExpressionIterator(val parser: Parser) : Iterator<Expression> {
 
         val semanticResult = semanticAnalyzer.analyze(expr)
         if (!semanticResult.success) {
-            throw ParseException("Semantic error: ${semanticResult.message}")
+            throw SemanticException("Semantic error: ${semanticResult.message}")
         }
 
         return expr

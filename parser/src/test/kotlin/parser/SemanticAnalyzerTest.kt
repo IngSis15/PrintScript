@@ -16,24 +16,28 @@ class SemanticAnalyzerTest {
         fun data(): Stream<Arguments> {
             return Stream.of(
                 // Valid
-                Arguments.of("valid-assignation"),
+                Arguments.of("assignation", "valid"),
+                Arguments.of("concat-string-number", "valid"),
                 // Invalid
-                Arguments.of("invalid-not-declared"),
-                Arguments.of("invalid-multiply"),
-                Arguments.of("invalid-string-in-condition"),
+                Arguments.of("not-declared", "invalid"),
+                Arguments.of("multiply", "invalid"),
+                Arguments.of("string-in-condition", "invalid"),
             )
         }
     }
 
     @ParameterizedTest
     @MethodSource("data")
-    fun testParser(testFile: String) {
-        val testCaseJson = Files.readString(Paths.get("src/test/resources/semantic/$testFile.json"))
+    fun testParser(
+        testFile: String,
+        validity: String,
+    ) {
+        val testCaseJson = Files.readString(Paths.get("src/test/resources/semantic/$validity/$testFile.json"))
 
         val json =
             Json {
                 prettyPrint = true
-                classDiscriminator = "type" // This is needed for polymorphic serialization
+                classDiscriminator = "type"
                 ignoreUnknownKeys = true
             }
 
@@ -44,7 +48,7 @@ class SemanticAnalyzerTest {
             }
         val semanticAnalyzer = SemanticAnalyzer()
 
-        if (testFile.startsWith("valid")) {
+        if (validity == "valid") {
             nodes.forEach {
                 val result = semanticAnalyzer.analyze(it)
                 assertEquals(true, result.success)

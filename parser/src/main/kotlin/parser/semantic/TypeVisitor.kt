@@ -13,6 +13,7 @@ import ast.OperatorExpr
 import ast.ReadEnvExpr
 import ast.ReadInputExpr
 import ast.StringExpr
+import parser.exception.SemanticException
 
 class TypeVisitor : ExpressionVisitor<VariableType?, SymbolMap> {
     fun getType(
@@ -32,7 +33,7 @@ class TypeVisitor : ExpressionVisitor<VariableType?, SymbolMap> {
     override fun visit(
         expr: DeclareExpr,
         context: SymbolMap,
-    ): VariableType? {
+    ): VariableType {
         return VariableType.fromString(expr.type)
     }
 
@@ -40,7 +41,7 @@ class TypeVisitor : ExpressionVisitor<VariableType?, SymbolMap> {
         expr: CallPrintExpr,
         context: SymbolMap,
     ): VariableType? {
-        return expr.arg.accept(this, context)
+        return null
     }
 
     override fun visit(
@@ -69,7 +70,7 @@ class TypeVisitor : ExpressionVisitor<VariableType?, SymbolMap> {
                 if (leftType == rightType) {
                     leftType
                 } else {
-                    throw IllegalArgumentException("Cannot apply operator ${expr.op} to types $leftType and $rightType")
+                    throw SemanticException("Cannot perform operation ${expr.op} on types $leftType and $rightType", expr.pos)
                 }
             }
         }
@@ -99,7 +100,7 @@ class TypeVisitor : ExpressionVisitor<VariableType?, SymbolMap> {
     override fun visit(
         expr: ReadEnvExpr,
         context: SymbolMap,
-    ): VariableType? {
+    ): VariableType {
         return VariableType.ANY
     }
 
