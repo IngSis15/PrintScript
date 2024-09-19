@@ -1,0 +1,33 @@
+[
+  {
+    "type": "OperatorExpr",
+    "operator": "+",
+    "left": {
+      "type": "StringExpr",
+      "value": "Hello",
+      "position": {
+        "line": "0",
+        "column": "0"
+      }
+    },
+    "right": {
+      "type": "ReadInputExpr",
+      "value": {
+        "type": "StringExpr",
+        "value": "Enter your name: ",
+        "position": {
+          "line": "0",
+          "column": "0"
+        }
+      },
+      "position": {
+        "line": "0",
+        "column": "0"
+      }
+    },
+    "position": {
+      "line": "0",
+      "column": "4"
+    }
+  }
+]

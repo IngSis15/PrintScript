@@ -5,7 +5,7 @@ import lib.Position
 /*
 Represents an identifier expression: a
  */
-class IdentifierExpr(val name: String, val pos: Position) : Expression {
+class IdentifierExpr(val name: String, override val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,

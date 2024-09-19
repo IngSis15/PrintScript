@@ -1,19 +1,11 @@
 {
   "tokens": [
     {
-      "type": "IF",
-      "literal": "if",
+      "type": "LET_KEYWORD",
+      "literal": "let",
       "position": {
         "line": 0,
         "column": 0
-      }
-    },
-    {
-      "type": "LEFT_PAR",
-      "literal": "(",
-      "position": {
-        "line": 0,
-        "column": 3
       }
     },
     {
@@ -25,10 +17,74 @@
       }
     },
     {
+      "type": "COLON",
+      "literal": ":",
+      "position": {
+        "line": 0,
+        "column": 5
+      }
+    },
+    {
+      "type": "BOOLEAN_TYPE",
+      "literal": "boolean",
+      "position": {
+        "line": 0,
+        "column": 7
+      }
+    },
+    {
+      "type": "ASSIGNATION",
+      "literal": "=",
+      "position": {
+        "line": 0,
+        "column": 15
+      }
+    },
+    {
+      "type": "BOOLEAN_LITERAL",
+      "literal": "true",
+      "position": {
+        "line": 0,
+        "column": 17
+      }
+    },
+    {
+      "type": "SEMICOLON",
+      "literal": ";",
+      "position": {
+        "line": 0,
+        "column": 21
+      }
+    },
+    {
+      "type": "IF",
+      "literal": "if",
+      "position": {
+        "line": 1,
+        "column": 0
+      }
+    },
+    {
+      "type": "LEFT_PAR",
+      "literal": "(",
+      "position": {
+        "line": 1,
+        "column": 3
+      }
+    },
+    {
+      "type": "IDENTIFIER",
+      "literal": "x",
+      "position": {
+        "line": 1,
+        "column": 4
+      }
+    },
+    {
       "type": "RIGHT_PAR",
       "literal": ")",
       "position": {
-        "line": 0,
+        "line": 1,
         "column": 11
       }
     },
@@ -36,32 +92,16 @@
       "type": "LEFT_BRACE",
       "literal": "{",
       "position": {
-        "line": 0,
+        "line": 1,
         "column": 13
       }
     },
     {
       "type": "IDENTIFIER",
-      "literal": "y",
+      "literal": "x",
       "position": {
         "line": 1,
-        "column": 2
-      }
-    },
-    {
-      "type": "ASSIGNATION",
-      "literal": "=",
-      "position": {
-        "line": 1,
-        "column": 4
-      }
-    },
-    {
-      "type": "NUMBER_LITERAL",
-      "literal": "1",
-      "position": {
-        "line": 1,
-        "column": 6
+        "column": 1
       }
     },
     {
@@ -69,7 +109,7 @@
       "literal": ";",
       "position": {
         "line": 1,
-        "column": 7
+        "column": 2
       }
     },
     {
@@ -91,45 +131,48 @@
   ],
   "expected": [
     {
+      "type": "DeclareExpr",
+      "position": {
+        "line": 0,
+        "column": 0
+      },
+      "name": "x",
+      "vtype": "boolean",
+      "mutable": true,
+      "value": {
+        "type": "BooleanExpr",
+        "value": true,
+        "position": {
+          "line": 0,
+          "column": 17
+        }
+      }
+    },
+    {
       "type": "ConditionalExpr",
+      "position": {
+        "line": 1,
+        "column": 0
+      },
       "condition": {
         "type": "IdentifierExpr",
         "name": "x",
         "position": {
-          "line": 0,
+          "line": 1,
           "column": 4
         }
       },
       "body": [
         {
-          "type": "AssignExpr",
-          "left": {
-            "type": "IdentifierExpr",
-            "name": "y",
-            "position": {
-              "line": 1,
-              "column": 2
-            }
-          },
-          "value": {
-            "type": "NumberExpr",
-            "value": "1.0",
-            "position": {
-              "line": 1,
-              "column": 6
-            }
-          },
+          "type": "IdentifierExpr",
+          "name": "x",
           "position": {
             "line": 1,
-            "column": 4
+            "column": 1
           }
         }
       ],
-      "elseBody": [],
-      "position": {
-        "line": 0,
-        "column": 0
-      }
+      "elseBody": []
     }
   ]
 }

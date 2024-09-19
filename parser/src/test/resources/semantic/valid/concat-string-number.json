@@ -1,0 +1,26 @@
+[
+  {
+    "type": "OperatorExpr",
+    "operator": "+",
+    "left": {
+      "type": "StringExpr",
+      "value": "Hello",
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    "right": {
+      "type": "NumberExpr",
+      "value": "42",
+      "position": {
+        "line": 0,
+        "column": 6
+      }
+    },
+    "position": {
+      "line": 0,
+      "column": 4
+    }
+  }
+]

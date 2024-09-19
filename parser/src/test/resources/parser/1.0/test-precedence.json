@@ -1,8 +1,8 @@
 {
   "tokens": [
     {
-      "type": "IDENTIFIER",
-      "literal": "x",
+      "type": "NUMBER_LITERAL",
+      "literal": "3",
       "position": {
         "line": 0,
         "column": 0
@@ -61,8 +61,8 @@
     {
       "type": "OperatorExpr",
       "left": {
-        "type": "IdentifierExpr",
-        "name": "x",
+        "type": "NumberExpr",
+        "value": "3.0",
         "position": {
           "line": 0,
           "column": 0

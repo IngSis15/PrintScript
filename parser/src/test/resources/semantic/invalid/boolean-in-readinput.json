@@ -1,0 +1,17 @@
+[
+  {
+    "type": "ReadInputExpr",
+    "value": {
+      "type": "BooleanExpr",
+      "value": true,
+      "position": {
+        "line": 0,
+        "column": 0
+      }
+    },
+    "position": {
+      "line": 0,
+      "column": 0
+    }
+  }
+]

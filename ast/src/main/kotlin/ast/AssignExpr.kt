@@ -5,7 +5,7 @@ import lib.Position
 /*
 Represents an assignment expression: a = 1
  */
-class AssignExpr(val left: Expression, val value: Expression, val pos: Position) : Expression {
+class AssignExpr(val left: Expression, val value: Expression, override val pos: Position) : Expression {
     override fun <R, C> accept(
         visitor: ExpressionVisitor<R, C>,
         context: C,
