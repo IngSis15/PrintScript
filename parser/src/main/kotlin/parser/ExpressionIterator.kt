@@ -22,7 +22,7 @@ class ExpressionIterator(val parser: Parser) : Iterator<Expression> {
 
         val semanticResult = semanticAnalyzer.analyze(expr)
         if (!semanticResult.success) {
-            throw SemanticException("Semantic error: ${semanticResult.message}")
+            throw SemanticException("Semantic error: ${semanticResult.message} on position ${semanticResult.position}")
         }
 
         return expr

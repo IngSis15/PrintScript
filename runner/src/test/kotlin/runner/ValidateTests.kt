@@ -41,7 +41,7 @@ class ValidateTests {
 
         runner.runValidate(FileInputStream(file), version, errorHandler)
 
-        if (file.startsWith("invalid")) {
+        if (filePath.startsWith("invalid")) {
             assert(errorHandler.getErrors().isNotEmpty())
         } else {
             assert(errorHandler.getErrors().isEmpty())
