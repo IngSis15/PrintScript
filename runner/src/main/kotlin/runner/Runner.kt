@@ -81,7 +81,7 @@ class Runner() {
         try {
             val lexer = Lexer(input, version)
             val parser = ParserFactory.createParser(version, lexer.lex())
-            parser.parse()
+            parser.parse().asSequence().toList()
         } catch (e: Exception) {
             errorHandler.handleError(e.message ?: "Unknown error")
         }
